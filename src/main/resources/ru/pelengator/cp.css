@@ -1,0 +1,105 @@
+.color-picker .color-picker-label .text {
+    -fx-fill: transparent;
+}
+.scroll-pane > .viewport  {
+ -fx-background-color: #ccc;
+  }
+
+.group{
+  -fx-padding: 2;
+  -fx-border-color: green ;-fx-border-width: 0.5;
+  -fx-border-radius: 5;
+  -fx-background-color: lightGreen;
+  -fx-border-style: solid inside;
+  }
+.download{
+    -fx-padding: 2;
+    -fx-border-color: black;-fx-border-width: 0.5;
+    -fx-border-radius: 5;
+    -fx-background-color: null;
+    -fx-border-style: solid inside;
+    }
+.startStopVideo{
+        -fx-padding: 2;
+        -fx-border-color: black ;-fx-border-width: 0.5;
+        -fx-border-radius: 5;
+        -fx-background-color: null;
+        -fx-border-style: solid inside;
+        }
+.testFrame{
+         -fx-padding: 2;
+         -fx-border-color: black ;-fx-border-width: 0.5;
+         -fx-border-radius: 5;
+         -fx-background-color: f8f685;
+         -fx-border-style: solid inside;
+         }
+
+.download: pressed{
+             -fx-background-color:
+                 #707070,
+                 linear-gradient(#fcfcfc, #f3f3f3),
+                 linear-gradient(#f2f2f2 0%, #ebebeb 49%, #dddddd 50%, #cfcfcf 100%);
+             -fx-background-insets: 0,1,2;
+             -fx-background-radius: 3,2,1;
+             -fx-padding: 3 30 3 30;
+             -fx-text-fill: black;
+             -fx-font-size: 14px;
+            }
+
+ .do{        -fx-padding: 8 15 15 15;
+             -fx-background-insets: 0,0 0 5 0, 0 0 6 0, 0 0 7 0;
+             -fx-background-radius: 8;
+             -fx-background-color:
+                 linear-gradient(from 0% 93% to 0% 100%, #a34313 0%, #903b12 100%),
+                 #9d4024,
+                 #d86e3a,
+                 radial-gradient(center 50% 50%, radius 100%, #d86e3a, #c54e2c);
+             -fx-effect: dropshadow( gaussian , rgba(0,0,0,0.75) , 4,0,0,1 );
+             -fx-font-weight: bold;
+             -fx-font-size: 0.9em;
+         }
+.do:hover {
+             -fx-background-color:
+                 linear-gradient(from 0% 93% to 0% 100%, #a34110 0%, #903110 100%),
+                 #9d4024,
+                 #d86e3a,
+                 radial-gradient(center 50% 50%, radius 100%, #ea7f4b, #c54e2c);
+         }
+.do:pressed {
+             -fx-padding: 10 15 13 15;
+             -fx-background-insets: 2 0 0 0,2 0 3 0, 2 0 4 0, 2 0 5 0;
+         }
+.do:pressed.text {
+             -fx-fill: yellow;
+             -fx-effect: dropshadow( gaussian , #a30000 , 0,0,0,2 );
+         }
+
+
+/*Кнопка газа*/
+ .gaz{
+        -fx-padding: 2 10 10 10;
+        -fx-background-insets: 0,0 0 5 0, 0 0 6 0, 0 0 7 0;
+
+        -fx-background-radius: 8;
+
+        -fx-background-color:
+           linear-gradient(from 0% 93% to 0% 100%, #a34110 0%, #13458f 100%),#9d4024,#d86e3a,
+           radial-gradient(center 50% 50%, radius 100%, #ea7f4b, #c54e2c);
+
+        -fx-font-weight: bold;
+        -fx-font-size: 0.9em;
+       }
+.gaz:hover {
+        -fx-background-color:
+           linear-gradient(from 0% 93% to 0% 100%, #a34110 0%, #13458f 100%),#9d4024,#d86e3a,
+           radial-gradient(center 50% 100%, radius 100%, #ea7f4b, #c54e2c);
+           }
+.gaz:pressed {
+        -fx-padding: 4 10 8 10;
+        -fx-background-insets: 2 0 0 0,2 0 3 0, 2 0 4 0, 2 0 5 0;
+            }
+/*Кнопка газа*Конец*/
+
+.readonly-checkbox *.text:disabled {
+    -fx-opacity: 1.0;
+}
