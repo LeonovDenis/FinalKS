@@ -1,0 +1,454 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  Copyright (c) 2015, 2019, Gluon and/or its affiliates.
+  All rights reserved. Use is subject to license terms.
+
+  This file is available and licensed under the following license:
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions
+  are met:
+
+  - Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+  - Redistributions in binary form must reproduce the above copyright
+    notice, this list of conditions and the following disclaimer in
+    the documentation and/or other materials provided with the distribution.
+  - Neither the name of Oracle Corporation nor the names of its
+    contributors may be used to endorse or promote products derived
+    from this software without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.text.Font?>
+
+<VBox prefHeight="900.0" prefWidth="1500.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+  <children>
+    <MenuBar VBox.vgrow="NEVER">
+      <menus>
+        <Menu mnemonicParsing="false" text="Настройки">
+          <items>
+            <Menu mnemonicParsing="false" text="Open Recent" />
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem mnemonicParsing="false" text="Загрузить эксперимент" />
+            <MenuItem mnemonicParsing="false" text="Сохранить эксперимент" />
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem mnemonicParsing="false" text="Калибровка термодатчика" />
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem mnemonicParsing="false" text="Подготовка полей отчета" />
+          </items>
+        </Menu>
+        <Menu mnemonicParsing="false" text="Помощь">
+          <items>
+            <MenuItem mnemonicParsing="false" text="Руководство по эксплуатации" />
+                  <MenuItem mnemonicParsing="false" text="О программе" />
+          </items>
+        </Menu>
+      </menus>
+    </MenuBar>
+    <SplitPane dividerPositions="0.5612472160356348, 0.7505567928730512" focusTraversable="true" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
+      <items>
+        <AnchorPane>
+          <children>
+                  <SplitPane orientation="VERTICAL" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <items>
+                      <AnchorPane minHeight="0.0" minWidth="0.0">
+                           <children>
+                              <GridPane hgap="5.0" vgap="10.0">
+                                <columnConstraints>
+                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="50.0" minWidth="50.0" prefWidth="50.0" />
+                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="330.0" minWidth="80.0" prefWidth="330.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="10.0" minWidth="10.0" prefWidth="10.0" />
+                                </columnConstraints>
+                                <rowConstraints>
+                                  <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                  <RowConstraints maxHeight="1.0" minHeight="1.0" prefHeight="1.0" vgrow="SOMETIMES" />
+                                  <RowConstraints maxHeight="50.0" minHeight="50.0" prefHeight="50.0" vgrow="SOMETIMES" />
+                                    <RowConstraints vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="50.0" minHeight="50.0" prefHeight="50.0" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="50.0" minHeight="50.0" prefHeight="50.0" vgrow="SOMETIMES" />
+                                    <RowConstraints vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="50.0" minHeight="50.0" prefHeight="50.0" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="50.0" minHeight="50.0" prefHeight="50.0" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="50.0" minHeight="50.0" prefHeight="50.0" vgrow="SOMETIMES" />
+                                    <RowConstraints vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="50.0" minHeight="50.0" prefHeight="50.0" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="10.0" minHeight="10.0" prefHeight="10.0" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="1.0" minHeight="1.0" prefHeight="1.0" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="50.0" minHeight="50.0" prefHeight="50.0" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="50.0" minHeight="50.0" prefHeight="50.0" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" prefHeight="10.0" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="1.0" minHeight="1.0" prefHeight="1.0" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="50.0" minHeight="50.0" prefHeight="50.0" vgrow="SOMETIMES" />
+                                </rowConstraints>
+                                 <children>
+                                    <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+                                       <image>
+                                          <Image url="@newImg/power.png" />
+                                       </image>
+                                    </ImageView>
+                                    <Label contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Управление" textFill="#726d53" GridPane.columnSpan="4">
+                                       <GridPane.margin>
+                                          <Insets />
+                                       </GridPane.margin>
+                                       <font>
+                                          <Font name="System Bold" size="20.0" />
+                                       </font>
+                                    </Label>
+                                    <VBox GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                       <children>
+                                          <Label alignment="TOP_LEFT" contentDisplay="TOP" text="Питание" textFill="#726d53">
+                                             <font>
+                                                <Font name="System Bold" size="18.0" />
+                                             </font>
+                                          </Label>
+                                          <Label alignment="TOP_LEFT" contentDisplay="TOP" graphicTextGap="0.0" layoutX="10.0" layoutY="10.0" text="Подача питания. Конфигурирование" textFill="#726d53" wrapText="true">
+                                             <font>
+                                                <Font size="14.0" />
+                                             </font>
+                                             <VBox.margin>
+                                                <Insets />
+                                             </VBox.margin>
+                                          </Label>
+                                       </children>
+                                    </VBox>
+                                    <CheckBox alignment="CENTER" focusTraversable="false" mnemonicParsing="false" scaleX="3.0" scaleY="3.0" scaleZ="3.0" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+                                       <padding>
+                                          <Insets bottom="1.0" right="8.0" />
+                                       </padding>
+                                    </CheckBox>
+                                    <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="CENTER">
+                                       <image>
+                                          <Image url="@newImg/window.png" />
+                                       </image>
+                                    </ImageView>
+                                    <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="5">
+                                       <image>
+                                          <Image url="@newImg/gain.png" />
+                                       </image>
+                                    </ImageView>
+                                    <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="11">
+                                       <image>
+                                          <Image url="@newImg/gaz.png" />
+                                       </image>
+                                    </ImageView>
+                                    <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="7">
+                                       <image>
+                                          <Image url="@newImg/integration.png" />
+                                       </image>
+                                    </ImageView>
+                                    <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="8">
+                                       <image>
+                                          <Image url="@newImg/skimming.png" />
+                                       </image>
+                                    </ImageView>
+                                    <Separator prefWidth="200.0" GridPane.columnSpan="4" GridPane.rowIndex="6" />
+                                    <Separator prefWidth="200.0" GridPane.columnSpan="4" GridPane.rowIndex="3" />
+                                    <Separator prefWidth="200.0" GridPane.columnSpan="4" GridPane.rowIndex="10" />
+                                    <VBox GridPane.columnIndex="1" GridPane.rowIndex="4">
+                                       <children>
+                                          <Label alignment="TOP_LEFT" contentDisplay="TOP" text="Окно" textFill="#726d53">
+                                             <font>
+                                                <Font name="System Bold" size="18.0" />
+                                             </font>
+                                          </Label>
+                                          <Label alignment="TOP_LEFT" contentDisplay="TOP" graphicTextGap="0.0" layoutX="10.0" layoutY="10.0" text="Размер окна. Ширина*высота, pix" textFill="#726d53" wrapText="true">
+                                             <font>
+                                                <Font size="14.0" />
+                                             </font>
+                                             <VBox.margin>
+                                                <Insets />
+                                             </VBox.margin>
+                                          </Label>
+                                       </children>
+                                    </VBox>
+                                    <VBox GridPane.columnIndex="1" GridPane.rowIndex="5">
+                                       <children>
+                                          <Label alignment="TOP_LEFT" contentDisplay="TOP" text="Усиление" textFill="#726d53">
+                                             <font>
+                                                <Font name="System Bold" size="18.0" />
+                                             </font>
+                                          </Label>
+                                          <Label alignment="TOP_LEFT" contentDisplay="TOP" graphicTextGap="0.0" layoutX="10.0" layoutY="10.0" text="Коэфициент усиления сигнала, раз" textFill="#726d53" wrapText="true">
+                                             <font>
+                                                <Font size="14.0" />
+                                             </font>
+                                             <VBox.margin>
+                                                <Insets />
+                                             </VBox.margin>
+                                          </Label>
+                                       </children>
+                                    </VBox>
+                                    <VBox GridPane.columnIndex="1" GridPane.rowIndex="7">
+                                       <children>
+                                          <Label alignment="TOP_LEFT" contentDisplay="TOP" text="Накопление" textFill="#726d53">
+                                             <font>
+                                                <Font name="System Bold" size="18.0" />
+                                             </font>
+                                          </Label>
+                                          <Label alignment="TOP_LEFT" contentDisplay="TOP" graphicTextGap="0.0" layoutX="10.0" layoutY="10.0" text="Время накопления сигнала, мкс" textFill="#726d53" wrapText="true">
+                                             <font>
+                                                <Font size="14.0" />
+                                             </font>
+                                             <VBox.margin>
+                                                <Insets />
+                                             </VBox.margin>
+                                          </Label>
+                                       </children>
+                                    </VBox>
+                                    <VBox GridPane.columnIndex="1" GridPane.rowIndex="8">
+                                       <children>
+                                          <Label alignment="TOP_LEFT" contentDisplay="TOP" text="Скимминг" textFill="#726d53">
+                                             <font>
+                                                <Font name="System Bold" size="18.0" />
+                                             </font>
+                                          </Label>
+                                          <Label alignment="TOP_LEFT" contentDisplay="TOP" graphicTextGap="0.0" layoutX="10.0" layoutY="10.0" text="Вычитание постоянной сост. сигнала, мВ" textFill="#726d53" wrapText="true">
+                                             <font>
+                                                <Font size="14.0" />
+                                             </font>
+                                             <VBox.margin>
+                                                <Insets />
+                                             </VBox.margin>
+                                          </Label>
+                                       </children>
+                                    </VBox>
+                                    <VBox GridPane.columnIndex="1" GridPane.rowIndex="11">
+                                       <children>
+                                          <Label alignment="TOP_LEFT" contentDisplay="TOP" text="Газ" textFill="#726d53">
+                                             <font>
+                                                <Font name="System Bold" size="18.0" />
+                                             </font>
+                                          </Label>
+                                          <Label alignment="TOP_LEFT" contentDisplay="TOP" graphicTextGap="0.0" layoutX="10.0" layoutY="10.0" text="Подача питания на электроклапан" textFill="#726d53" wrapText="true">
+                                             <font>
+                                                <Font size="14.0" />
+                                             </font>
+                                             <VBox.margin>
+                                                <Insets />
+                                             </VBox.margin>
+                                          </Label>
+                                       </children>
+                                    </VBox>
+                                    <ImageView fitHeight="50.0" fitWidth="50.0" layoutX="20.0" layoutY="297.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="9">
+                                       <image>
+                                          <Image url="@newImg/VR0.png" />
+                                       </image>
+                                    </ImageView>
+                                    <VBox GridPane.columnIndex="1" GridPane.rowIndex="9">
+                                       <children>
+                                          <Label alignment="TOP_LEFT" contentDisplay="TOP" text="Смещение" textFill="#726d53">
+                                             <font>
+                                                <Font name="System Bold" size="18.0" />
+                                             </font>
+                                          </Label>
+                                          <Label alignment="TOP_LEFT" contentDisplay="TOP" graphicTextGap="0.0" layoutX="10.0" layoutY="10.0" text="Напряжение смещения на диодах, в отсчётах " textFill="#726d53" wrapText="true">
+                                             <font>
+                                                <Font size="14.0" />
+                                             </font>
+                                             <VBox.margin>
+                                                <Insets />
+                                             </VBox.margin>
+                                          </Label>
+                                       </children>
+                                    </VBox>
+                                    <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Старт" textFill="#726d53" GridPane.columnIndex="2" GridPane.rowIndex="11">
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font>
+                                    </Button>
+                                    <ComboBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" nodeOrientation="RIGHT_TO_LEFT" prefWidth="150.0" promptText="128*128" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+                                    <ComboBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" nodeOrientation="RIGHT_TO_LEFT" prefWidth="150.0" promptText="3" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+                                    <TextField alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" promptText="10-1000" text="1000" GridPane.columnIndex="2" GridPane.rowIndex="7">
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font>
+                                    </TextField>
+                                    <TextField alignment="CENTER_RIGHT" layoutX="380.0" layoutY="242.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" promptText="от 1600 до 5000" text="1600" GridPane.columnIndex="2" GridPane.rowIndex="8">
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font>
+                                    </TextField>
+                                    <TextField alignment="CENTER_RIGHT" layoutX="380.0" layoutY="297.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" promptText="0-127" text="20" GridPane.columnIndex="2" GridPane.rowIndex="9">
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font>
+                                    </TextField>
+                                    <Label contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Дополнительные функции" textFill="#726d53" GridPane.columnSpan="4" GridPane.rowIndex="13">
+                                       <font>
+                                          <Font name="System Bold" size="20.0" />
+                                       </font>
+                                    </Label>
+                                    <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="15">
+                                       <image>
+                                          <Image url="@newImg/2point.png" />
+                                       </image>
+                                    </ImageView>
+                                    <VBox GridPane.columnIndex="1" GridPane.rowIndex="15">
+                                       <children>
+                                          <Label alignment="TOP_LEFT" contentDisplay="TOP" text="Двухточечная коррекция" textFill="#726d53">
+                                             <font>
+                                                <Font name="System Bold" size="18.0" />
+                                             </font>
+                                          </Label>
+                                          <Label alignment="TOP_LEFT" contentDisplay="TOP" graphicTextGap="0.0" layoutX="10.0" layoutY="10.0" text="Устранение неоднородности сигнала" textFill="#726d53" wrapText="true">
+                                             <font>
+                                                <Font size="14.0" />
+                                             </font>
+                                             <VBox.margin>
+                                                <Insets />
+                                             </VBox.margin>
+                                          </Label>
+                                       </children>
+                                    </VBox>
+                                    <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Старт" textFill="#726d53" GridPane.columnIndex="2" GridPane.rowIndex="15">
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font>
+                                    </Button>
+                                    <VBox GridPane.columnIndex="1" GridPane.rowIndex="16">
+                                       <children>
+                                          <Label alignment="TOP_LEFT" contentDisplay="TOP" text="Вычитание сигнала" textFill="#726d53">
+                                             <font>
+                                                <Font name="System Bold" size="18.0" />
+                                             </font>
+                                          </Label>
+                                          <Label alignment="TOP_LEFT" contentDisplay="TOP" graphicTextGap="0.0" layoutX="10.0" layoutY="10.0" text="Вычитание постоянной величины из сигнала" textFill="#726d53" wrapText="true">
+                                             <font>
+                                                <Font size="14.0" />
+                                             </font>
+                                             <VBox.margin>
+                                                <Insets />
+                                             </VBox.margin>
+                                          </Label>
+                                       </children>
+                                    </VBox>
+                                    <VBox GridPane.columnIndex="1" GridPane.rowIndex="20">
+                                       <children>
+                                          <Label alignment="TOP_LEFT" contentDisplay="TOP" text="Сбор данных" textFill="#726d53">
+                                             <font>
+                                                <Font name="System Bold" size="18.0" />
+                                             </font>
+                                          </Label>
+                                          <Label alignment="TOP_LEFT" contentDisplay="TOP" graphicTextGap="0.0" layoutX="10.0" layoutY="10.0" text="Накопление данных. Анализ результатов" textFill="#726d53" wrapText="true">
+                                             <font>
+                                                <Font size="14.0" />
+                                             </font>
+                                             <VBox.margin>
+                                                <Insets />
+                                             </VBox.margin>
+                                          </Label>
+                                       </children>
+                                    </VBox>
+                                    <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="16">
+                                       <image>
+                                          <Image url="@newImg/resize.png" />
+                                       </image>
+                                    </ImageView>
+                                    <TextField alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" promptText="0-5000" text="0" GridPane.columnIndex="2" GridPane.rowIndex="16">
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font>
+                                    </TextField>
+                                    <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Старт" textFill="#726d53" GridPane.columnIndex="2" GridPane.rowIndex="20">
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font>
+                                    </Button>
+                                    <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="20">
+                                       <image>
+                                          <Image url="@newImg/exp.png" />
+                                       </image>
+                                    </ImageView>
+                                    <Label contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Эксперимент" textFill="#726d53" GridPane.columnSpan="4" GridPane.rowIndex="18">
+                                       <font>
+                                          <Font name="System Bold" size="20.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                                 <padding>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                 </padding>
+                              </GridPane>
+                           </children>
+                        </AnchorPane>
+                    </items>
+                  </SplitPane>
+          </children>
+        </AnchorPane>
+        <ScrollPane maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="870.0">
+          <content>
+            <AnchorPane id="Content" minHeight="-1.0" minWidth="-1.0">
+              <children>
+                <Label alignment="CENTER" layoutX="14.0" layoutY="14.0" style="&#10;" text="View" textAlignment="CENTER" wrapText="false">
+                           <font>
+                      <Font size="18.0" fx:id="x1" />
+                           </font></Label>
+              </children>
+            </AnchorPane>
+          </content>
+        </ScrollPane>
+        <AnchorPane>
+          <children>
+            <Label alignment="CENTER" font="$x1" layoutX="14.0" layoutY="14.0" style="&#10;" text="Details" textAlignment="CENTER" wrapText="false" />
+          </children>
+        </AnchorPane>
+      </items>
+    </SplitPane>
+    <HBox id="HBox" alignment="CENTER_LEFT" spacing="5.0" VBox.vgrow="NEVER">
+      <children>
+        <Label maxHeight="1.7976931348623157E308" maxWidth="-1.0" text="Left status" HBox.hgrow="ALWAYS">
+          <font>
+            <Font size="11.0" fx:id="x3" />
+          </font>
+          <textFill>
+            <Color red="0.625" green="0.625" blue="0.625" fx:id="x4" />
+          </textFill>
+        </Label>
+        <Pane prefHeight="-1.0" prefWidth="-1.0" HBox.hgrow="ALWAYS" />
+        <Label font="$x3" maxWidth="-1.0" text="Right status" textFill="$x4" HBox.hgrow="NEVER" />
+      </children>
+      <padding>
+        <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
+      </padding>
+    </HBox>
+  </children>
+</VBox>
