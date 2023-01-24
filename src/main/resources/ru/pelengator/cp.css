@@ -1,9 +1,12 @@
 .color-picker .color-picker-label .text {
     -fx-fill: transparent;
 }
+
 .scroll-pane > .viewport  {
  -fx-background-color: #ccc;
-  }
+}
+
+
 
 .group{
   -fx-padding: 2;
@@ -11,7 +14,7 @@
   -fx-border-radius: 5;
   -fx-background-color: lightGreen;
   -fx-border-style: solid inside;
-  }
+}
 .download{
     -fx-padding: 2;
     -fx-border-color: black;-fx-border-width: 0.5;
@@ -75,8 +78,23 @@
          }
 
 
-/*Кнопка газа*/
- .gaz{
+
+
+.readonly-checkbox *.text:disabled {
+    -fx-opacity: 1.0;
+}
+
+/*новое*/
+
+/*Текстовое поле*/
+.myTf{
+-fx-font-fill: #112e1d;
+ -fx-font-weight: bold;
+  -fx-font-size: 20px;
+}
+
+/*Кнопка*/
+.myBtn{
         -fx-padding: 2 10 10 10;
         -fx-background-insets: 0,0 0 5 0, 0 0 6 0, 0 0 7 0;
 
@@ -87,19 +105,48 @@
            radial-gradient(center 50% 50%, radius 100%, #ea7f4b, #c54e2c);
 
         -fx-font-weight: bold;
-        -fx-font-size: 0.9em;
+        -fx-font-size: 24px;
        }
-.gaz:hover {
+.myBtn:hover {
         -fx-background-color:
            linear-gradient(from 0% 93% to 0% 100%, #a34110 0%, #13458f 100%),#9d4024,#d86e3a,
            radial-gradient(center 50% 100%, radius 100%, #ea7f4b, #c54e2c);
            }
-.gaz:pressed {
+.myBtn:pressed {
         -fx-padding: 4 10 8 10;
         -fx-background-insets: 2 0 0 0,2 0 3 0, 2 0 4 0, 2 0 5 0;
             }
-/*Кнопка газа*Конец*/
+/*Кнопка газа*/
+ .myGaz{
+        -fx-padding: 2 10 10 10;
+        -fx-background-insets: 0,0 0 5 0, 0 0 6 0, 0 0 7 0;
 
-.readonly-checkbox *.text:disabled {
-    -fx-opacity: 1.0;
+        -fx-background-radius: 8;
+
+        -fx-background-color:
+         linear-gradient(from 0% 93% to 0% 100%, #11ba8a 0%, #43e085 100%),#056b44,#43e085,
+          radial-gradient(center 50% 50%, radius 100%, #43e085, #23c265);
+
+        -fx-font-weight: bold;
+        -fx-font-size: 24px;
+       }
+.myGaz:hover {
+        -fx-background-color:
+           linear-gradient(from 0% 93% to 0% 100%, #11ba8a 0%, #43e085 100%),#056b44,#43e085,
+           radial-gradient(center 30% 100%, radius 100%, #43e085, red);
+           }
+.myGaz:pressed {
+        -fx-padding: 4 10 8 10;
+        -fx-background-insets: 2 0 0 0,2 0 3 0, 2 0 4 0, 2 0 5 0;
+}
+
+/*выползающая менюшка*/
+.combo-box-popup .list-view {
+-fx-font-weight: bold;
+    -fx-font-size : 16px;
+}
+.combo-box-popup {
+-fx-font-weight: bold;
+    -fx-padding: 0 0 0 0;
+    -fx-font-size : 16px;
 }

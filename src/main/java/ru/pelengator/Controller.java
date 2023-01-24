@@ -60,17 +60,13 @@ import ru.pelengator.API.*;
 import ru.pelengator.API.devises.china.ChinaDriver;
 import ru.pelengator.API.devises.china.ChinaDriverEthernet;
 import ru.pelengator.API.driver.FT_STATUS;
-import ru.pelengator.API.transformer.MyChinaGrayTramsformer;
 import ru.pelengator.API.transformer.MyChinaRgbImageTransformer;
-import ru.pelengator.API.transformer.comFilters.JHFlipFilter;
-import ru.pelengator.API.transformer.comFilters.JHNormalizeFilter;
 import ru.pelengator.model.*;
 import ru.pelengator.service.DataService;
 import ru.pelengator.service.TimeChartService;
 
 
 import static javafx.scene.input.KeyEvent.KEY_PRESSED;
-import static ru.pelengator.API.transformer.comFilters.JHFlipFilter.*;
 import static ru.pelengator.API.utils.Utils.*;
 import static ru.pelengator.API.driver.ethernet.NetUtils.findInterfaces;
 
@@ -88,17 +84,17 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
     /**
      * Размер центральной зоны по ширине.
      */
-    @FXML
+
     private TextField tfKvadratWidth;
     /**
      * Размер центральной зоны по высоте.
      */
-    @FXML
+
     private TextField tfKvadratHeight;
     /**
      * Поле ввода диаметра
      */
-    @FXML
+
     private TextField tf_diam;
     ////////////////////////////////////////////////////////////////испытания
     public MultipleAxesLineChart timehart;
@@ -110,21 +106,21 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
     /**
      * Скролпейн.
      */
-    @FXML
+
     private ScrollPane myPane;
     @FXML
     private Pane paneExp;
-    @FXML
+
     private ScrollPane myLeftPane;
     /**
      * Сценарий остановки картинки.
      */
-    @FXML
+
     private Button btnStartStop;
     /**
      * Кнопка расчета потока от источника света.
      */
-    @FXML
+
     private Button btnPotok;
     /**
      * Кнопка сбора кадров.
@@ -136,10 +132,10 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
      * Кнопка температуры.
      */
     @FXML
-    private Button btnTemp;
+    private Label lb_Temp;
 
     @FXML
-    private Button btnTemp1;
+    private Label lb_Temp1;
 
     /**
      * Кнопка таймера.
@@ -155,7 +151,7 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
     /**
      * Кнопка расчета параметров.
      */
-    @FXML
+
     private Button btnParams;
     /**
      * Список подключенных детекторов.
@@ -200,7 +196,7 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
      * Поле инта.
      */
     @FXML
-    private TextField tfInt_fps;
+    private Label lb_fps;
     /**
      * Поле VOS.
      */
@@ -214,7 +210,6 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
     /**
      * Доступные разрешения.
      */
-    @FXML
     private ComboBox<String> cbExpOptions;
     /**
      * Доступные разрешения.
@@ -229,7 +224,6 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
     /**
      * Задержка опроса платы.
      */
-    @FXML
     private TextField tfSpeedPlata;
     /**
      * Поле текущего FPS.
@@ -315,17 +309,17 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
     /**
      * Режим рисования DRAW_NONE
      */
-    @FXML
+
     private ToggleButton tb_none;
     /**
      * Режим рисования DRAW_FILL
      */
-    @FXML
+
     private ToggleButton tb_fill;
     /**
      * Режим рисования DRAW_FIT
      */
-    @FXML
+
     private ToggleButton tb_fit;
     /**
      * Группа ддля режимов рисования.
@@ -334,41 +328,41 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
     /**
      * Режим зеркалирования
      */
-    @FXML
+
     private ToggleButton tb_mirror;
     /**
      * Режим показа отладочной информации
      */
-    @FXML
+
     private ToggleButton tb_debug;
     /**
      * Сглаживание картинки.
      */
-    @FXML
+
     private ToggleButton tb_antialising;
     /**
      * Поворот изображения на угол кратный 90 градусов.
      */
-    @FXML
+
     private ChoiceBox<String> cb_flip;
-    @FXML
+
     private ToggleButton tb_rgb;
-    @FXML
+
     private ToggleButton tb_gray;
-    @FXML
+
     private ToggleButton tb_norm;
-    @FXML
+
     private Label lb_online;
 
-    @FXML
+
     private Button btnLookUp;
 
-    @FXML
+
     private TitledPane tp_debug;
 
-    @FXML
+
     private VBox vb_comPanel;
-    @FXML
+
     private VBox vb_expPanel;
 
     private boolean isEthrnetWorking;
@@ -543,18 +537,18 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
         params = new StendParams(this);
         setLostFocusAction();// инициализация отработки потери фокуса полей ввода данных
 
-        setDrawButton();//инициализация кнопок режимов рисования
+        //  setDrawButton();//инициализация кнопок режимов рисования
 
-        setAllAnotherButtons();//инициализация кнопок управления стендом
+        //   setAllAnotherButtons();//инициализация кнопок управления стендом
 
         Detector.addDiscoveryListener(this);//добавка в слушатели
 
-        btnLookUp.setVisible(false);
+        // btnLookUp.setVisible(false);
         /**
          * Выключение интерфейса управления.
          */
-        myPane.setVisible(false);
-        myLeftPane.setVisible(false);
+        // myPane.setVisible(false);
+        //   myLeftPane.setVisible(false);
         cbDetectorOptions.setDisable(true);
         /**
          * Создание списка.
@@ -607,7 +601,7 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
                     /**
                      * Отключение панельки
                      */
-                    disableTitledPane("tp_debug");
+                    //       disableTitledPane("tp_debug");
 
                 } else {
                     /**
@@ -616,7 +610,7 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
                     Detector.setDriver(new ChinaDriverEthernet(params));
                     async = false;
                     fpsLimited = true;
-                    btnLookUp.setVisible(true);
+                    //   btnLookUp.setVisible(true);
                     isEthrnetWorking = true;
 
                     initDebugPanel();
@@ -654,20 +648,20 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
                  * Передача индекса детектора в инициализатор.
                  */
                 saveDetIp(detectorName);
-                btnLookUp.setVisible(false);
+                //    btnLookUp.setVisible(false);
                 initializeDetector(newValue.getDetectorIndex());
-                if (!myPane.isVisible()) {
-                    myPane.setVisible(true);
-                    myLeftPane.setVisible(true);
-                }
+                /**    if (!myPane.isVisible()) {
+                 myPane.setVisible(true);
+                 myLeftPane.setVisible(true);
+                 }*/
             }
         });
-
-        cbKvadrat.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            if (detectorPanel != null) {
-                detectorPanel.setAimDisplayed(newValue);
-            }
-        });
+/**
+ cbKvadrat.selectedProperty().addListener((observable, oldValue, newValue) -> {
+ if (detectorPanel != null) {
+ detectorPanel.setAimDisplayed(newValue);
+ }
+ });*/
 
 
         /**
@@ -699,13 +693,13 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
                     params.setTempKU(true);
                 }
             }
-            resetBTNS();
+        //    resetBTNS();
 
         });
         /**
          * Установка списка экспериментов
          */
-        cbExpOptions.setItems(optionsExperim);
+        //   cbExpOptions.setItems(optionsExperim);
 
         /**
          * Установка списка разрешений.
@@ -730,11 +724,11 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
         /**
          * Обработка  меню экспериментов
          */
-        cbExpOptions.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+        /**   cbExpOptions.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
 
-            System.out.println("Эксперимент: " + newValue);
+         System.out.println("Эксперимент: " + newValue);
 
-        });
+         });*/
         /**
          * Обработка отклика на смену разрешения.
          */
@@ -752,7 +746,14 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
                 }
             }
             setSignalFielsdToZero();
-            resetBTNS();
+        //    resetBTNS();
+            Dimension resolution = getSelDetector().getDevice().getResolution();
+
+            Platform.runLater(() -> {
+                params.setWidth(resolution.width);
+                params.setHeigth(resolution.height);
+            });
+
         });
 
         /**
@@ -791,11 +792,14 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
 
                 }
             }
-            resetBTNS();
+         //   resetBTNS();
         });
         /**
          * Определение кнопки газа
          */
+
+        Bindings.bindBidirectional(lb_fps.textProperty(), params.intFPSProperty(), (StringConverter) new MyFPSConverter());
+
         Bindings.bindBidirectional(btnGaz.textProperty(), params.mPowerValueProperty(), (StringConverter) new MyGazConverter());
 
         btnGaz.setOnAction(actionEvent -> {
@@ -819,8 +823,8 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
         /**
          * Определение вывода температуры
          */
-        Bindings.bindBidirectional(btnTemp.textProperty(), params.tempProperty(), (StringConverter) new MyTempConverter());
-        Bindings.bindBidirectional(btnTemp1.textProperty(), params.tempProperty(), (StringConverter) new MyTempCelsConverter());
+        Bindings.bindBidirectional(lb_Temp.textProperty(), params.tempProperty(), (StringConverter) new MyTempConverter());
+        Bindings.bindBidirectional(lb_Temp1.textProperty(), params.tempProperty(), (StringConverter) new MyTempCelsConverter());
 
         /**
          * Определение времени выхода
@@ -828,9 +832,9 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
         //  Bindings.bindBidirectional(btnTimer.textProperty(), params.timeProperty(), (StringConverter) new MyTimeConverter());
 
         //   btnTimer.setOnAction(event -> startTimer());
-        btnLookUp.setOnAction(event -> Detector.getDiscoveryService().scan());
+        //  btnLookUp.setOnAction(event -> Detector.getDiscoveryService().scan());
 
-        Bindings.bindBidirectional(tf_diam.textProperty(), params.diametrProperty(), (StringConverter) new IntegerStringConverter());
+        //    Bindings.bindBidirectional(tf_diam.textProperty(), params.diametrProperty(), (StringConverter) new IntegerStringConverter());
 
         // Platform.runLater(() -> setImageViewSize());
 
@@ -841,6 +845,8 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
         pb_exp.setVisible(false);
 
         lab_exp_status.setText("");
+
+        lbAverageSignal.textProperty().bind(StendParams.sredneeProperty().asString("%.0f"));
 
     }
 
@@ -878,21 +884,23 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
             }
         });
 
-        tfKvadratWidth.focusedProperty().addListener((observableValue, aBoolean, t1) -> {
-            if (!t1) {
-                tfKvadratWidth.fireEvent(EnterEvent);
-            }
-        });
-        tfKvadratHeight.focusedProperty().addListener((observableValue, aBoolean, t1) -> {
-            if (!t1) {
-                tfKvadratHeight.fireEvent(EnterEvent);
-            }
-        });
-        tfSpeedPlata.focusedProperty().addListener((observableValue, aBoolean, t1) -> {
-            if (!t1) {
-                tfSpeedPlata.fireEvent(EnterEvent);
-            }
-        });
+        /**
+         tfKvadratWidth.focusedProperty().addListener((observableValue, aBoolean, t1) -> {
+         if (!t1) {
+         tfKvadratWidth.fireEvent(EnterEvent);
+         }
+         });
+         tfKvadratHeight.focusedProperty().addListener((observableValue, aBoolean, t1) -> {
+         if (!t1) {
+         tfKvadratHeight.fireEvent(EnterEvent);
+         }
+         });
+
+         tfSpeedPlata.focusedProperty().addListener((observableValue, aBoolean, t1) -> {
+         if (!t1) {
+         tfSpeedPlata.fireEvent(EnterEvent);
+         }
+         });*/
         tf_stolbec.focusedProperty().addListener((observableValue, aBoolean, t1) -> {
             if (!t1) {
                 tf_stolbec.fireEvent(EnterEvent);
@@ -919,67 +927,67 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
     }
 
     private void setAllAnotherButtons() {
+/**
+ tb_antialising.selectedProperty().addListener((observable, oldValue, newValue) -> detectorPanel.setAntialiasingEnabled(newValue));
+ tb_mirror.selectedProperty().addListener((observable, oldValue, newValue) -> detectorPanel.setMirrored(newValue));
+ tb_debug.selectedProperty().addListener((observable, oldValue, newValue) -> {
+ detectorPanel.setFPSDisplayed(newValue);
+ detectorPanel.setImageSizeDisplayed(newValue);
+ detectorPanel.setDisplayDebugInfo(newValue);
 
-        tb_antialising.selectedProperty().addListener((observable, oldValue, newValue) -> detectorPanel.setAntialiasingEnabled(newValue));
-        tb_mirror.selectedProperty().addListener((observable, oldValue, newValue) -> detectorPanel.setMirrored(newValue));
-        tb_debug.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            detectorPanel.setFPSDisplayed(newValue);
-            detectorPanel.setImageSizeDisplayed(newValue);
-            detectorPanel.setDisplayDebugInfo(newValue);
+ });
 
-        });
+ cb_flip.setItems(optionsFlip);
+ cb_flip.getSelectionModel().select(optionsFlip.get(0));
+ cb_flip.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
 
-        cb_flip.setItems(optionsFlip);
-        cb_flip.getSelectionModel().select(optionsFlip.get(0));
-        cb_flip.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-
-            switch (newValue) {
-                case "Нет поворота":
-                    DetectorPanel.setFlipper(null);
-                    break;
-                case "Поворот: +90\u00B0":
-                    DetectorPanel.setFlipper(new JHFlipFilter(FLIP_90CW));
-                    break;
-                case "Поворот: -90\u00B0":
-                    DetectorPanel.setFlipper(new JHFlipFilter(FLIP_90CCW));
-                    break;
-                case "Поворот: 180\u00B0":
-                    DetectorPanel.setFlipper(new JHFlipFilter(FLIP_180));
-                    break;
-            }
-        });
+ switch (newValue) {
+ case "Нет поворота":
+ DetectorPanel.setFlipper(null);
+ break;
+ case "Поворот: +90\u00B0":
+ DetectorPanel.setFlipper(new JHFlipFilter(FLIP_90CW));
+ break;
+ case "Поворот: -90\u00B0":
+ DetectorPanel.setFlipper(new JHFlipFilter(FLIP_90CCW));
+ break;
+ case "Поворот: 180\u00B0":
+ DetectorPanel.setFlipper(new JHFlipFilter(FLIP_180));
+ break;
+ }
+ });
 
 
-        tb_rgb.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue) {
-                detectorPanel.setImageTransformer(new MyChinaRgbImageTransformer());
-                tb_gray.selectedProperty().setValue(false);
-                BufferedImage bufferedImage = fillPolosa();
-                ivPolosa.setImage(SwingFXUtils.toFXImage(bufferedImage, null));
-            } else {
-                tb_gray.selectedProperty().setValue(true);
-            }
+ tb_rgb.selectedProperty().addListener((observable, oldValue, newValue) -> {
+ if (newValue) {
+ detectorPanel.setImageTransformer(new MyChinaRgbImageTransformer());
+ tb_gray.selectedProperty().setValue(false);
+ BufferedImage bufferedImage = fillPolosa();
+ ivPolosa.setImage(SwingFXUtils.toFXImage(bufferedImage, null));
+ } else {
+ tb_gray.selectedProperty().setValue(true);
+ }
 
-        });
+ });
 
-        tb_gray.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue) {
-                detectorPanel.setImageTransformer(new MyChinaGrayTramsformer());
-                tb_rgb.selectedProperty().setValue(false);
-                BufferedImage bufferedImage = fillPolosa();
-                ivPolosa.setImage(SwingFXUtils.toFXImage(bufferedImage, null));
-            } else {
-                tb_rgb.selectedProperty().setValue(true);
-            }
-        });
+ tb_gray.selectedProperty().addListener((observable, oldValue, newValue) -> {
+ if (newValue) {
+ detectorPanel.setImageTransformer(new MyChinaGrayTramsformer());
+ tb_rgb.selectedProperty().setValue(false);
+ BufferedImage bufferedImage = fillPolosa();
+ ivPolosa.setImage(SwingFXUtils.toFXImage(bufferedImage, null));
+ } else {
+ tb_rgb.selectedProperty().setValue(true);
+ }
+ });
 
-        tb_norm.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue) {
-                detectorPanel.setNormalayzer(new JHNormalizeFilter());
-            } else {
-                detectorPanel.setNormalayzer(null);
-            }
-        });
+ tb_norm.selectedProperty().addListener((observable, oldValue, newValue) -> {
+ if (newValue) {
+ detectorPanel.setNormalayzer(new JHNormalizeFilter());
+ } else {
+ detectorPanel.setNormalayzer(null);
+ }
+ });*/
     }
 
     /**
@@ -1200,8 +1208,8 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
          * Активировать панель с кнопками.
          */
         btnGetData.setDisable(true);
-        btnParams.setDisable(true);
-        Platform.runLater(() -> showFPS());
+        //  btnParams.setDisable(true);
+      //  Platform.runLater(() -> showFPS());
     }
 
     /**
@@ -1218,8 +1226,7 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
         detectorPanel.setImageTransformer(imageTransformer);
         detectorPanel.setPause(params.getPAUSE());
         snDetectorCapturedImage.setContent(detectorPanel);
-        initFPSservice();
-        //   initStatService();
+        initSHowStatusSservice();
         initStatServiceForNew();
         BufferedImage bufferedImage = fillPolosa();
         ivPolosa.setImage(SwingFXUtils.toFXImage(bufferedImage, null));
@@ -1306,18 +1313,18 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
     /**
      * Сервис отображения FPS.
      */
-    private void initFPSservice() {
+    private void initSHowStatusSservice() {
         Task<Void> task = new Task<Void>() {
             @Override
             protected Void call() throws Exception {
                 while (!stopVideo) {
                     try {
                         TimeUnit.SECONDS.sleep(1);
-                        Platform.runLater(() -> {
-                            lb_online.setVisible(!((DetectorDevice.ChinaSource) selDetector
-                                    .getDevice()).isOnline());
+                        /**  Platform.runLater(() -> {
+                         lb_online.setVisible(!((DetectorDevice.ChinaSource) selDetector
+                         .getDevice()).isOnline());
 
-                        });
+                         });*/
                     } catch (Exception e) {
                         //ignore
                     }
@@ -1336,223 +1343,7 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
     private static int stroka = 0;
 
     private static float mean = 0;
-    private static float max = 0;
-    private static float min = 0;
-    private static float sko = 0;
 
-    /**
-     * Отображение статистики.
-     */
-    private void initStatService() {
-        Task<Void> task = new Task<Void>() {
-            @Override
-            protected Void call() throws Exception {
-
-                //  while (!stopVideo) {
-                try {
-                    DetectorDevice.ChinaSource device = (DetectorDevice.ChinaSource) selDetector.getDevice();
-                    if (device == null) {
-                        return null;
-                    }
-                    int[][] frameData = device.getFrame();
-                    if (frameData != null) {
-                        StatData statData = new StatData(frameData);
-
-                        float[] dataArray = statData.getDataArray();
-                        float[] skoArray = statData.getSKOArray();
-                        float[] skoArrayHorisontal = statData.getSKOArrayHorisontal();
-                        float[] signalFromStroka = statData.getSignalFromStroka(stroka);
-                        float[] signalFromStolbec = statData.getSignalFromStolbec(stolbec);
-
-                        assert dataArray != null;
-                        assert skoArray != null;
-                        assert skoArrayHorisontal != null;
-                        assert signalFromStroka != null;
-                        assert signalFromStolbec != null;
-
-                        grabbedImage = drawMainGist(dataArray);
-                        grabbedImageH = drawLowGist(skoArray, true, true);
-                        grabbedImageV = drawLowGist(skoArrayHorisontal, true, false);
-
-                        grabbedImageSignalH = drawLowGist(signalFromStroka, false, false);
-                        grabbedImageSignalV = drawLowGist(signalFromStolbec, false, false);
-
-                        float max = statData.getMAX();
-                        float min = statData.getMin();
-                        float sko = statData.getSKO();
-                        mean = statData.getMean();
-                        //    params.setSrednee(mean);
-
-                        Platform.runLater(() -> {
-                            //Отображение статистики в полях
-                            lbMax.setText(FORMATTER.format(max));
-                            lbMin.setText(FORMATTER.format(min));
-                            lbSKO.setText(FORMATTER.format(sko));
-
-                            lbAverageSignal.setText(FORMATTER.format(mean));
-
-                            //Отображение гистограмм
-                            /**
-                             * Главная гистограмма.
-                             */
-
-
-                            if (grabbedImage != null) {
-                                final Image gistIamgeToFX = SwingFXUtils
-                                        .toFXImage(grabbedImage, null);
-                                gistImageProperty.set(gistIamgeToFX);
-                            }
-
-                            /**
-                             * Горизонтальная гистограмма.
-                             */
-                            if (grabbedImageH != null) {
-                                final Image gistHIamgeToFXH = SwingFXUtils
-                                        .toFXImage(grabbedImageH, null);
-                                gistImagePropertyH.set(gistHIamgeToFXH);
-                            }
-                            /**
-                             * Вертикальная гистограмма.
-                             */
-                            if (grabbedImageV != null) {
-                                final Image gistVIamgeToFXV = SwingFXUtils
-                                        .toFXImage(grabbedImageV, null);
-                                gistImagePropertyV.set(gistVIamgeToFXV);
-                            }
-                            /**
-                             * Строчная гистограмма.
-                             */
-                            if (grabbedImageSignalH != null) {
-                                final Image gistSignalHIamgeToFXH = SwingFXUtils
-                                        .toFXImage(grabbedImageSignalH, null);
-                                gistImagePropertySignalH.set(gistSignalHIamgeToFXH);
-                            }
-                            /**
-                             * Столбцовая гистограмма.
-                             */
-                            if (grabbedImageSignalH != null) {
-                                final Image gistSignalVIamgeToFXV = SwingFXUtils
-                                        .toFXImage(grabbedImageSignalV, null);
-                                gistImagePropertySignalV.set(gistSignalVIamgeToFXV);
-                            }
-                        });
-
-                        if (grabbedImage != null) {
-                            grabbedImage.flush();
-                        }
-
-                        if (grabbedImageH != null) {
-                            grabbedImageH.flush();
-                        }
-                        if (grabbedImageV != null) {
-                            grabbedImageV.flush();
-                        }
-                        if (grabbedImageSignalH != null) {
-                            grabbedImageSignalH.flush();
-                        }
-                        if (grabbedImageSignalV != null) {
-                            grabbedImageSignalV.flush();
-                        }
-                        ///отображение и пересчет FPS
-                        showFPS();
-
-                    }
-                } catch (Exception e) {
-                    LOG.error("Error in staticService {}", e);
-                }
-
-                //  }
-                return null;
-            }
-        };
-        //Старт потока
-        //  Thread th = new Thread(task);
-        //  th.setDaemon(true);
-        // th.start();
-        iwGist.imageProperty().bind(gistImageProperty);
-
-        iwGistSKO_H.imageProperty().bind(gistImagePropertyH);
-        iwGistSKO_V.imageProperty().bind(gistImagePropertyV);
-
-        iwGistSignal_H.imageProperty().bind(gistImagePropertySignalH);
-        iwGistSignal_V.imageProperty().bind(gistImagePropertySignalV);
-
-        executor = Executors.newScheduledThreadPool(2);
-        executor.scheduleWithFixedDelay(task, 100, 2000, TimeUnit.MILLISECONDS);
-    }
-
-    /**
-     * Отображение статистики.
-     */
-    private void initStatService5() {
-        Task<Void> task = new Task<Void>() {
-            @Override
-            protected Void call() throws Exception {
-
-                while (!stopVideo) {
-                    try {
-                        DetectorDevice.ChinaSource device = (DetectorDevice.ChinaSource) selDetector.getDevice();
-                        if (device == null) {
-                            return null;
-                        }
-                        int[][] frameData = device.getFrame();
-                        if (frameData != null) {
-                            StatData statData = new StatData(frameData);
-
-                            grabbedImage = drawMainGist(statData.getDataArray());
-                            grabbedImageH = drawLowGist(statData.getSKOArray(), true);
-                            grabbedImageV = drawLowGist(statData.getSKOArrayHorisontal(), false);
-
-                            Platform.runLater(() -> {
-                                //Отображение статистики в полях
-                                lbMax.setText(FORMATTER.format(statData.getMAX()));
-                                lbMin.setText(FORMATTER.format(statData.getMin()));
-                                lbSKO.setText(FORMATTER.format(statData.getSKO()));
-                                lbAverageSignal.setText(FORMATTER.format(statData.getMean()));
-                                //Отображение гистограмм
-                                /**
-                                 * Главная гистограмма.
-                                 */
-                                if (grabbedImage != null) {
-                                    final Image gistIamgeToFX = SwingFXUtils
-                                            .toFXImage(grabbedImage, null);
-                                    gistImageProperty.set(gistIamgeToFX);
-                                }
-                                /**
-                                 * Горизонтальная гистограмма.
-                                 */
-                                final Image gistHIamgeToFXH = SwingFXUtils
-                                        .toFXImage(grabbedImageH, null);
-                                gistImagePropertyH.set(gistHIamgeToFXH);
-                                /**
-                                 * Вертикальная гистограмма.
-                                 */
-                                final Image gistVIamgeToFXV = SwingFXUtils
-                                        .toFXImage(grabbedImageV, null);
-                                gistImagePropertyV.set(gistVIamgeToFXV);
-                            });
-                            if (grabbedImage != null) {
-                                grabbedImage.flush();
-                            }
-                            grabbedImageH.flush();
-                            grabbedImageV.flush();
-
-                        }
-                    } catch (Exception e) {
-                        LOG.error("Error in staticService {}", e);
-                    }
-                }
-                return null;
-            }
-        };
-        //Старт потока
-        Thread th = new Thread(task);
-        th.setDaemon(true);
-        th.start();
-        iwGist.imageProperty().bind(gistImageProperty);
-        iwGistSKO_H.imageProperty().bind(gistImagePropertyH);
-        iwGistSKO_V.imageProperty().bind(gistImagePropertyV);
-    }
 
     private void initStatServiceForNew() {
         Runnable task = new Runnable() {
@@ -1578,91 +1369,87 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
                         float[] signalFromStolbec = statData.getSignalFromStolbec(stolbec);
 
 
-                        max = statData.getMAX();
-                        min = statData.getMin();
-                        sko = statData.getSKO();
                         mean = statData.getMean();
-                        params.setSrednee(mean);
-                        grabbedImage = drawMainGist(dataArray);
+                        //   grabbedImage = drawMainGist(dataArray);
 
-                        grabbedImageH = drawLowGist(skoArray, true, true);
-                        grabbedImageV = drawLowGist(skoArrayHorisontal, true, false);
+                        //   grabbedImageH = drawLowGist(skoArray, true, true);
+                        //    grabbedImageV = drawLowGist(skoArrayHorisontal, true, false);
 
-                        grabbedImageSignalH = drawLowGist(signalFromStroka, false, false);
-                        grabbedImageSignalV = drawLowGist(signalFromStolbec, false, false);
+                        //    grabbedImageSignalH = drawLowGist(signalFromStroka, false, false);
+                        //     grabbedImageSignalV = drawLowGist(signalFromStolbec, false, false);
 
                         Platform.runLater(() -> {
                             //Отображение статистики в полях
 
-                            lbMax.setText(FORMATTER.format(max));
-                            lbMin.setText(FORMATTER.format(min));
-                            lbSKO.setText(FORMATTER.format(sko));
-                            lbAverageSignal.setText(FORMATTER.format(mean));
-
+                            //     lbMax.setText(FORMATTER.format(max));
+                            //     lbMin.setText(FORMATTER.format(min));
+                            //      lbSKO.setText(FORMATTER.format(sko));
+                            //      lbAverageSignal.setText(FORMATTER.format(mean));
+                            params.setSrednee(mean);
                             //Отображение гистограмм
                             /**
                              * Главная гистограмма.
                              */
-                            if (grabbedImage != null) {
-                                final Image gistIamgeToFX = SwingFXUtils
-                                        .toFXImage(grabbedImage, null);
-                                gistImageProperty.set(gistIamgeToFX);
-                            }
+                            //         if (grabbedImage != null) {
+                            //             final Image gistIamgeToFX = SwingFXUtils
+                            //                     .toFXImage(grabbedImage, null);
+                            //             gistImageProperty.set(gistIamgeToFX);
+                            //         }
                             /**
                              * Горизонтальная гистограмма.
                              */
-                            if (grabbedImageH != null) {
-                                final Image gistHIamgeToFXH = SwingFXUtils
-                                        .toFXImage(grabbedImageH, null);
-                                gistImagePropertyH.set(gistHIamgeToFXH);
-                            }
+                            //         if (grabbedImageH != null) {
+                            //             final Image gistHIamgeToFXH = SwingFXUtils
+                            //                     .toFXImage(grabbedImageH, null);
+                            //             gistImagePropertyH.set(gistHIamgeToFXH);
+                            //         }
                             /**
                              * Вертикальная гистограмма.
                              */
-                            if (grabbedImageV != null) {
-                                final Image gistVIamgeToFXV = SwingFXUtils
-                                        .toFXImage(grabbedImageV, null);
-                                gistImagePropertyV.set(gistVIamgeToFXV);
-                            }
+                            //         if (grabbedImageV != null) {
+                            //             final Image gistVIamgeToFXV = SwingFXUtils
+                            //                     .toFXImage(grabbedImageV, null);
+                            //             gistImagePropertyV.set(gistVIamgeToFXV);
+                            //         }
 
                             /**
                              * Строчная гистограмма.
                              */
-                            if (grabbedImageSignalH != null) {
-                                final Image gistSignalHIamgeToFXH = SwingFXUtils
-                                        .toFXImage(grabbedImageSignalH, null);
-                                gistImagePropertySignalH.set(gistSignalHIamgeToFXH);
-                            }
+                            //        if (grabbedImageSignalH != null) {
+                            //            final Image gistSignalHIamgeToFXH = SwingFXUtils
+                            //                    .toFXImage(grabbedImageSignalH, null);
+                            //            gistImagePropertySignalH.set(gistSignalHIamgeToFXH);
+                            //        }
                             /**
                              * Столбцовая гистограмма.
                              */
-                            if (grabbedImageSignalV != null) {
-                                final Image gistSignalVIamgeToFXV = SwingFXUtils
-                                        .toFXImage(grabbedImageSignalV, null);
-                                gistImagePropertySignalV.set(gistSignalVIamgeToFXV);
-                            }
+                            //       if (grabbedImageSignalV != null) {
+                            //            final Image gistSignalVIamgeToFXV = SwingFXUtils
+                            //                   .toFXImage(grabbedImageSignalV, null);
+                            //           gistImagePropertySignalV.set(gistSignalVIamgeToFXV);
+                            //        }
 
 
                         });
+/**
+ if (grabbedImage != null) {
+ grabbedImage.flush();
+ }
 
-                        if (grabbedImage != null) {
-                            grabbedImage.flush();
-                        }
+ if (grabbedImageH != null) {
+ grabbedImageH.flush();
+ }
 
-                        if (grabbedImageH != null) {
-                            grabbedImageH.flush();
-                        }
+ if (grabbedImageV != null) {
+ grabbedImageV.flush();
+ }
 
-                        if (grabbedImageV != null) {
-                            grabbedImageV.flush();
-                        }
-
-                        if (grabbedImageSignalH != null) {
-                            grabbedImageSignalH.flush();
-                        }
-                        if (grabbedImageSignalV != null) {
-                            grabbedImageSignalV.flush();
-                        }
+ if (grabbedImageSignalH != null) {
+ grabbedImageSignalH.flush();
+ }
+ if (grabbedImageSignalV != null) {
+ grabbedImageSignalV.flush();
+ }*/
 
                     }
                 } catch (Exception e) {
@@ -1672,13 +1459,13 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
             }
         };
 
-        iwGist.imageProperty().bind(gistImageProperty);
+        //     iwGist.imageProperty().bind(gistImageProperty);
 
-        iwGistSKO_H.imageProperty().bind(gistImagePropertyH);
-        iwGistSKO_V.imageProperty().bind(gistImagePropertyV);
+        //     iwGistSKO_H.imageProperty().bind(gistImagePropertyH);
+        //     iwGistSKO_V.imageProperty().bind(gistImagePropertyV);
 
-        iwGistSignal_H.imageProperty().bind(gistImagePropertySignalH);
-        iwGistSignal_V.imageProperty().bind(gistImagePropertySignalV);
+        //    iwGistSignal_H.imageProperty().bind(gistImagePropertySignalH);
+        //     iwGistSignal_V.imageProperty().bind(gistImagePropertySignalV);
         executor = Executors.newScheduledThreadPool(2);
         executor.scheduleWithFixedDelay(task, 0, 120, TimeUnit.MILLISECONDS);
     }
@@ -1694,21 +1481,21 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
             if (i <= 0) {
                 throw new NumberFormatException();
             }
-            tfInt_fps.setBorder(null);
+            lb_fps.setBorder(null);
 
             Dimension resolution = getSelDetector().getDevice().getResolution();
 
             double v = 10E+06 / (2.0 * (((resolution.getWidth() + 2.0) * ((resolution.getHeight() / 4.0) + 16)) + 1));
             double max = Math.min(v, 1000_000.0 / i);
 
-            tfInt_fps.setText(String.format("%.1f", max));
+            lb_fps.setText(String.format("%.1f", max));
 
         } catch (NumberFormatException e) {
 
-            tfInt_fps.setBorder(new Border(new BorderStroke(javafx.scene.paint.Color.RED,
+            lb_fps.setBorder(new Border(new BorderStroke(javafx.scene.paint.Color.RED,
                     BorderStrokeStyle.SOLID, new CornerRadii(3),
                     new BorderWidths(2), new Insets(-2))));
-            tfInt_fps.setText("Err.");
+            lb_fps.setText("Err.");
 
         } catch (NullPointerException e) {
 
@@ -1735,12 +1522,12 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
 
         setInt();
 
-        resetBTNS();
+    //    resetBTNS();
 
         /**
          * Отображение пересчета в ФПС
          */
-        Platform.runLater(() -> showFPS());
+    //    Platform.runLater(() -> showFPS());
 
     }
 
@@ -1759,10 +1546,10 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
      */
     private void resetBTNS() {
         btnGetData.setDisable(true);
-        btnParams.setDisable(true);
+        //    btnParams.setDisable(true);
         btnGetData.setStyle("-fx-background-color:  orange");
-        btnParams.setStyle("-fx-background-color:  orange");
-        btnPotok.setStyle("-fx-background-color:  orange");
+        //    btnParams.setStyle("-fx-background-color:  orange");
+        //    btnPotok.setStyle("-fx-background-color:  orange");
     }
 
     /**
@@ -1789,7 +1576,7 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
         }
         params.setTempVOS(i);
         setVOS();
-        resetBTNS();
+    //    resetBTNS();
     }
 
     /**
@@ -1824,7 +1611,7 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
         }
         params.setTempREF(i);
         setReference();
-        resetBTNS();
+     //   resetBTNS();
     }
 
     /**
@@ -1851,7 +1638,7 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
         }
         params.setTempVR0(i);
         setVR0();
-        resetBTNS();
+      //  resetBTNS();
     }
 
     /**
@@ -1876,7 +1663,7 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
             return;
         }
         params.setCountFrames(i);
-        resetBTNS();
+      //  resetBTNS();
     }
 
     /**
@@ -2512,7 +2299,7 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
 
         Platform.runLater(() -> {
             options.add(detectorInfo);
-            btnLookUp.setStyle("-fx-background-color:  green");
+            //      btnLookUp.setStyle("-fx-background-color:  green");
         });
 
     }
@@ -2630,6 +2417,33 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
 
         printStatus();
     }
+
+
+    private static class MyFPSConverter extends IntegerStringConverter {
+        public MyFPSConverter() {
+            super();
+        }
+
+        @Override
+        public Integer fromString(String value) {
+            try {
+                Integer.parseInt(value);
+                return super.fromString(value);
+            } catch (NumberFormatException exception) {
+                return 0;
+            }
+        }
+
+        @Override
+        public String toString(Integer value) {
+            if (value >= 0) {
+                return String.format("%d", value);
+            } else {
+                return "Err.";
+            }
+        }
+    }
+
 
     /**
      * Конвертер для надписи кнопки "Газ"

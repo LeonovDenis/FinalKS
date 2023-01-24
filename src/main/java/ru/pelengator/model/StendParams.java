@@ -154,6 +154,11 @@ public class StendParams {
 
     private IntegerProperty mPowerValue = new SimpleIntegerProperty();
 
+    private IntegerProperty intForFPS = new SimpleIntegerProperty(0);
+    private IntegerProperty intFPS = new SimpleIntegerProperty(0);
+    private IntegerProperty width = new SimpleIntegerProperty(0);
+    private IntegerProperty heigth = new SimpleIntegerProperty(0);
+
     private IntegerProperty temp = new SimpleIntegerProperty();//значение термодатчика в Кельвинах
     private static IntegerProperty tempValue = new SimpleIntegerProperty();//сырое значение термодатчика в миливольтах
     private FloatProperty tempValue_77K = new SimpleFloatProperty();//значение при 77К
@@ -238,7 +243,7 @@ public class StendParams {
         mPowerValue.set(Integer.parseInt(properties.getProperty("MPOWER", "0")));
 
         PAUSE = Integer.parseInt(properties.getProperty("PAUSE", "50"));
-        controller.getTfSpeedPlata().setText(String.valueOf(PAUSE));
+        //  controller.getTfSpeedPlata().setText(String.valueOf(PAUSE));
 
         temp0 = Double.parseDouble(properties.getProperty("temp0", "303.0"));
         temp1 = Double.parseDouble(properties.getProperty("temp1", "513.0"));
@@ -313,7 +318,20 @@ public class StendParams {
 
         temp.bind(tempValue_77K.subtract(tempValue).divide(tempValue_k).add(77));//расчет температуры
 
-        time.addListener((observable, oldValue, newValue) ->  System.out.println());
+
+        intFPS.bind(Bindings.min(Bindings.divide(5E+06,Bindings.add(1,Bindings.multiply(widthProperty().add(2),Bindings.add(16, heigthProperty().divide(4))))), Bindings.divide(1000_000.0,intForFPS)));
+
+
+
+
+
+    //       double v = 10E+06 / (2.0 * (((resolution.getWidth() + 2.0) *((resolution.getHeight() / 4.0) + 16)) + 1));
+    //      double max = Math.min(v, 1000_000.0 / i);
+
+
+
+
+        time.addListener((observable, oldValue, newValue) -> System.out.println());
         temp.addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
@@ -643,6 +661,19 @@ public class StendParams {
 
     public void setTempInt(int tempInt) {
         this.tempInt = tempInt;
+        setIntForFPS(tempInt);
+    }
+
+    public int getIntForFPS() {
+        return intForFPS.get();
+    }
+
+    public IntegerProperty intForFPSProperty() {
+        return intForFPS;
+    }
+
+    public void setIntForFPS(int intForFPS) {
+        this.intForFPS.set(intForFPS);
     }
 
     public int getTempREF() {
@@ -1210,6 +1241,42 @@ public class StendParams {
 
     public void setFi1(double fi1) {
         this.fi1 = fi1;
+    }
+
+    public int getWidth() {
+        return width.get();
+    }
+
+    public IntegerProperty widthProperty() {
+        return width;
+    }
+
+    public void setWidth(int width) {
+        this.width.set(width);
+    }
+
+    public int getHeigth() {
+        return heigth.get();
+    }
+
+    public IntegerProperty heigthProperty() {
+        return heigth;
+    }
+
+    public void setHeigth(int heigth) {
+        this.heigth.set(heigth);
+    }
+
+    public int getIntFPS() {
+        return intFPS.get();
+    }
+
+    public IntegerProperty intFPSProperty() {
+        return intFPS;
+    }
+
+    public void setIntFPS(int intFPS) {
+        this.intFPS.set(intFPS);
     }
 
     public void setDetectorDone(boolean detectorDone) {

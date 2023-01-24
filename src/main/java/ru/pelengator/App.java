@@ -25,8 +25,8 @@ public class App extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         ftd3XX = loadJarDll("FTD3XX.dll");
-        //загрузчик первого окна
-        loader = new FXMLLoader(getClass().getResource("primaryPage.fxml"));
+        //загрузчик главного окна
+        loader = new FXMLLoader(getClass().getResource("mainPage.fxml"));/*primaryPage*/
         root = loader.load();
         scene = new Scene(root);
 
