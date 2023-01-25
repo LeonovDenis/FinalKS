@@ -43,10 +43,12 @@
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.RadioMenuItem?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -67,14 +69,22 @@
       <menus>
         <Menu mnemonicParsing="false" text="Настройки">
           <items>
-            <Menu mnemonicParsing="false" text="Open Recent" />
+            <Menu mnemonicParsing="false" text="Драйвер">
+                     <items>
+                        <RadioMenuItem fx:id="menu_USB" mnemonicParsing="false" text="USB">
+                           <toggleGroup>
+                              <ToggleGroup fx:id="driverGroup" />
+                           </toggleGroup>
+                        </RadioMenuItem>
+                        <RadioMenuItem fx:id="menu_Ethernet" mnemonicParsing="false" text="Ethernet" toggleGroup="$driverGroup" />
+                     </items></Menu>
             <SeparatorMenuItem mnemonicParsing="false" />
             <MenuItem mnemonicParsing="false" text="Загрузить эксперимент" />
             <MenuItem mnemonicParsing="false" text="Сохранить эксперимент" />
             <SeparatorMenuItem mnemonicParsing="false" />
             <MenuItem mnemonicParsing="false" text="Калибровка термодатчика" />
             <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" text="Подготовка полей отчета" />
+            <MenuItem mnemonicParsing="false" text="Подготовка отчета" />
           </items>
         </Menu>
         <Menu mnemonicParsing="false" text="Помощь">
@@ -437,6 +447,12 @@
                               <Image url="@newImg/timer.png" />
                            </image>
                         </ImageView>
+                        <FlowPane alignment="CENTER_RIGHT" columnHalignment="RIGHT" GridPane.columnIndex="1" GridPane.columnSpan="2">
+                           <children>
+                              <ComboBox fx:id="cbDetectorOptions" prefWidth="150.0" />
+                              <ComboBox fx:id="cbNetworkOptions" prefWidth="150.0" />
+                           </children>
+                        </FlowPane>
                      </children>
                      <padding>
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
@@ -458,14 +474,6 @@
          <BorderPane.margin>
             <Insets bottom="5.0" top="5.0" />
          </BorderPane.margin>
-         <top>
-            <FlowPane BorderPane.alignment="CENTER">
-               <children>
-                  <ComboBox fx:id="cbNetworkOptions" prefWidth="150.0" />
-                  <ComboBox fx:id="cbDetectorOptions" prefWidth="150.0" />
-               </children>
-            </FlowPane>
-         </top>
       </BorderPane>
    </center>
    <right>

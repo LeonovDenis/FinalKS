@@ -173,6 +173,8 @@ public class StendParams {
     private int PAUSE = 0;
 
     private int detPortVideo;
+
+    private String driver;
     private int detPortCommand;
     private String detIP;
 
@@ -308,6 +310,8 @@ public class StendParams {
 
         serverVideoBuff = Integer.parseInt(properties.getProperty("serverVideoBuff", "1024"));
         commandBuff = Integer.parseInt(properties.getProperty("commandBuff", "1024"));
+
+        driver = properties.getProperty("DRIVER", "USB");
 
         //термодатчик
 
@@ -471,7 +475,7 @@ public class StendParams {
         properties.setProperty("detIP", String.valueOf(detIP));
         properties.setProperty("serverVideoBuff", String.valueOf(serverVideoBuff));
         properties.setProperty("commandBuff", String.valueOf(commandBuff));
-
+        properties.setProperty("DRIVER", driver);
 
         Path of = Paths.get(PATH);
         try (BufferedWriter bufferedWriter = Files.newBufferedWriter(of)) {
@@ -1265,6 +1269,14 @@ public class StendParams {
 
     public void setIntFPS(int intFPS) {
         this.intFPS.set(intFPS);
+    }
+
+    public String getDriver() {
+        return driver;
+    }
+
+    public void setDriver(String driver) {
+        this.driver = driver;
     }
 
     public void setDetectorDone(boolean detectorDone) {

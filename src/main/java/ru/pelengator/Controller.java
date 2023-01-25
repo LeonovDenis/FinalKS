@@ -19,6 +19,7 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.concurrent.Worker;
@@ -313,6 +314,12 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
     /**
      * Режим рисования DRAW_NONE
      */
+///////////////////////////////////////////////////меню////////////
+    @FXML
+    private RadioMenuItem menu_USB;
+    @FXML
+    private RadioMenuItem menu_Ethernet;
+    ///////////////////////////////////////////////////меню////////////
 
     private ToggleButton tb_none;
     /**
@@ -328,7 +335,9 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
     /**
      * Группа ддля режимов рисования.
      */
-    private final ToggleGroup growModeGroup = new ToggleGroup();
+    private ToggleGroup growModeGroup = new ToggleGroup();
+    @FXML
+    private ToggleGroup driverGroup = new ToggleGroup();
     /**
      * Режим зеркалирования
      */
@@ -480,7 +489,7 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
     /**
      * Подсказка в список драйверов.
      */
-    private final String networkListPromptText = "Выбрать драйвер";
+    private final String networkListPromptText = "Сетевой интерфейс";
     /**
      * Список для меню детекторов.
      */
@@ -617,7 +626,7 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
                     //   btnLookUp.setVisible(true);
                     isEthrnetWorking = true;
 
-                    initDebugPanel();
+                    //   initDebugPanel();
                 }
 
                 /**
@@ -637,7 +646,6 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
                  */
                 fillDetectors();
                 cbNetworkOptions.setDisable(true);
-
             }
         });
 
@@ -853,7 +861,88 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
         lbAverageSignal.textProperty().bind(StendParams.sredneeProperty().asString("%.0f"));
 
         lb_fps.setVisible(false);
+
+        setMenuItems();//настройка менюшек
     }
+
+    private void setMenuItems() {
+
+
+
+
+        initeMenu();
+
+        driverGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                RadioMenuItem item = (RadioMenuItem) newValue;
+                String id = item.getId();
+
+                switch (id) {
+                    case "menu_USB":
+                        params.setDriver("USB");
+                        disposeDetector(null);
+                        break;
+                    case "menu_Ethernet":
+                        params.setDriver("ETHERNET");
+                        disposeDetector(null);
+                        initeMenu();
+                        break;
+                }
+
+            }
+        });
+
+    }
+
+    private void initeMenu() {
+        String driver = params.getDriver();
+
+        int select0 = 0;
+        switch (driver) {
+            case "USB":
+                cbDetectorOptions.setVisible(false);
+                cbNetworkOptions.setVisible(false);
+
+                driverGroup.selectToggle(menu_USB);
+                select0 = 0;
+                cbNetworkOptions.getSelectionModel().select(select0);
+                break;
+            case "ETHERNET":
+                cbDetectorOptions.setVisible(true);
+                cbNetworkOptions.setVisible(true);
+                driverGroup.selectToggle(menu_Ethernet);
+                break;
+        }
+
+        scanEthernetAndfireDetector();
+    }
+
+    private TimerTask timerTask2;
+    private Timer tm1;
+
+    private void scanEthernetAndfireDetector() {
+
+        timerTask2 = new TimerTask() {
+            @Override
+            public void run() {
+                Detector.getDiscoveryService().scan();
+            }
+        };
+
+        options.addListener((ListChangeListener<DetectorInfo>) c -> {
+
+            if (c.getList().size() > 0) {
+                cbDetectorOptions.getSelectionModel().select(0);
+
+                if (tm1 != null) {
+                    tm1.cancel();
+                }
+            }
+        });
+
+        //   tm1.schedule(timerTask2, 0, 1000);
+    }
+
 
     private void setSignalFielsdToZero() {
         KeyEvent EnterEvent = new KeyEvent(KEY_PRESSED, "", "", KeyCode.ENTER, false, false, false, false);
