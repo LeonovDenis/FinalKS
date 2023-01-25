@@ -154,10 +154,10 @@ public class StendParams {
 
     private IntegerProperty mPowerValue = new SimpleIntegerProperty();
 
-    private IntegerProperty intForFPS = new SimpleIntegerProperty(0);
-    private IntegerProperty intFPS = new SimpleIntegerProperty(0);
-    private IntegerProperty width = new SimpleIntegerProperty(0);
-    private IntegerProperty heigth = new SimpleIntegerProperty(0);
+    private DoubleProperty intForFPS = new SimpleDoubleProperty(500);
+    private DoubleProperty intFPS = new SimpleDoubleProperty(0);
+    private DoubleProperty width = new SimpleDoubleProperty(128);
+    private DoubleProperty heigth = new SimpleDoubleProperty(128);
 
     private IntegerProperty temp = new SimpleIntegerProperty();//значение термодатчика в Кельвинах
     private static IntegerProperty tempValue = new SimpleIntegerProperty();//сырое значение термодатчика в миливольтах
@@ -318,26 +318,8 @@ public class StendParams {
 
         temp.bind(tempValue_77K.subtract(tempValue).divide(tempValue_k).add(77));//расчет температуры
 
+        intFPS.bind(Bindings.min(Bindings.divide(5E+06, Bindings.add(1, Bindings.multiply(widthProperty().add(2), Bindings.add(16, heigthProperty().divide(4))))), Bindings.divide(1000_000.0, intForFPS)));
 
-        intFPS.bind(Bindings.min(Bindings.divide(5E+06,Bindings.add(1,Bindings.multiply(widthProperty().add(2),Bindings.add(16, heigthProperty().divide(4))))), Bindings.divide(1000_000.0,intForFPS)));
-
-
-
-
-
-    //       double v = 10E+06 / (2.0 * (((resolution.getWidth() + 2.0) *((resolution.getHeight() / 4.0) + 16)) + 1));
-    //      double max = Math.min(v, 1000_000.0 / i);
-
-
-
-
-        time.addListener((observable, oldValue, newValue) -> System.out.println());
-        temp.addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                System.out.println();
-            }
-        });
     }
 
 
@@ -661,19 +643,25 @@ public class StendParams {
 
     public void setTempInt(int tempInt) {
         this.tempInt = tempInt;
-        setIntForFPS(tempInt);
     }
 
-    public int getIntForFPS() {
+    public double getIntForFPS() {
         return intForFPS.get();
     }
 
-    public IntegerProperty intForFPSProperty() {
+    public DoubleProperty intForFPSProperty() {
         return intForFPS;
     }
 
-    public void setIntForFPS(int intForFPS) {
-        this.intForFPS.set(intForFPS);
+    public void setIntForFPS(int intForFPS1) {
+        Thread thread = Thread.currentThread();
+        String name = thread.getName();
+        if (name.startsWith("Thread-")) {
+            Platform.runLater(() -> intForFPS.set(intForFPS1));
+
+        } else {
+            this.intForFPS.set(intForFPS1);
+        }
     }
 
     public int getTempREF() {
@@ -1243,11 +1231,11 @@ public class StendParams {
         this.fi1 = fi1;
     }
 
-    public int getWidth() {
+    public double getWidth() {
         return width.get();
     }
 
-    public IntegerProperty widthProperty() {
+    public DoubleProperty widthProperty() {
         return width;
     }
 
@@ -1255,11 +1243,11 @@ public class StendParams {
         this.width.set(width);
     }
 
-    public int getHeigth() {
+    public double getHeigth() {
         return heigth.get();
     }
 
-    public IntegerProperty heigthProperty() {
+    public DoubleProperty heigthProperty() {
         return heigth;
     }
 
@@ -1267,11 +1255,11 @@ public class StendParams {
         this.heigth.set(heigth);
     }
 
-    public int getIntFPS() {
+    public double getIntFPS() {
         return intFPS.get();
     }
 
-    public IntegerProperty intFPSProperty() {
+    public DoubleProperty intFPSProperty() {
         return intFPS;
     }
 

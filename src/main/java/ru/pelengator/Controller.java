@@ -51,6 +51,7 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.util.StringConverter;
+import javafx.util.converter.DoubleStringConverter;
 import javafx.util.converter.IntegerStringConverter;
 import javafx.util.converter.LongStringConverter;
 import org.decimal4j.util.DoubleRounder;
@@ -171,7 +172,7 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
     /**
      * Панель ско.
      */
-    @FXML
+
     private VBox pnFlash;
     /**
      * Поле вывода картинки.
@@ -235,6 +236,9 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
      */
     @FXML
     private Pane pnGist;
+
+    @FXML
+    private StackPane spGist;
     /**
      * Среднее значение отклонения сигнала.
      */
@@ -274,7 +278,7 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
      * Полоса.
      */
     @FXML
-    private ImageView ivPolosa;//w=300; h=25;
+    private ImageView ivPolosa;//w=600; h=20;
     /**
      * Гистограмма низ. Распределение по строкам.
      */
@@ -667,7 +671,7 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
         /**
          * Подгонка размеров окна отображения картинки.
          */
-        //   Platform.runLater(() -> setImageViewSize());
+        Platform.runLater(() -> setImageViewSize());
         /**
          * Инициализация списка коэф. усиления.
          */
@@ -693,7 +697,7 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
                     params.setTempKU(true);
                 }
             }
-        //    resetBTNS();
+            //    resetBTNS();
 
         });
         /**
@@ -746,7 +750,7 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
                 }
             }
             setSignalFielsdToZero();
-        //    resetBTNS();
+            //    resetBTNS();
             Dimension resolution = getSelDetector().getDevice().getResolution();
 
             Platform.runLater(() -> {
@@ -792,7 +796,7 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
 
                 }
             }
-         //   resetBTNS();
+            //   resetBTNS();
         });
         /**
          * Определение кнопки газа
@@ -836,7 +840,7 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
 
         //    Bindings.bindBidirectional(tf_diam.textProperty(), params.diametrProperty(), (StringConverter) new IntegerStringConverter());
 
-        // Platform.runLater(() -> setImageViewSize());
+        Platform.runLater(() -> setImageViewSize());
 
         /**
          *Сброс строки состояния
@@ -848,6 +852,7 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
 
         lbAverageSignal.textProperty().bind(StendParams.sredneeProperty().asString("%.0f"));
 
+        lb_fps.setVisible(false);
     }
 
     private void setSignalFielsdToZero() {
@@ -1140,24 +1145,36 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
      *
      * @return
      */
-    private BufferedImage fillPolosa() {
-        float[] floats = new float[50];
-        for (int i = 0; i < 50; i++) {
-            floats[i] = 195;
+    private BufferedImage fillPolosa(ImageView ivPolosa, Pane pnGist) {
+        int w = (int) pnGist.getWidth();
+        int h = (int) (pnGist.getHeight() / 10.0);
+        int max = 100;
+        int count = 100;
+
+        float[] floats = new float[count];
+        for (int i = 0; i < count; i++) {
+            floats[i] = max;
         }
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
         GraphicsConfiguration gc = ge.getDefaultScreenDevice().getDefaultConfiguration();
-        BufferedImage bi = gc.createCompatibleImage(300, 10);
+        BufferedImage bi = gc.createCompatibleImage(w, h);
         Graphics2D g2 = ge.createGraphics(bi);
         g2.setBackground(new Color(204, 204, 204, 255));
-        g2.clearRect(0, 0, 300, 51);
+        g2.clearRect(0, 0, w, h);
 
-        for (int i = 0; i < 50; i++) {
-            drawRect(g2, 100, i, 50);
+        for (int i = 0; i < count; i++) {
+            drawRect(g2, max, i, count, h, w);
         }
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2.dispose();
         bi.flush();
+
+        ivPolosa.setFitHeight(h);
+        ivPolosa.setFitWidth(w);
+        ivPolosa.prefHeight(h);
+        ivPolosa.prefWidth(w);
+        ivPolosa.setPreserveRatio(true);
+
         return bi;
     }
 
@@ -1209,7 +1226,7 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
          */
         btnGetData.setDisable(true);
         //  btnParams.setDisable(true);
-      //  Platform.runLater(() -> showFPS());
+        //  Platform.runLater(() -> showFPS());
     }
 
     /**
@@ -1228,7 +1245,8 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
         snDetectorCapturedImage.setContent(detectorPanel);
         initSHowStatusSservice();
         initStatServiceForNew();
-        BufferedImage bufferedImage = fillPolosa();
+        BufferedImage bufferedImage = fillPolosa(ivPolosa, pnGist);
+
         ivPolosa.setImage(SwingFXUtils.toFXImage(bufferedImage, null));
 
 
@@ -1370,86 +1388,84 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
 
 
                         mean = statData.getMean();
-                        //   grabbedImage = drawMainGist(dataArray);
+                        grabbedImage = drawMainGist(dataArray, pnGist);
 
-                        //   grabbedImageH = drawLowGist(skoArray, true, true);
-                        //    grabbedImageV = drawLowGist(skoArrayHorisontal, true, false);
+                        grabbedImageH = drawLowGist(skoArray, true, true, spGist);
+                        grabbedImageV = drawLowGist(skoArrayHorisontal, true, false, spGist);
 
-                        //    grabbedImageSignalH = drawLowGist(signalFromStroka, false, false);
-                        //     grabbedImageSignalV = drawLowGist(signalFromStolbec, false, false);
+                        grabbedImageSignalH = drawLowGist(signalFromStroka, false, false, spGist);
+                        grabbedImageSignalV = drawLowGist(signalFromStolbec, false, false, spGist);
 
                         Platform.runLater(() -> {
                             //Отображение статистики в полях
-
-                            //     lbMax.setText(FORMATTER.format(max));
-                            //     lbMin.setText(FORMATTER.format(min));
-                            //      lbSKO.setText(FORMATTER.format(sko));
-                            //      lbAverageSignal.setText(FORMATTER.format(mean));
                             params.setSrednee(mean);
+
                             //Отображение гистограмм
                             /**
                              * Главная гистограмма.
                              */
-                            //         if (grabbedImage != null) {
-                            //             final Image gistIamgeToFX = SwingFXUtils
-                            //                     .toFXImage(grabbedImage, null);
-                            //             gistImageProperty.set(gistIamgeToFX);
-                            //         }
+                            if (grabbedImage != null) {
+                                final Image gistIamgeToFX = SwingFXUtils
+                                        .toFXImage(grabbedImage, null);
+                                gistImageProperty.set(gistIamgeToFX);
+                            }
                             /**
                              * Горизонтальная гистограмма.
                              */
-                            //         if (grabbedImageH != null) {
-                            //             final Image gistHIamgeToFXH = SwingFXUtils
-                            //                     .toFXImage(grabbedImageH, null);
-                            //             gistImagePropertyH.set(gistHIamgeToFXH);
-                            //         }
+                            if (grabbedImageH != null) {
+                                final Image gistHIamgeToFXH = SwingFXUtils
+                                        .toFXImage(grabbedImageH, null);
+                                gistImagePropertyH.set(gistHIamgeToFXH);
+                            }
                             /**
                              * Вертикальная гистограмма.
                              */
-                            //         if (grabbedImageV != null) {
-                            //             final Image gistVIamgeToFXV = SwingFXUtils
-                            //                     .toFXImage(grabbedImageV, null);
-                            //             gistImagePropertyV.set(gistVIamgeToFXV);
-                            //         }
+                            if (grabbedImageV != null) {
+                                final Image gistVIamgeToFXV = SwingFXUtils
+                                        .toFXImage(grabbedImageV, null);
+                                gistImagePropertyV.set(gistVIamgeToFXV);
+                            }
 
                             /**
                              * Строчная гистограмма.
                              */
-                            //        if (grabbedImageSignalH != null) {
-                            //            final Image gistSignalHIamgeToFXH = SwingFXUtils
-                            //                    .toFXImage(grabbedImageSignalH, null);
-                            //            gistImagePropertySignalH.set(gistSignalHIamgeToFXH);
-                            //        }
+                            if (grabbedImageSignalH != null) {
+                                final Image gistSignalHIamgeToFXH = SwingFXUtils
+                                        .toFXImage(grabbedImageSignalH, null);
+                                gistImagePropertySignalH.set(gistSignalHIamgeToFXH);
+                            }
                             /**
                              * Столбцовая гистограмма.
                              */
-                            //       if (grabbedImageSignalV != null) {
-                            //            final Image gistSignalVIamgeToFXV = SwingFXUtils
-                            //                   .toFXImage(grabbedImageSignalV, null);
-                            //           gistImagePropertySignalV.set(gistSignalVIamgeToFXV);
-                            //        }
+                            if (grabbedImageSignalV != null) {
+                                final Image gistSignalVIamgeToFXV = SwingFXUtils
+                                        .toFXImage(grabbedImageSignalV, null);
+                                gistImagePropertySignalV.set(gistSignalVIamgeToFXV);
+                            }
 
 
                         });
-/**
- if (grabbedImage != null) {
- grabbedImage.flush();
- }
 
- if (grabbedImageH != null) {
- grabbedImageH.flush();
- }
+                        if (grabbedImage != null) {
+                            grabbedImage.flush();
+                        }
 
- if (grabbedImageV != null) {
- grabbedImageV.flush();
- }
 
- if (grabbedImageSignalH != null) {
- grabbedImageSignalH.flush();
- }
- if (grabbedImageSignalV != null) {
- grabbedImageSignalV.flush();
- }*/
+                        if (grabbedImageH != null) {
+                            grabbedImageH.flush();
+                        }
+
+                        if (grabbedImageV != null) {
+                            grabbedImageV.flush();
+                        }
+
+
+                        if (grabbedImageSignalH != null) {
+                            grabbedImageSignalH.flush();
+                        }
+                        if (grabbedImageSignalV != null) {
+                            grabbedImageSignalV.flush();
+                        }
 
                     }
                 } catch (Exception e) {
@@ -1459,13 +1475,14 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
             }
         };
 
-        //     iwGist.imageProperty().bind(gistImageProperty);
+        iwGist.imageProperty().bind(gistImageProperty);
 
-        //     iwGistSKO_H.imageProperty().bind(gistImagePropertyH);
-        //     iwGistSKO_V.imageProperty().bind(gistImagePropertyV);
+        iwGistSKO_H.imageProperty().bind(gistImagePropertyH);
+        iwGistSKO_V.imageProperty().bind(gistImagePropertyV);
 
-        //    iwGistSignal_H.imageProperty().bind(gistImagePropertySignalH);
-        //     iwGistSignal_V.imageProperty().bind(gistImagePropertySignalV);
+        iwGistSignal_H.imageProperty().bind(gistImagePropertySignalH);
+        iwGistSignal_V.imageProperty().bind(gistImagePropertySignalV);
+
         executor = Executors.newScheduledThreadPool(2);
         executor.scheduleWithFixedDelay(task, 0, 120, TimeUnit.MILLISECONDS);
     }
@@ -1522,12 +1539,12 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
 
         setInt();
 
-    //    resetBTNS();
+        //    resetBTNS();
 
         /**
          * Отображение пересчета в ФПС
          */
-    //    Platform.runLater(() -> showFPS());
+        //    Platform.runLater(() -> showFPS());
 
     }
 
@@ -1556,10 +1573,18 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
      * Установка инта.
      */
     public FT_STATUS setInt() {
+
         if (selDetector.getDevice() instanceof DetectorDevice.ChinaSource) {
             FT_STATUS ft_status = ((DetectorDevice.ChinaSource) selDetector.getDevice()).setInt(params.getTempInt());
+            params.setIntForFPS(params.getTempInt());
+
+            if (!lb_fps.isVisible()) {
+                lb_fps.setVisible(true);
+            }
+
             return ft_status;
         }
+
         return null;
     }
 
@@ -1576,7 +1601,7 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
         }
         params.setTempVOS(i);
         setVOS();
-    //    resetBTNS();
+        //    resetBTNS();
     }
 
     /**
@@ -1611,7 +1636,7 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
         }
         params.setTempREF(i);
         setReference();
-     //   resetBTNS();
+        //   resetBTNS();
     }
 
     /**
@@ -1638,7 +1663,7 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
         }
         params.setTempVR0(i);
         setVR0();
-      //  resetBTNS();
+        //  resetBTNS();
     }
 
     /**
@@ -1663,7 +1688,7 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
             return;
         }
         params.setCountFrames(i);
-      //  resetBTNS();
+        //  resetBTNS();
     }
 
     /**
@@ -1712,7 +1737,7 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
      * @param data входной массив данных.
      * @return картинка.
      */
-    private BufferedImage drawMainGist(float[] data) {
+    private BufferedImage drawMainGist(float[] data, Pane pnGist) {
 
         int height = (int) pnGist.getHeight();
         int width = (int) pnGist.getWidth();
@@ -1729,7 +1754,7 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
         g2.setBackground(new Color(204, 204, 204, 255));
         g2.clearRect(0, 0, width, height);
 
-        drowColomn(data, g2);
+        drowColomn(data, g2, height, width);
 
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2.dispose();
@@ -1747,16 +1772,18 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
      *
      * @param data
      * @param g2
+     * @param height
+     * @param width
      */
-    private void drowColomn(float[] data, Graphics2D g2) {
+    private void drowColomn(float[] data, Graphics2D g2, int height, int width) {
         maxVisota = -1;
         maxVhogrenie = -1;
         bochka = -1;
         length = data.length;
-        int[] ints = takeCountInside(data, true, 195, 300);
+        int[] ints = takeCountInside(data, true, height, width);
         for (int i = 0; i < ints.length; i++) {
 
-            drawRect(g2, ints[i], i, ints.length);
+            drawRect(g2, ints[i], i, ints.length, height, width);
             if (ints[i] > maxVhogrenie) {
                 maxVhogrenie = ints[i];
                 bochka = i;
@@ -1772,16 +1799,16 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
      * @param i
      * @param length
      */
-    private void drawRect(Graphics2D g2, int value, int i, int length) {
+    private void drawRect(Graphics2D g2, int value, int i, int length, int heigth, int width) {
 
-        int shaG = 300 / length;
+        int shaG = width / length;
         float acp = detectorPanel.getImageTransformer().getRazryadnost();
         int color = detectorPanel.getImageTransformer()
                 .convertValueToColor((int) ((acp / length) * (i)));
         g2.setColor(new Color(color));
 
-        int visota = (int) (195 * value * 0.01);
-        g2.fillRect(shaG * i, 195 - visota, shaG, visota);
+        int visota = (int) (heigth * value * 0.01);
+        g2.fillRect(shaG * i, heigth - visota, shaG, visota);
 
     }
 
@@ -1810,7 +1837,7 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
             }
         }
 
-        int countOtrezkov = 50;
+        int countOtrezkov = 100;
         float acp = detectorPanel.getImageTransformer().getRazryadnost();
 
         double delta = acp / countOtrezkov;
@@ -1847,7 +1874,7 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
      * @param REVERSX      true- прямая, false - обратная последовательность по оси Х.
      * @return картинка.
      */
-    private BufferedImage drawLowGist(float[] data, boolean TYPE_DIAGRAM, boolean REVERSX) {
+    private BufferedImage drawLowGist(float[] data, boolean TYPE_DIAGRAM, boolean REVERSX, Pane parent) {
 
         if (!REVERSX) {
             float[] tempData = new float[data.length];
@@ -1857,8 +1884,9 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
             data = tempData;
         }
 
-        int height = (int) pnFlash.getHeight() / 2;
-        int width = (int) pnFlash.getWidth();
+        int height = (int) parent.getHeight();
+        int width = (int) parent.getWidth();
+
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
         GraphicsConfiguration gc = ge.getDefaultScreenDevice().getDefaultConfiguration();
         BufferedImage bi = gc.createCompatibleImage(width, height);
@@ -1896,6 +1924,7 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
 
         int height = (int) pnFlash.getHeight() / 2;
         int width = (int) pnFlash.getWidth();
+
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
         GraphicsConfiguration gc = ge.getDefaultScreenDevice().getDefaultConfiguration();
         BufferedImage bi = gc.createCompatibleImage(width, height);
@@ -2419,25 +2448,25 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
     }
 
 
-    private static class MyFPSConverter extends IntegerStringConverter {
+    private class MyFPSConverter extends DoubleStringConverter {
         public MyFPSConverter() {
             super();
         }
 
         @Override
-        public Integer fromString(String value) {
+        public Double fromString(String value) {
             try {
-                Integer.parseInt(value);
+                Double.parseDouble(value);
                 return super.fromString(value);
             } catch (NumberFormatException exception) {
-                return 0;
+                return Double.valueOf(0);
             }
         }
 
         @Override
-        public String toString(Integer value) {
+        public String toString(Double value) {
             if (value >= 0) {
-                return String.format("%d", value);
+                return String.format("%.1f", value);
             } else {
                 return "Err.";
             }

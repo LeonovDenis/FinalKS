@@ -1601,11 +1601,11 @@ public class Utils {
             i = Integer.parseInt(text);
         } catch (Exception e) {
             LOG.error("Int value not valid");
-            setError(source, "Error");
+            setError(source, "Err.");
             return -1;
         }
         if (i < 0) {
-            setError(source, "Error");
+            setError(source, "Err.");
             return -2;
 
         }
