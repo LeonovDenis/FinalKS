@@ -28,6 +28,7 @@ import javafx.concurrent.Worker;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.embed.swing.SwingNode;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
 import javafx.fxml.FXML;
@@ -44,6 +45,7 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
@@ -52,9 +54,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
-import javafx.stage.Modality;
-import javafx.stage.Screen;
-import javafx.stage.Stage;
+import javafx.stage.*;
+import javafx.stage.Window;
 import javafx.util.Duration;
 import javafx.util.StringConverter;
 import javafx.util.converter.DoubleStringConverter;
@@ -333,6 +334,14 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
 
     @FXML
     private MenuItem menu_loadProgram;
+
+    @FXML
+    private MenuItem menu_fullSize;
+    @FXML
+    private MenuItem menu_iconed;
+    @FXML
+    private MenuItem menu_close;
+
     ///////////////////////////////////////////////////меню////////////
 
     private ToggleButton tb_none;
@@ -815,15 +824,10 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
 
 
 
-        menu_loadProgram.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-
-            }
-        });
         /**
          * Определение времени выхода
          */
+
         //  Bindings.bindBidirectional(btnTimer.textProperty(), params.timeProperty(), (StringConverter) new MyTimeConverter());
 
 
@@ -912,6 +916,18 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
         });
 
 
+        menu_fullSize.setOnAction(event -> {
+            Stage stage =(Stage) lb_fps.getScene().getWindow();
+            stage.setFullScreen(true);
+        });
+        menu_iconed.setOnAction(event -> {
+            Stage stage =(Stage) lb_fps.getScene().getWindow();
+            stage.setIconified(true);
+        });
+        menu_close.setOnAction(event -> {
+            Stage stage =(Stage) lb_fps.getScene().getWindow();
+            stage.fireEvent(new WindowEvent(stage, WindowEvent.WINDOW_CLOSE_REQUEST));
+        });
     }
 
     private void initeMenu() {
@@ -2283,13 +2299,38 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
     private void startPotok(ActionEvent event) throws IOException {
         Stage stage = new Stage();
 
-        potokFxmlLoader = new FXMLLoader(getClass().getResource("potokPage.fxml"));
-        Parent root = potokFxmlLoader.load();
-        PotokController potokController = potokFxmlLoader.getController();
+        driverFxmlLoader = new FXMLLoader(getClass().getResource("potokPage.fxml"));
+        Parent root = driverFxmlLoader.load();
+        PotokController potokController = driverFxmlLoader.getController();
         potokController.initController(this);
         stage.setOnCloseRequest(t -> potokController.saveValuesToParams());
         Scene scene = new Scene(root);
-        stage.setTitle("Расчет значения потока. Ввод параметров стенда");
+        stage.setTitle("Загрузка драйвера");
+        stage.setScene(scene);
+        stage.centerOnScreen();
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.setResizable(false);
+        stage.show();
+
+    }
+
+
+    /**
+     * Старт окна для загрузки драйвера.
+     *
+     * @param event
+     */
+    @FXML
+    private void startLoadDriver(ActionEvent event) throws IOException {
+        Stage stage = new Stage();
+
+        driverFxmlLoader = new FXMLLoader(getClass().getResource("loadDriverPage.fxml"));
+        Parent root = driverFxmlLoader.load();
+        PotokController potokController = driverFxmlLoader.getController();
+        potokController.initController(this);
+        stage.setOnCloseRequest(t -> potokController.saveValuesToParams());
+        Scene scene = new Scene(root);
+        stage.setTitle("Загрузка драйвера");
         stage.setScene(scene);
         stage.centerOnScreen();
         stage.initModality(Modality.APPLICATION_MODAL);
@@ -2348,7 +2389,7 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
         dataService = new DataService(this);
     }
 
-    FXMLLoader potokFxmlLoader;
+    FXMLLoader driverFxmlLoader;
     FXMLLoader tempFxmlLoader;
     FXMLLoader paramsFxmlLoader;
 
@@ -2748,9 +2789,9 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
 
         if (((DetectorDevice.ChinaSource) selDetector.getDevice()).isOnline() && isTimerStarted) {
 
-                if (median_chart_service.isRunning()) {
-                    median_chart_service.cancel();
-                }
+            if (median_chart_service.isRunning()) {
+                median_chart_service.cancel();
+            }
             isTimerStarted = !isTimerStarted;   //фиксания события
         }
 

@@ -63,7 +63,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane prefHeight="1000.0" prefWidth="1600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.pelengator.Controller">
+<BorderPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.pelengator.Controller">
    <top>
     <MenuBar BorderPane.alignment="CENTER">
       <menus>
@@ -78,17 +78,28 @@
                         </RadioMenuItem>
                         <RadioMenuItem fx:id="menu_Ethernet" mnemonicParsing="false" text="Ethernet" toggleGroup="$driverGroup" />
                         <SeparatorMenuItem mnemonicParsing="false" />
-                        <MenuItem fx:id="menu_loadProgram" mnemonicParsing="false" text="Загрузить прошивку" />
+                        <MenuItem fx:id="menu_loadProgram" mnemonicParsing="false" onAction="#startLoadDriver" text="Загрузить прошивку" />
                      </items></Menu>
             <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" text="Загрузить эксперимент" />
-            <MenuItem mnemonicParsing="false" text="Сохранить эксперимент" />
-            <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem mnemonicParsing="false" text="Расчет потока" />
             <MenuItem mnemonicParsing="false" text="Калибровка термодатчика" />
-            <SeparatorMenuItem mnemonicParsing="false" />
             <MenuItem mnemonicParsing="false" text="Подготовка отчета" />
           </items>
         </Menu>
+            <Menu mnemonicParsing="false" text="Эксперимент">
+              <items>
+            <MenuItem mnemonicParsing="false" text="Загрузить" />
+            <MenuItem mnemonicParsing="false" text="Сохранить" />
+              </items>
+            </Menu>
+            <Menu mnemonicParsing="false" text="Окно">
+              <items>
+                <MenuItem fx:id="menu_fullSize" mnemonicParsing="false" text="Полный экран" />
+                  <MenuItem fx:id="menu_iconed" mnemonicParsing="false" text="Свернуть окно" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem fx:id="menu_close" mnemonicParsing="false" text="Закрыть окно" />
+              </items>
+            </Menu>
         <Menu mnemonicParsing="false" text="Помощь">
           <items>
             <MenuItem mnemonicParsing="false" text="Руководство по эксплуатации" />

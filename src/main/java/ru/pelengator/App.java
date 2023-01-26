@@ -26,14 +26,16 @@ public class App extends Application {
     public void start(Stage stage) throws IOException {
         ftd3XX = loadJarDll("FTD3XX.dll");
         //загрузчик главного окна
-        loader = new FXMLLoader(getClass().getResource("mainPage.fxml"));/*primaryPage*/
+        loader = new FXMLLoader(getClass().getResource("mainPage.fxml"));
         root = loader.load();
         scene = new Scene(root);
 
         String crc32 = calkCRC32();
         stage.setTitle("Стенд ИС2. CRC-32: " + crc32);
         stage.setScene(scene);
-        stage.centerOnScreen();
+        stage.setResizable(false);
+        stage.setFullScreen(true);
+      //  stage.centerOnScreen();
         stage.show();
 
         /**
@@ -79,6 +81,10 @@ public class App extends Application {
 
     public static String loadFilePath(String name) {
         return loadJarDll(name);
+    }
+
+    public static Scene getScene() {
+        return scene;
     }
 
     public static String getFtd3XX() {

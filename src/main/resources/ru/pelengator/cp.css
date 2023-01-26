@@ -94,6 +94,31 @@
 }
 
 /*Кнопка*/
+.myLitleBtn{
+        -fx-padding: 2 10 10 10;
+        -fx-background-insets: 0,0 0 5 0, 0 0 6 0, 0 0 7 0;
+
+        -fx-background-radius: 8;
+
+        -fx-background-color:
+           linear-gradient(from 0% 93% to 0% 100%, #a34110 0%, #13458f 100%),#9d4024,#d86e3a,
+           radial-gradient(center 50% 50%, radius 100%, #ea7f4b, #c54e2c);
+
+        -fx-font-weight: bold;
+        -fx-font-size: 16px;
+       }
+.myLitleBtn:hover {
+        -fx-background-color:
+           linear-gradient(from 0% 93% to 0% 100%, #a34110 0%, #13458f 100%),#9d4024,#d86e3a,
+           radial-gradient(center 50% 100%, radius 100%, #ea7f4b, #c54e2c);
+           }
+.myLitleBtn:pressed {
+        -fx-padding: 4 10 8 10;
+        -fx-background-insets: 2 0 0 0,2 0 3 0, 2 0 4 0, 2 0 5 0;
+
+
+}
+
 .myBtn{
         -fx-padding: 2 10 10 10;
         -fx-background-insets: 0,0 0 5 0, 0 0 6 0, 0 0 7 0;
