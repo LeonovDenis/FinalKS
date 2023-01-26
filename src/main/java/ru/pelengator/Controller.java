@@ -16,7 +16,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -26,6 +28,8 @@ import javafx.concurrent.Worker;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.embed.swing.SwingNode;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -40,6 +44,7 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -99,7 +104,7 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
 
     private TextField tf_diam;
     ////////////////////////////////////////////////////////////////испытания
-    public MultipleAxesLineChart timehart;
+    public MultipleAxesLineChart timechart;
     private TimeChartService median_chart_service;
 
 
@@ -244,6 +249,12 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
      * Среднее значение отклонения сигнала.
      */
     @FXML
+    private ImageView iv_okStatus;
+    @FXML
+    private ImageView iv_errorStatus;
+
+
+    @FXML
     private Label lbSKO;
     /**
      * Среднее значение сигнала.
@@ -319,6 +330,9 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
     private RadioMenuItem menu_USB;
     @FXML
     private RadioMenuItem menu_Ethernet;
+
+    @FXML
+    private MenuItem menu_loadProgram;
     ///////////////////////////////////////////////////меню////////////
 
     private ToggleButton tb_none;
@@ -548,42 +562,19 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
     public void initialize(URL arg0, ResourceBundle arg1) {
 
         params = new StendParams(this);
+
+        /**
+         * Установка полей в прошлое состояние.
+         */
+        params.loadParams("props.properties");
+
         setLostFocusAction();// инициализация отработки потери фокуса полей ввода данных
-
-        //  setDrawButton();//инициализация кнопок режимов рисования
-
-        //   setAllAnotherButtons();//инициализация кнопок управления стендом
 
         Detector.addDiscoveryListener(this);//добавка в слушатели
 
-        // btnLookUp.setVisible(false);
-        /**
-         * Выключение интерфейса управления.
-         */
-        // myPane.setVisible(false);
-        //   myLeftPane.setVisible(false);
-        cbDetectorOptions.setDisable(true);
-        /**
-         * Создание списка.
-         */
-        int interfaceCounter = 0;
-        /**
-         * Заполнение списка интерфейсов.
-         */
-        optionsNetwork.add(new NetworkInfo(interfaceCounter++));
-        for (NetworkInterface networkInterface : findInterfaces().toArray(new NetworkInterface[0])) {
-            NetworkInfo networkInfo = new NetworkInfo(networkInterface.getName(), networkInterface, interfaceCounter);
-            optionsNetwork.add(networkInfo);
-            interfaceCounter++;
-        }
-        /**
-         * Установка списка в комбобокс.
-         */
-        cbNetworkOptions.setItems(optionsNetwork);
-        /**
-         * Установка подсказки в комбобокс.
-         */
-        cbNetworkOptions.setPromptText(networkListPromptText);
+        createNetworcOptions(); //заполнение списка сетей
+
+
         /**
          * Установка подсказки в комбобокс.
          */
@@ -599,6 +590,7 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
         expInfo.setExpName("Пустой эксперимент");
         optionsExp.add(expInfo);
         expCounter++;
+
         /**
          * Подключение слушателя на выбор элемента из списка.
          */
@@ -611,11 +603,6 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
                     Detector.setDriver(new ChinaDriver(params));
                     async = false;
                     isEthrnetWorking = false;
-                    /**
-                     * Отключение панельки
-                     */
-                    //       disableTitledPane("tp_debug");
-
                 } else {
                     /**
                      * Регистрация драйвера детектора для ethernet.
@@ -625,18 +612,8 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
                     fpsLimited = true;
                     //   btnLookUp.setVisible(true);
                     isEthrnetWorking = true;
-
-                    //   initDebugPanel();
                 }
 
-                /**
-                 * Разблокировка списка детекторов.
-                 */
-                if (cbDetectorOptions.isDisabled()) {
-                    cbDetectorOptions.setDisable(false);
-                } else {
-                    closeDetector();
-                }
                 /**
                  * Передача индекса интерфейса в инициализатор.
                  */
@@ -647,12 +624,18 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
                 fillDetectors();
                 cbNetworkOptions.setDisable(true);
             }
+
+            scanEthernetAndfireDetector();
+
         });
+
+        changeIconStatusVisible(false, false);
 
         /**
          * Подключение слушателя на выбор элемента из списка детекторов.
          */
         cbDetectorOptions.getSelectionModel().selectedItemProperty().addListener((arg01, arg11, newValue) -> {
+
             if (newValue != null) {
                 String detectorName = newValue.getDetectorName();
                 LOG.trace("Detector Index: " + newValue.getDetectorIndex() + ": Detector Name: " + detectorName + " choosed");
@@ -662,18 +645,9 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
                 saveDetIp(detectorName);
                 //    btnLookUp.setVisible(false);
                 initializeDetector(newValue.getDetectorIndex());
-                /**    if (!myPane.isVisible()) {
-                 myPane.setVisible(true);
-                 myLeftPane.setVisible(true);
-                 }*/
             }
+
         });
-/**
- cbKvadrat.selectedProperty().addListener((observable, oldValue, newValue) -> {
- if (detectorPanel != null) {
- detectorPanel.setAimDisplayed(newValue);
- }
- });*/
 
 
         /**
@@ -684,10 +658,7 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
          * Инициализация списка коэф. усиления.
          */
         cbCCCOptions.setItems(optionsCCC);
-        /**
-         * Установка полей в прошлое состояние.
-         */
-        params.loadParams("props.properties");
+
         /**
          * Обработка смены коэф. усиления
          */
@@ -705,13 +676,12 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
                     params.setTempKU(true);
                 }
             }
-            //    resetBTNS();
 
         });
         /**
          * Установка списка экспериментов
          */
-        //   cbExpOptions.setItems(optionsExperim);
+        //    cbExpOptions.setItems(optionsExperim);
 
         /**
          * Установка списка разрешений.
@@ -741,6 +711,7 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
          System.out.println("Эксперимент: " + newValue);
 
          });*/
+
         /**
          * Обработка отклика на смену разрешения.
          */
@@ -758,7 +729,7 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
                 }
             }
             setSignalFielsdToZero();
-            //    resetBTNS();
+
             Dimension resolution = getSelDetector().getDevice().getResolution();
 
             Platform.runLater(() -> {
@@ -773,10 +744,13 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
          */
         chPower.selectedProperty().addListener((observable, oldValue, newValue) -> {
 
+            if (selDetector == null) {
+                newValue = oldValue;
+                return;
+            }
             /**
              * Запрос на статус
              */
-
             if (newValue) {
                 if (selDetector.getDevice() instanceof DetectorDevice.ChinaSource) {
 
@@ -804,7 +778,7 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
 
                 }
             }
-            //   resetBTNS();
+
         });
         /**
          * Определение кнопки газа
@@ -822,6 +796,7 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
                 startTimer();
             } else {
                 i = 0x00;// 0 вольт
+                stopTimer();
             }
 
             if (selDetector.getDevice() instanceof DetectorDevice.ChinaSource) {
@@ -838,15 +813,19 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
         Bindings.bindBidirectional(lb_Temp.textProperty(), params.tempProperty(), (StringConverter) new MyTempConverter());
         Bindings.bindBidirectional(lb_Temp1.textProperty(), params.tempProperty(), (StringConverter) new MyTempCelsConverter());
 
+
+
+        menu_loadProgram.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+
+            }
+        });
         /**
          * Определение времени выхода
          */
         //  Bindings.bindBidirectional(btnTimer.textProperty(), params.timeProperty(), (StringConverter) new MyTimeConverter());
 
-        //   btnTimer.setOnAction(event -> startTimer());
-        //  btnLookUp.setOnAction(event -> Detector.getDiscoveryService().scan());
-
-        //    Bindings.bindBidirectional(tf_diam.textProperty(), params.diametrProperty(), (StringConverter) new IntegerStringConverter());
 
         Platform.runLater(() -> setImageViewSize());
 
@@ -865,9 +844,33 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
         setMenuItems();//настройка менюшек
     }
 
+    private void createNetworcOptions() {
+        /**
+         * Создание списка.
+         */
+        int interfaceCounter = 0;
+        /**
+         * Заполнение списка интерфейсов.
+         */
+        optionsNetwork.add(new NetworkInfo(interfaceCounter++));
+        for (NetworkInterface networkInterface : findInterfaces().toArray(new NetworkInterface[0])) {
+            NetworkInfo networkInfo = new NetworkInfo(networkInterface.getName(), networkInterface, interfaceCounter);
+            optionsNetwork.add(networkInfo);
+            interfaceCounter++;
+        }
+
+        /**
+         * Установка списка в комбобокс.
+         */
+        cbNetworkOptions.setItems(optionsNetwork);
+
+        /**
+         * Установка подсказки в комбобокс.
+         */
+        cbNetworkOptions.setPromptText(networkListPromptText);
+    }
+
     private void setMenuItems() {
-
-
 
 
         initeMenu();
@@ -881,6 +884,7 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
                     case "menu_USB":
                         params.setDriver("USB");
                         disposeDetector(null);
+                        initeMenu();
                         break;
                     case "menu_Ethernet":
                         params.setDriver("ETHERNET");
@@ -892,9 +896,32 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
             }
         });
 
+
+        options.addListener((ListChangeListener<DetectorInfo>) c -> {
+
+            if (c.getList().size() != 1) {
+
+
+            } else {//Если только USB
+                if (tm1 != null) {
+                    tm1.cancel();
+                }
+                cbDetectorOptions.getSelectionModel().select(0);
+            }
+
+        });
+
+
     }
 
     private void initeMenu() {
+
+        if (tm1 != null) {
+            tm1.cancel();
+            tm1 = null;
+            timerTask1 = null;
+        }
+
         String driver = params.getDriver();
 
         int select0 = 0;
@@ -908,39 +935,42 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
                 cbNetworkOptions.getSelectionModel().select(select0);
                 break;
             case "ETHERNET":
-                cbDetectorOptions.setVisible(true);
+                cbDetectorOptions.setVisible(false);
                 cbNetworkOptions.setVisible(true);
                 driverGroup.selectToggle(menu_Ethernet);
+                if (optionsNetwork.size() == 2) {
+                    select0 = 1;
+                    cbNetworkOptions.getSelectionModel().select(select0);
+                } else {
+                    cbNetworkOptions.setDisable(false);
+                    cbNetworkOptions.getSelectionModel().clearSelection();
+
+                }
                 break;
         }
 
-        scanEthernetAndfireDetector();
     }
 
-    private TimerTask timerTask2;
+    private TimerTask timerTask1;
     private Timer tm1;
 
     private void scanEthernetAndfireDetector() {
 
-        timerTask2 = new TimerTask() {
+        if (options.size() > 0) {
+            options.clear();
+        }
+
+        tm1 = new Timer("Таймер поиска детекторов");
+
+        timerTask1 = new TimerTask() {
             @Override
             public void run() {
                 Detector.getDiscoveryService().scan();
             }
         };
 
-        options.addListener((ListChangeListener<DetectorInfo>) c -> {
+        tm1.schedule(timerTask1, 0, 1000);
 
-            if (c.getList().size() > 0) {
-                cbDetectorOptions.getSelectionModel().select(0);
-
-                if (tm1 != null) {
-                    tm1.cancel();
-                }
-            }
-        });
-
-        //   tm1.schedule(timerTask2, 0, 1000);
     }
 
 
@@ -1313,7 +1343,7 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
         /**
          * Активировать панель с кнопками.
          */
-        btnGetData.setDisable(true);
+        // btnGetData.setDisable(true);
         //  btnParams.setDisable(true);
         //  Platform.runLater(() -> showFPS());
     }
@@ -1417,32 +1447,38 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
         source.getParent().requestFocus();
     }
 
+    private static BooleanProperty onLine = new SimpleBooleanProperty(false);
+
+    private Timer tm2;
+    private TimerTask timerTask2;
+
     /**
      * Сервис отображения FPS.
      */
     private void initSHowStatusSservice() {
-        Task<Void> task = new Task<Void>() {
-            @Override
-            protected Void call() throws Exception {
-                while (!stopVideo) {
-                    try {
-                        TimeUnit.SECONDS.sleep(1);
-                        /**  Platform.runLater(() -> {
-                         lb_online.setVisible(!((DetectorDevice.ChinaSource) selDetector
-                         .getDevice()).isOnline());
 
-                         });*/
-                    } catch (Exception e) {
-                        //ignore
-                    }
+        onLine.addListener((observable, oldValue, newValue) -> {
+                    changeIconStatusVisible(newValue, !newValue);
                 }
-                return null;
+        );
+
+        tm2 = new Timer();
+        timerTask2 = new TimerTask() {
+            @Override
+            public void run() {
+                onLine.setValue(((DetectorDevice.ChinaSource) selDetector.getDevice()).isOnline());
             }
         };
-        //Старт потока
-        Thread th = new Thread(task);
-        th.setDaemon(true);
-        th.start();
+
+        tm2.schedule(timerTask2, 0, 1000);
+
+    }
+
+    private void changeIconStatusVisible(boolean okVisible, boolean errorVisible) {
+        Platform.runLater(() -> {
+            iv_okStatus.setVisible(okVisible);
+            iv_errorStatus.setVisible(errorVisible);
+        });
     }
 
     private ScheduledExecutorService executor = null;
@@ -2675,34 +2711,50 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
     private static Thread serviceSbora;
 
     /**
-     * Старт времени выхода
+     * Старт таймера времени выхода и отрисовки графика
      *
      * @return
      */
 
     private String startTimer() {
 
-        int timeTick = 1000;
-        initMedian_chart_service(timeTick);
+        int timeTick = 1000;//градация шкалы, мс
+
+        initMedian_chart_service(timeTick);//создание сервиса графика
 
         if (((DetectorDevice.ChinaSource) selDetector.getDevice()).isOnline() && !isTimerStarted) {
 
-            Long startTime = System.currentTimeMillis();
-            initTimer(startTime);//2. Старт таймера
-            isTimerStarted = !isTimerStarted;
-        } else {
+            Long startTime = System.currentTimeMillis(); //время старта
 
+            initTimer(startTime);   //запуск самого таймера
+
+            isTimerStarted = !isTimerStarted;   //фиксания события
+        } else {
+            //игнор
             return "Not CNCT";
         }
 
-        if (timehart == null) {
-            timehart = getNew_chart();//  отрисовка основного графика
-            new Thread(() -> {
+        if (timechart == null) {
+            timechart = getNew_chart();     //  создание основного графика
+            new Thread(() -> {              //  запуск отрисовки графика
                 median_chart_service.restart();
             }).start();
 
         }
         return "str_date";
+    }
+
+    private String stopTimer() {
+
+        if (((DetectorDevice.ChinaSource) selDetector.getDevice()).isOnline() && isTimerStarted) {
+
+                if (median_chart_service.isRunning()) {
+                    median_chart_service.cancel();
+                }
+            isTimerStarted = !isTimerStarted;   //фиксания события
+        }
+
+        return "stoped";
     }
 
     public static int i = 900;//тестовые данные
@@ -2775,7 +2827,7 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
     }
 
     public MultipleAxesLineChart getLineChart_time() {
-        return timehart;
+        return timechart;
     }
 
     public final static int X_DATA_COUNT = 3 * 60;
@@ -2842,7 +2894,7 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
         Stage stage = new Stage();
         stage.setOnCloseRequest(t -> {
 
-            timehart = null;
+            timechart = null;
 
 
             if (median_chart_service.isRunning()) {

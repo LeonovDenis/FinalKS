@@ -77,6 +77,8 @@
                            </toggleGroup>
                         </RadioMenuItem>
                         <RadioMenuItem fx:id="menu_Ethernet" mnemonicParsing="false" text="Ethernet" toggleGroup="$driverGroup" />
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem fx:id="menu_loadProgram" mnemonicParsing="false" text="Загрузить прошивку" />
                      </items></Menu>
             <SeparatorMenuItem mnemonicParsing="false" />
             <MenuItem mnemonicParsing="false" text="Загрузить эксперимент" />
@@ -163,11 +165,24 @@
                               </Label>
                            </children>
                         </VBox>
-                        <CheckBox fx:id="chPower" alignment="CENTER" focusTraversable="false" mnemonicParsing="false" scaleX="3.0" scaleY="3.0" scaleZ="3.0" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="CENTER">
-                           <padding>
-                              <Insets bottom="1.0" right="8.0" />
-                           </padding>
-                        </CheckBox>
+                        <StackPane GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+                           <children>
+                              <ImageView fx:id="iv_errorStatus" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="CENTER_LEFT">
+                                 <image>
+                                    <Image url="@newImg/noSignal.png" />
+                                 </image>
+                              </ImageView>
+                              <ImageView fx:id="iv_okStatus" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="CENTER_LEFT" />
+                              <CheckBox fx:id="chPower" alignment="CENTER" focusTraversable="false" mnemonicParsing="false" scaleX="3.0" scaleY="3.0" scaleZ="3.0" StackPane.alignment="CENTER_RIGHT">
+                                 <padding>
+                                    <Insets bottom="1.0" />
+                                 </padding>
+                                 <StackPane.margin>
+                                    <Insets right="15.0" />
+                                 </StackPane.margin>
+                              </CheckBox>
+                           </children>
+                        </StackPane>
                         <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="CENTER">
                            <image>
                               <Image url="@newImg/window.png" />

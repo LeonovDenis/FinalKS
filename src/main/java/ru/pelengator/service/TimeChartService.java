@@ -64,15 +64,7 @@ public class TimeChartService extends ScheduledService<Void> {
                     data2.get(0).getData().add(data_temp);//добавляем данные в график
 
                     if (data.get(0).getData().size() > WINDOW_SIZE*ii) {  //при переполнении графика удаляем первое значение
-                        Platform.runLater(() -> {
-
-
-                        //    data.get(0).getData().remove(0);
-                        //    data2.get(0).getData().remove(0);
-                        //    NumberAxis xAxis = (NumberAxis) baseChart.getXAxis();
-                      //      xAxis.setUpperBound(X_DATA_COUNT*ii++);
-                      //      controller.getLineChart_time().rebuildChart();
-                        });
+                        //ignore
                     }
 
                 }
