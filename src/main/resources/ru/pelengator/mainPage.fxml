@@ -69,6 +69,9 @@
       <menus>
         <Menu mnemonicParsing="false" text="Настройки">
           <items>
+                  <MenuItem mnemonicParsing="false" onAction="#startPotok" text="Расчет потока" />
+            <MenuItem mnemonicParsing="false" text="Калибровка термодатчика" />
+            <SeparatorMenuItem mnemonicParsing="false" />
             <Menu mnemonicParsing="false" text="Драйвер">
                      <items>
                         <RadioMenuItem fx:id="menu_USB" mnemonicParsing="false" text="USB">
@@ -80,16 +83,17 @@
                         <SeparatorMenuItem mnemonicParsing="false" />
                         <MenuItem fx:id="menu_loadProgram" mnemonicParsing="false" onAction="#startLoadDriver" text="Загрузить прошивку" />
                      </items></Menu>
-            <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" text="Расчет потока" />
-            <MenuItem mnemonicParsing="false" text="Калибровка термодатчика" />
-            <MenuItem mnemonicParsing="false" text="Подготовка отчета" />
           </items>
         </Menu>
             <Menu mnemonicParsing="false" text="Эксперимент">
               <items>
             <MenuItem mnemonicParsing="false" text="Загрузить" />
             <MenuItem mnemonicParsing="false" text="Сохранить" />
+              </items>
+            </Menu>
+            <Menu mnemonicParsing="false" text="Отчёт">
+              <items>
+            <MenuItem fx:id="menu_fields" mnemonicParsing="false" onAction="#startFields" text="Подготовка отчета" />
               </items>
             </Menu>
             <Menu mnemonicParsing="false" text="Окно">

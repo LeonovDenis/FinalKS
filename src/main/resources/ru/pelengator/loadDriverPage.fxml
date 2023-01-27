@@ -12,8 +12,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
-
-<AnchorPane xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.pelengator.PotokController">
+<AnchorPane xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.pelengator.LoadDriverController">
    <children>
       <GridPane alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
          <columnConstraints>
@@ -24,13 +23,12 @@
          </columnConstraints>
          <rowConstraints>
             <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints maxHeight="10.0" minHeight="10.0" prefHeight="10.0" vgrow="SOMETIMES" />
             <RowConstraints vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
          </rowConstraints>
          <children>
-            <StackPane alignment="CENTER_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefWidth="410.0" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="1">
+            <StackPane alignment="CENTER_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefWidth="410.0" GridPane.columnIndex="1" GridPane.columnSpan="3">
                <children>
                   <ProgressBar fx:id="pb_status" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" progress="0.0">
                      <StackPane.margin>
@@ -47,12 +45,12 @@
                   </Label>
                </children>
             </StackPane>
-            <TextField fx:id="lb_partSize" minHeight="-Infinity" minWidth="-Infinity" prefHeight="44.0" prefWidth="50.0" promptText="Размер" styleClass="myTf" stylesheets="@cp.css" text="1024" GridPane.columnIndex="2" GridPane.rowIndex="3">
+            <TextField fx:id="lb_partSize" minHeight="-Infinity" minWidth="-Infinity" prefHeight="44.0" prefWidth="50.0" promptText="Размер" styleClass="myTf" stylesheets="@cp.css" text="1024" GridPane.columnIndex="2" GridPane.rowIndex="2">
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
             </TextField>
-            <Button fx:id="btnLoad" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" styleClass="myLitleBtn" stylesheets="@cp.css" text="Загрузить прошивку" GridPane.columnIndex="3" GridPane.rowIndex="3">
+            <Button fx:id="btnLoad" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" styleClass="myLitleBtn" stylesheets="@cp.css" text="Загрузить прошивку" GridPane.columnIndex="3" GridPane.rowIndex="2">
                <font>
                   <Font name="Segoe UI" size="14.0" fx:id="x12" />
                </font>
@@ -60,7 +58,7 @@
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
             </Button>
-            <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Размер пакета" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER">
+            <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Размер пакета" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
                <font>
                   <Font size="24.0" />
                </font>
@@ -68,6 +66,7 @@
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
             </Label>
+            <Label text="Примечание - Загрузка драйвера доступна при условии поддержки активного соединения" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="3" />
          </children>
          <padding>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />

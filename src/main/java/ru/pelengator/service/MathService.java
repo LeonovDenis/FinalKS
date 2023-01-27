@@ -8,22 +8,22 @@ import javafx.scene.control.TextField;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.pelengator.Controller;
-import ru.pelengator.PotokController;
+import ru.pelengator.MathController;
 
-import java.util.*;
+import java.util.Locale;
 
 import static ru.pelengator.API.utils.Utils.*;
 
 /**
  * Сервис расчета потока.
  */
-public class PotokService extends Service<Void> {
+public class MathService extends Service<Void> {
     /**
      * Логгер.
      */
-    private static final Logger LOG = LoggerFactory.getLogger(PotokService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(MathService.class);
 
-    private PotokController controller;
+    private MathController controller;
     private Controller mainController;
     private ObservableList<TextField> fieldOptions;
 
@@ -40,6 +40,9 @@ public class PotokService extends Service<Void> {
     private double betta0;
     private double betta1;
 
+    private double lyambdaMin;
+
+    private double lyambdaMax;
     private double fi0;
     private double fi1;
     private double areaFPU0;
@@ -52,7 +55,7 @@ public class PotokService extends Service<Void> {
     private double exposure;
 
 
-    public PotokService(PotokController controller) {
+    public MathService(MathController controller) {
         this.controller = controller;
         this.mainController = controller.getMainController();
     }
@@ -113,11 +116,17 @@ public class PotokService extends Service<Void> {
         betta0 = getValueFromField(11);
         betta1 = getValueFromField(12);
 
-        fi0 = getValueFromField(13);
-        fi1 = getValueFromField(14);
+        lyambdaMin = getValueFromField(13);
+        lyambdaMax = getValueFromField(14);
 
-        areaFPU0 = getValueFromField(15) * 1.0E-12;// приведение в метры
-        areaFPU1 = getValueFromField(16) * 1.0E-12;
+        fi0 = calkFiFromTemp(T0,lyambdaMin,lyambdaMax);
+        fi1 = calkFiFromTemp(T1,lyambdaMin,lyambdaMax);
+
+      //  fi0 = getValueFromField(15);
+     //   fi1 = getValueFromField(16);
+
+        areaFPU0 = getValueFromField(17) * 1.0E-12;// приведение в метры
+        areaFPU1 = getValueFromField(18) * 1.0E-12;
 
     }
 
@@ -144,8 +153,11 @@ public class PotokService extends Service<Void> {
      * @param potok      итоговый поток.
      * @param exposure   итоговая одлученность.
      */
-    private void printPotok(PotokController controller, double potok0, double potok1, double potok,
+    private void printPotok(MathController controller, double potok0, double potok1, double potok,
                             double exposure0, double exposure1, double exposure) {
+
+        String ffi0 = String.format(Locale.CANADA, "%.4f", fi0).toUpperCase();
+        String ffi1 = String.format(Locale.CANADA, "%.4f", fi1).toUpperCase();
 
         String fpotok0 = String.format(Locale.CANADA, "%.2e", potok0).toUpperCase();
         String fpotok1 = String.format(Locale.CANADA, "%.2e", potok1).toUpperCase();
@@ -156,6 +168,10 @@ public class PotokService extends Service<Void> {
         String fexposure = String.format(Locale.CANADA, "%.2e", exposure).toUpperCase();
 
         Platform.runLater(() -> {
+
+            controller.getTfFi0().setText(ffi0);
+            controller.getTfFi1().setText(ffi1);
+
             controller.getLab_potok0().setText(fpotok0);
             controller.getLab_potok1().setText(fpotok1);
             controller.getLab_potok().setText(fpotok);
@@ -175,6 +191,9 @@ public class PotokService extends Service<Void> {
         printPotok(controller, potok0, potok1, potok, exposure0, exposure1, exposure);
 
         LOG.trace("Saving");
+        mainController.getParams().setFi0(fi0);
+        mainController.getParams().setFi1(fi1);
+
         mainController.getParams().setPotok(potok);
         mainController.getParams().setPotok0(potok0);
         mainController.getParams().setPotok1(potok1);
@@ -189,19 +208,12 @@ public class PotokService extends Service<Void> {
     protected void succeeded() {
         super.succeeded();
         controller.getMainController().save();
-        Platform.runLater(() -> {
-            controller.setButtonsDisable(false, false);
-            controller.getMainController().getBtnGetData().setDisable(false);
-            controller.getMainController().getBtnPotok().setStyle("-fx-background-color: green");
-        });
+
     }
 
     @Override
     protected void cancelled() {
         super.cancelled();
-        Platform.runLater(() -> {
-            controller.getMainController().getBtnPotok().setStyle("-fx-background-color: red");
-        });
     }
 
     /**

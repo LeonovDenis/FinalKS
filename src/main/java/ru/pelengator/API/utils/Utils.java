@@ -1062,7 +1062,7 @@ public class Utils {
 
         for (int i = 0; i < dataArrays.length; i++) {
             for (int j = 0; j < dataArrays[0].length; j++) {
-                if (!isPointInDiametr(j,i, diametr, dataArrays[0].length, dataArrays.length)) {
+                if (!isPointInDiametr(j, i, diametr, dataArrays[0].length, dataArrays.length)) {
                     continue;
                 }
 
@@ -1744,9 +1744,9 @@ public class Utils {
                                      boolean noCorrection, double persent,
                                      String color, DEF_TYPE type) {
 
-        double[] lines = makeMaxMeanMinNew(data, true, FALSE,140);
+        double[] lines = makeMaxMeanMinNew(data, true, FALSE, 140);
 
-     //*   double[] lines = makeMaxMeanMin(data, true, FALSE);
+        //*   double[] lines = makeMaxMeanMin(data, true, FALSE);
         double mean = lines[1];
         if (persent != 0) {
             int sizeY = data.length;
@@ -2276,6 +2276,40 @@ public class Utils {
         }
         return count;
     }
+
+    /**
+     * Расчет коэфициента фи
+     * @param temperaturaK температура излучения, К
+     * @param lyambdaMin нижняя граница
+     * @param lyambdaMax верхняя граница
+     * @return коэфициент, отн. ед.
+     */
+    public static double calkFiFromTemp(double temperaturaK, double lyambdaMin, double lyambdaMax) {
+
+
+        double C1=37415E04;// из закона Планка
+        double C2=14388;
+
+        double SIGMA= 5.67E-08;//постоянная С-Б
+
+        double SHAG=0.01;
+        int count= (int) ((lyambdaMax-lyambdaMin)/SHAG);
+
+        double[] doubles = new double[count];
+
+        for (int i = 0; i <count ; i++) {
+            doubles[i]=(C1*Math.pow(lyambdaMin+SHAG*i,-5))/(Math.exp(C2/((lyambdaMin+SHAG*i)*temperaturaK))-1.0);
+        }
+
+        double summa=0;
+        for (int i = 0; i <count ; i++) {
+            summa=summa+doubles[i];
+        }
+        double fullPotok=SIGMA*Math.pow(temperaturaK,4);
+
+        return (SHAG*summa)/fullPotok;
+    }
+
 
     /**
      * Масштабирование рисунка

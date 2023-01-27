@@ -93,6 +93,25 @@
   -fx-font-size: 20px;
 }
 
+.myLitleTf{
+-fx-font-fill: #112e1d;
+ -fx-font-weight: bold;
+  -fx-font-size: 14px;
+}
+
+
+.myLitleLable{
+/*-fx-font-fill: #112e1d;*/
+ -fx-font-weight: bold;
+  -fx-font-size: 14px;
+}
+
+.myLable{
+/*-fx-font-fill: #112e1d;*/
+ -fx-font-weight: bold;
+  -fx-font-size: 30px;
+}
+
 /*Кнопка*/
 .myLitleBtn{
         -fx-padding: 2 10 10 10;

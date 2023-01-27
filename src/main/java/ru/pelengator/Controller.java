@@ -342,6 +342,9 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
     @FXML
     private MenuItem menu_close;
 
+    @FXML
+    private MenuItem  menu_fields;
+
     ///////////////////////////////////////////////////меню////////////
 
     private ToggleButton tb_none;
@@ -877,6 +880,7 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
     private void setMenuItems() {
 
 
+
         initeMenu();
 
         driverGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
@@ -928,9 +932,16 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
             Stage stage =(Stage) lb_fps.getScene().getWindow();
             stage.fireEvent(new WindowEvent(stage, WindowEvent.WINDOW_CLOSE_REQUEST));
         });
+
     }
 
     private void initeMenu() {
+
+        if("ETHERNET".equals(params.getDriver())&&onLine.getValue()){
+            menu_loadProgram.setDisable(false);
+        }else{
+            menu_loadProgram.setDisable(true);
+        }
 
         if (tm1 != null) {
             tm1.cancel();
@@ -1463,7 +1474,7 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
         source.getParent().requestFocus();
     }
 
-    private static BooleanProperty onLine = new SimpleBooleanProperty(false);
+    private static BooleanProperty onLine = new SimpleBooleanProperty(true);
 
     private Timer tm2;
     private TimerTask timerTask2;
@@ -2299,13 +2310,13 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
     private void startPotok(ActionEvent event) throws IOException {
         Stage stage = new Stage();
 
-        driverFxmlLoader = new FXMLLoader(getClass().getResource("potokPage.fxml"));
-        Parent root = driverFxmlLoader.load();
-        PotokController potokController = driverFxmlLoader.getController();
-        potokController.initController(this);
-        stage.setOnCloseRequest(t -> potokController.saveValuesToParams());
+        potokFxmlLoader = new FXMLLoader(getClass().getResource("mathPage.fxml"));
+        Parent root = potokFxmlLoader.load();
+        MathController mathController = potokFxmlLoader.getController();
+        mathController.initController(this);
+        stage.setOnCloseRequest(t -> mathController.saveValuesToParams());
         Scene scene = new Scene(root);
-        stage.setTitle("Загрузка драйвера");
+        stage.setTitle("Расчет параметров потока");
         stage.setScene(scene);
         stage.centerOnScreen();
         stage.initModality(Modality.APPLICATION_MODAL);
@@ -2326,9 +2337,9 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
 
         driverFxmlLoader = new FXMLLoader(getClass().getResource("loadDriverPage.fxml"));
         Parent root = driverFxmlLoader.load();
-        PotokController potokController = driverFxmlLoader.getController();
-        potokController.initController(this);
-        stage.setOnCloseRequest(t -> potokController.saveValuesToParams());
+        LoadDriverController loadController = driverFxmlLoader.getController();
+        loadController.initController(this);
+
         Scene scene = new Scene(root);
         stage.setTitle("Загрузка драйвера");
         stage.setScene(scene);
@@ -2338,6 +2349,31 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
         stage.show();
 
     }
+
+    /**
+     * Старт окна для ввода полей отчета.
+     *
+     * @param event
+     */
+    @FXML
+    private void startFields(ActionEvent event) throws IOException {
+        Stage stage = new Stage();
+
+        fieldsFxmlLoader = new FXMLLoader(getClass().getResource("fieldsPage.fxml"));
+        Parent root = fieldsFxmlLoader.load();
+        FieldsController fieldsController = fieldsFxmlLoader.getController();
+        fieldsController.initController(this);
+
+        Scene scene = new Scene(root);
+        stage.setTitle("Подготовка отчета");
+        stage.setScene(scene);
+        stage.centerOnScreen();
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.setResizable(false);
+        stage.show();
+    }
+
+
 
     /**
      * Старт расчета параметров.
@@ -2390,6 +2426,9 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
     }
 
     FXMLLoader driverFxmlLoader;
+
+    FXMLLoader potokFxmlLoader;
+    FXMLLoader fieldsFxmlLoader;
     FXMLLoader tempFxmlLoader;
     FXMLLoader paramsFxmlLoader;
 

@@ -79,8 +79,12 @@ public class StendParams {
      */
     private double betta0 = 0;
     private double betta1 = 0;
+
     private double fi0 = 0;
     private double fi1 = 0;
+
+    private double lyambdaMin = 0;
+    private double lyambdaMax = 0;
 
     /**
      * Частота эффективная.
@@ -265,6 +269,8 @@ public class StendParams {
         plank1 = Double.parseDouble(properties.getProperty("plank1", "5.670e-08"));
         betta0 = Double.parseDouble(properties.getProperty("betta0", "1.0"));
         betta1 = Double.parseDouble(properties.getProperty("betta1", "1.0"));
+        lyambdaMin = Double.parseDouble(properties.getProperty("lyambdaMin", "1.0"));
+        lyambdaMax = Double.parseDouble(properties.getProperty("lyambdaMax", "1.0"));
         fi0 = Double.parseDouble(properties.getProperty("fi0", "0.007317"));
         fi1 = Double.parseDouble(properties.getProperty("fi1", "0.088174"));
 
@@ -414,6 +420,11 @@ public class StendParams {
         properties.setProperty("betta0", text);
         text = String.format(Locale.CANADA, "%.4e", betta1);
         properties.setProperty("betta1", text);
+
+        text = String.format(Locale.CANADA, "%.4e", lyambdaMin);
+        properties.setProperty("lyambdaMin", text);
+        text = String.format(Locale.CANADA, "%.4e", lyambdaMax);
+        properties.setProperty("lyambdaMax", text);
 
         text = String.format(Locale.CANADA, "%.4e", fi0);
         properties.setProperty("fi0", text);
@@ -1281,5 +1292,21 @@ public class StendParams {
 
     public void setDetectorDone(boolean detectorDone) {
         this.detectorDone.set(detectorDone);
+    }
+
+    public double getLyambdaMin() {
+        return lyambdaMin;
+    }
+
+    public void setLyambdaMin(double lyambdaMin) {
+        this.lyambdaMin = lyambdaMin;
+    }
+
+    public double getLyambdaMax() {
+        return lyambdaMax;
+    }
+
+    public void setLyambdaMax(double lyambdaMax) {
+        this.lyambdaMax = lyambdaMax;
     }
 }
