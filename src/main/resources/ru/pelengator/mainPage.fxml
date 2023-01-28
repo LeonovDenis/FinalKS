@@ -70,7 +70,7 @@
         <Menu fx:id="menu_Settings_M" mnemonicParsing="false" text="Настройки">
           <items>
                   <MenuItem fx:id="menu_Potok" mnemonicParsing="false" onAction="#startPotok" text="Расчет потока" />
-            <MenuItem fx:id="menu_Kalibr" mnemonicParsing="false" text="Калибровка термодатчика" />
+            <MenuItem fx:id="menu_Kalibr" mnemonicParsing="false" onAction="#setTempParams" text="Калибровка термодатчика" />
             <SeparatorMenuItem mnemonicParsing="false" />
             <Menu fx:id="menu_Driver_M" mnemonicParsing="false" text="Драйвер">
                      <items>
@@ -87,8 +87,8 @@
         </Menu>
             <Menu fx:id="menu_Exp_M" mnemonicParsing="false" text="Эксперимент">
               <items>
-            <MenuItem fx:id="menu_LoadExp" mnemonicParsing="false" text="Загрузить" />
-            <MenuItem fx:id="menu_SaveExp" mnemonicParsing="false" text="Сохранить" />
+            <MenuItem fx:id="menu_LoadExp" mnemonicParsing="false" onAction="#loadExp" text="Загрузить" />
+            <MenuItem fx:id="menu_SaveExp" mnemonicParsing="false" onAction="#saveExp" text="Сохранить" />
               </items>
             </Menu>
             <Menu fx:id="menu_Order_M" mnemonicParsing="false" text="Отчёт">
@@ -106,8 +106,8 @@
             </Menu>
         <Menu fx:id="menu_Help_M" mnemonicParsing="false" text="Помощь">
           <items>
-            <MenuItem fx:id="menu_RE" mnemonicParsing="false" text="Руководство по эксплуатации" />
-                  <MenuItem fx:id="menu_about" mnemonicParsing="false" text="О программе" />
+            <MenuItem fx:id="menu_RE" mnemonicParsing="false" onAction="#showManual" text="Руководство по эксплуатации" />
+                  <MenuItem fx:id="menu_about" mnemonicParsing="false" onAction="#showAbout" text="О программе" />
           </items>
         </Menu>
       </menus>

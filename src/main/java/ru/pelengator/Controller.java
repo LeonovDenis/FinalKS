@@ -28,6 +28,7 @@ import javafx.concurrent.Worker;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.embed.swing.SwingNode;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -952,6 +953,7 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
             Stage stage = (Stage) lb_fps.getScene().getWindow();
             stage.fireEvent(new WindowEvent(stage, WindowEvent.WINDOW_CLOSE_REQUEST));
         });
+
 
         styleMenus();
 
@@ -3059,5 +3061,27 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
         return chart;
     }
 
+    @FXML
+    private void loadExp(ActionEvent event) throws IOException {
 
+        //todo Загрузка файла.
+        //todo Парсинг.
+    }
+
+    @FXML
+    private void saveExp(ActionEvent event) throws IOException {
+
+       //todo Вызов окна сохранения файла
+    }
+
+    @FXML
+    private void showManual(ActionEvent event) throws IOException {
+
+        //todo Вызов окна отображения пдф мануала
+    }
+    @FXML
+    private void showAbout(ActionEvent event) throws IOException {
+
+        //todo Вызов окна о программе
+    }
 }
