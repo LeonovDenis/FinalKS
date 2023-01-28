@@ -3,6 +3,7 @@ package ru.pelengator;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.lang.management.MonitorInfo;
 import java.net.NetworkInterface;
 import java.net.URL;
 import java.text.DecimalFormat;
@@ -698,7 +699,9 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
          * Обработка смены коэф. усиления
          */
         cbCCCOptions.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-
+            if (selDetector == null) {
+                return;//todo проверить на корректность
+            }
             if ("1".equals(newValue)) {
                 if (selDetector.getDevice() instanceof DetectorDevice.ChinaSource) {
                     ((DetectorDevice.ChinaSource) selDetector.getDevice()).setССС(false);
@@ -751,7 +754,9 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
          * Обработка отклика на смену разрешения.
          */
         cbDimOptions.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-
+            if (selDetector == null) {
+                return;//todo проверить на корректность
+            }
             if ("92*90".equals(newValue)) {
                 if (selDetector.getDevice() instanceof DetectorDevice.ChinaSource) {
                     ((DetectorDevice.ChinaSource) selDetector.getDevice()).setDim(false);
@@ -824,7 +829,9 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
         Bindings.bindBidirectional(btnGaz.textProperty(), params.mPowerValueProperty(), (StringConverter) new MyGazConverter());
 
         btnGaz.setOnAction(actionEvent -> {
-
+            if (selDetector == null) {
+                return;//todo проверить на корректность
+            }
             int i = params.getmPowerValue();
             if (i == 0) {
                 i = 0x18; // 24 вольта
@@ -994,10 +1001,10 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
             item.getKey().setGraphic(openView);
 
 
-                item.getKey().setStyle(" -fx-padding: 5 5 5 5;" +
-                        " -fx-font-size : 14px;" +
-                        "-fx-text-fill: #112e1d;");
-                //  item.getKey().setAccelerator(new KeyCodeCombination(KeyCode.O, KeyCombination.CONTROL_DOWN));
+            item.getKey().setStyle(" -fx-padding: 5 5 5 5;" +
+                    " -fx-font-size : 14px;" +
+                    "-fx-text-fill: #112e1d;");
+            //  item.getKey().setAccelerator(new KeyCodeCombination(KeyCode.O, KeyCombination.CONTROL_DOWN));
 
         }
 
@@ -3071,16 +3078,31 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
     @FXML
     private void saveExp(ActionEvent event) throws IOException {
 
-       //todo Вызов окна сохранения файла
+        //todo Вызов окна сохранения файла
     }
 
     @FXML
     private void showManual(ActionEvent event) throws IOException {
 
-        //todo Вызов окна отображения пдф мануала
+        String PATH = "PdfView.fxml";
+
+        Stage stage = new Stage();
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(PATH));
+        Parent root = fxmlLoader.load();
+        Scene scene = new Scene(root);
+        stage.setTitle("Руководство по эксплуатации");
+        stage.setScene(scene);
+        Dimension sSize = Toolkit.getDefaultToolkit().getScreenSize ();
+        stage.setHeight(sSize.getHeight()*.8);
+        stage.setWidth(sSize.getWidth()*.8);
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.show();
+
     }
+
     @FXML
     private void showAbout(ActionEvent event) throws IOException {
+        System.out.println();
 
         //todo Вызов окна о программе
     }

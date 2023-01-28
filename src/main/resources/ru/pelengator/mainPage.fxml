@@ -63,7 +63,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.pelengator.Controller">
+<BorderPane minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.pelengator.Controller">
    <top>
     <MenuBar BorderPane.alignment="CENTER">
       <menus>
@@ -497,7 +497,7 @@
       </ScrollPane>
    </left>
    <center>
-      <BorderPane prefHeight="200.0" prefWidth="200.0">
+      <BorderPane prefHeight="50.0" prefWidth="50.0">
          <center>
             <SwingNode fx:id="snDetectorCapturedImage" BorderPane.alignment="CENTER" />
          </center>

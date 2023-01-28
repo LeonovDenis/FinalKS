@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import javax.swing.*;
+import java.awt.*;
 import java.io.*;
 
 import static ru.pelengator.API.utils.Utils.*;
@@ -28,7 +29,9 @@ public class App extends Application {
         //загрузчик главного окна
         loader = new FXMLLoader(getClass().getResource("mainPage.fxml"));
         root = loader.load();
-        scene = new Scene(root);
+
+        Dimension sSize = Toolkit.getDefaultToolkit().getScreenSize ();
+        scene = new Scene(root,sSize.width,sSize.height);
 
         String crc32 = calkCRC32();
         stage.setTitle("Стенд ИС2. CRC-32: " + crc32);
