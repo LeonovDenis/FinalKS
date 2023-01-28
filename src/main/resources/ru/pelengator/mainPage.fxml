@@ -67,14 +67,14 @@
    <top>
     <MenuBar BorderPane.alignment="CENTER">
       <menus>
-        <Menu mnemonicParsing="false" text="Настройки">
+        <Menu fx:id="menu_Settings_M" mnemonicParsing="false" text="Настройки">
           <items>
-                  <MenuItem mnemonicParsing="false" onAction="#startPotok" text="Расчет потока" />
-            <MenuItem mnemonicParsing="false" text="Калибровка термодатчика" />
+                  <MenuItem fx:id="menu_Potok" mnemonicParsing="false" onAction="#startPotok" text="Расчет потока" />
+            <MenuItem fx:id="menu_Kalibr" mnemonicParsing="false" text="Калибровка термодатчика" />
             <SeparatorMenuItem mnemonicParsing="false" />
-            <Menu mnemonicParsing="false" text="Драйвер">
+            <Menu fx:id="menu_Driver_M" mnemonicParsing="false" text="Драйвер">
                      <items>
-                        <RadioMenuItem fx:id="menu_USB" mnemonicParsing="false" text="USB">
+                        <RadioMenuItem fx:id="menu_USB" mnemonicParsing="false" styleClass="cp" text="USB">
                            <toggleGroup>
                               <ToggleGroup fx:id="driverGroup" />
                            </toggleGroup>
@@ -85,29 +85,29 @@
                      </items></Menu>
           </items>
         </Menu>
-            <Menu mnemonicParsing="false" text="Эксперимент">
+            <Menu fx:id="menu_Exp_M" mnemonicParsing="false" text="Эксперимент">
               <items>
-            <MenuItem mnemonicParsing="false" text="Загрузить" />
-            <MenuItem mnemonicParsing="false" text="Сохранить" />
+            <MenuItem fx:id="menu_LoadExp" mnemonicParsing="false" text="Загрузить" />
+            <MenuItem fx:id="menu_SaveExp" mnemonicParsing="false" text="Сохранить" />
               </items>
             </Menu>
-            <Menu mnemonicParsing="false" text="Отчёт">
+            <Menu fx:id="menu_Order_M" mnemonicParsing="false" text="Отчёт">
               <items>
             <MenuItem fx:id="menu_fields" mnemonicParsing="false" onAction="#startFields" text="Подготовка отчета" />
               </items>
             </Menu>
-            <Menu mnemonicParsing="false" text="Окно">
+            <Menu fx:id="menu_Window_M" mnemonicParsing="false" text="Окно">
               <items>
                 <MenuItem fx:id="menu_fullSize" mnemonicParsing="false" text="Полный экран" />
-                  <MenuItem fx:id="menu_iconed" mnemonicParsing="false" text="Свернуть окно" />
+                  <MenuItem fx:id="menu_iconed" mnemonicParsing="false" text="Свернуть" />
                   <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem fx:id="menu_close" mnemonicParsing="false" text="Закрыть окно" />
+                  <MenuItem fx:id="menu_close" mnemonicParsing="false" text="Закрыть" />
               </items>
             </Menu>
-        <Menu mnemonicParsing="false" text="Помощь">
+        <Menu fx:id="menu_Help_M" mnemonicParsing="false" text="Помощь">
           <items>
-            <MenuItem mnemonicParsing="false" text="Руководство по эксплуатации" />
-                  <MenuItem mnemonicParsing="false" text="О программе" />
+            <MenuItem fx:id="menu_RE" mnemonicParsing="false" text="Руководство по эксплуатации" />
+                  <MenuItem fx:id="menu_about" mnemonicParsing="false" text="О программе" />
           </items>
         </Menu>
       </menus>

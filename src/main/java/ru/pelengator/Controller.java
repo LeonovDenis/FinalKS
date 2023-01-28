@@ -28,9 +28,6 @@ import javafx.concurrent.Worker;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.embed.swing.SwingNode;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
-import javafx.event.EventHandler;
-import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -55,7 +52,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.stage.*;
-import javafx.stage.Window;
 import javafx.util.Duration;
 import javafx.util.StringConverter;
 import javafx.util.converter.DoubleStringConverter;
@@ -327,14 +323,36 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
      * Режим рисования DRAW_NONE
      */
 ///////////////////////////////////////////////////меню////////////
+
+    @FXML
+    private Menu menu_Settings_M;
+    @FXML
+    private MenuItem menu_Potok;
+    @FXML
+    private MenuItem menu_Kalibr;
+    @FXML
+    private Menu menu_Driver_M;
     @FXML
     private RadioMenuItem menu_USB;
     @FXML
     private RadioMenuItem menu_Ethernet;
-
     @FXML
     private MenuItem menu_loadProgram;
 
+    @FXML
+    private Menu menu_Exp_M;
+    @FXML
+    private MenuItem menu_LoadExp;
+    @FXML
+    private MenuItem menu_SaveExp;
+
+    @FXML
+    private Menu menu_Order_M;
+    @FXML
+    private MenuItem menu_fields;
+
+    @FXML
+    private Menu menu_Window_M;
     @FXML
     private MenuItem menu_fullSize;
     @FXML
@@ -343,7 +361,11 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
     private MenuItem menu_close;
 
     @FXML
-    private MenuItem  menu_fields;
+    private Menu menu_Help_M;
+    @FXML
+    private MenuItem menu_RE;
+    @FXML
+    private MenuItem menu_about;
 
     ///////////////////////////////////////////////////меню////////////
 
@@ -826,7 +848,6 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
         Bindings.bindBidirectional(lb_Temp1.textProperty(), params.tempProperty(), (StringConverter) new MyTempCelsConverter());
 
 
-
         /**
          * Определение времени выхода
          */
@@ -880,7 +901,6 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
     private void setMenuItems() {
 
 
-
         initeMenu();
 
         driverGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
@@ -921,25 +941,71 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
 
 
         menu_fullSize.setOnAction(event -> {
-            Stage stage =(Stage) lb_fps.getScene().getWindow();
+            Stage stage = (Stage) lb_fps.getScene().getWindow();
             stage.setFullScreen(true);
         });
         menu_iconed.setOnAction(event -> {
-            Stage stage =(Stage) lb_fps.getScene().getWindow();
+            Stage stage = (Stage) lb_fps.getScene().getWindow();
             stage.setIconified(true);
         });
         menu_close.setOnAction(event -> {
-            Stage stage =(Stage) lb_fps.getScene().getWindow();
+            Stage stage = (Stage) lb_fps.getScene().getWindow();
             stage.fireEvent(new WindowEvent(stage, WindowEvent.WINDOW_CLOSE_REQUEST));
         });
+
+        styleMenus();
+
+
+    }
+
+    private void styleMenus() {
+
+        HashMap<MenuItem, String> list = new HashMap<>();
+        list.put(menu_Settings_M, "menu/settings.png");
+        list.put(menu_Potok, "menu/sensor.png");
+        list.put(menu_Kalibr, "menu/freezing.png");
+        list.put(menu_Driver_M, "menu/plug.png");
+        list.put(menu_USB, "menu/usb.png");
+        list.put(menu_Ethernet, "menu/lan.png");
+        list.put(menu_loadProgram, "menu/loading.png");
+        list.put(menu_Exp_M, "menu/exp.png");
+        list.put(menu_LoadExp, "menu/dowload.png");
+        list.put(menu_SaveExp, "menu/save.png");
+
+        list.put(menu_Order_M, "menu/clipboard.png");
+        list.put(menu_fields, "menu/filling-form.png");
+        list.put(menu_Window_M, "menu/window.png");
+        list.put(menu_fullSize, "menu/resize.png");
+        list.put(menu_iconed, "menu/iconed.png");
+        list.put(menu_close, "menu/close-window.png");
+        list.put(menu_Help_M, "menu/help.png");
+        list.put(menu_RE, "menu/manual.png");
+        list.put(menu_about, "menu/about.png");
+
+
+        for (Map.Entry<MenuItem, String> item : list.entrySet()) {
+
+            Image image = new Image(getClass().getResourceAsStream(item.getValue()));
+            ImageView openView = new ImageView(image);
+            openView.setFitWidth(30);
+            openView.setFitHeight(30);
+            item.getKey().setGraphic(openView);
+
+
+                item.getKey().setStyle(" -fx-padding: 5 5 5 5;" +
+                        " -fx-font-size : 14px;" +
+                        "-fx-text-fill: #112e1d;");
+                //  item.getKey().setAccelerator(new KeyCodeCombination(KeyCode.O, KeyCombination.CONTROL_DOWN));
+
+        }
 
     }
 
     private void initeMenu() {
 
-        if("ETHERNET".equals(params.getDriver())&&onLine.getValue()){
+        if ("ETHERNET".equals(params.getDriver()) && onLine.getValue()) {
             menu_loadProgram.setDisable(false);
-        }else{
+        } else {
             menu_loadProgram.setDisable(true);
         }
 
@@ -2372,7 +2438,6 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
         stage.setResizable(false);
         stage.show();
     }
-
 
 
     /**
