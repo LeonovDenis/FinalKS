@@ -3096,6 +3096,7 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
         stage.setHeight(sSize.getHeight()*.8);
         stage.setWidth(sSize.getWidth()*.8);
         stage.initModality(Modality.APPLICATION_MODAL);
+        stage.setAlwaysOnTop(true);
         stage.show();
 
     }
@@ -3111,9 +3112,7 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
         Scene scene = new Scene(root);
         stage.setTitle("О программе ИС2");
         stage.setScene(scene);
-     //   Dimension sSize = Toolkit.getDefaultToolkit().getScreenSize ();
-     //   stage.setHeight(sSize.getHeight()*.8);
-      //  stage.setWidth(sSize.getWidth()*.8);
+
         stage.setResizable(false);
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.show();

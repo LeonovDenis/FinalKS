@@ -31,13 +31,15 @@ public class App extends Application {
         root = loader.load();
 
         Dimension sSize = Toolkit.getDefaultToolkit().getScreenSize ();
-        scene = new Scene(root,sSize.width,sSize.height);
+        scene = new Scene(root/*,sSize.width,sSize.height*/);
 
         String crc32 = calkCRC32();
         stage.setTitle("Стенд ИС2. CRC-32: " + crc32);
         stage.setScene(scene);
         stage.setResizable(false);
-        stage.setFullScreen(true);
+       // stage.setFullScreen(true);
+        stage.setMaximized(true);
+        stage.toBack();
       //  stage.centerOnScreen();
         stage.show();
 

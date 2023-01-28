@@ -54,6 +54,8 @@ import java.io.IOException;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
 import java.nio.channels.OverlappingFileLockException;
+import java.util.jar.Attributes;
+import java.util.jar.JarFile;
 import java.util.zip.CRC32;
 
 public class Utils {
@@ -73,6 +75,23 @@ public class Utils {
         String absolutePath = currentClass.getAbsolutePath();
         String value = Long.toHexString(calculate(absolutePath)).toUpperCase();
         return value;
+    }
+
+    /**
+     * Выдача атрибутов Jar файла
+     * @param absolutePath путь
+     * @return файл атрибутов
+     */
+    private static Attributes getAtributeJarFile(String absolutePath) throws IOException {
+
+            JarFile jarFile = new JarFile(absolutePath);
+            Attributes mainAttributes = jarFile.getManifest().getMainAttributes();
+
+            for (Object o : mainAttributes.keySet()) {
+                System.out.println( " "+o+"L "+ mainAttributes.getValue(o.toString()));
+            }
+
+        return mainAttributes;
     }
 
     /**
@@ -2279,35 +2298,36 @@ public class Utils {
 
     /**
      * Расчет коэфициента фи
+     *
      * @param temperaturaK температура излучения, К
-     * @param lyambdaMin нижняя граница
-     * @param lyambdaMax верхняя граница
+     * @param lyambdaMin   нижняя граница
+     * @param lyambdaMax   верхняя граница
      * @return коэфициент, отн. ед.
      */
     public static double calkFiFromTemp(double temperaturaK, double lyambdaMin, double lyambdaMax) {
 
 
-        double C1=37415E04;// из закона Планка
-        double C2=14388;
+        double C1 = 37415E04;// из закона Планка
+        double C2 = 14388;
 
-        double SIGMA= 5.67E-08;//постоянная С-Б
+        double SIGMA = 5.67E-08;//постоянная С-Б
 
-        double SHAG=0.01;
-        int count= (int) ((lyambdaMax-lyambdaMin)/SHAG);
+        double SHAG = 0.01;
+        int count = (int) ((lyambdaMax - lyambdaMin) / SHAG);
 
         double[] doubles = new double[count];
 
-        for (int i = 0; i <count ; i++) {
-            doubles[i]=(C1*Math.pow(lyambdaMin+SHAG*i,-5))/(Math.exp(C2/((lyambdaMin+SHAG*i)*temperaturaK))-1.0);
+        for (int i = 0; i < count; i++) {
+            doubles[i] = (C1 * Math.pow(lyambdaMin + SHAG * i, -5)) / (Math.exp(C2 / ((lyambdaMin + SHAG * i) * temperaturaK)) - 1.0);
         }
 
-        double summa=0;
-        for (int i = 0; i <count ; i++) {
-            summa=summa+doubles[i];
+        double summa = 0;
+        for (int i = 0; i < count; i++) {
+            summa = summa + doubles[i];
         }
-        double fullPotok=SIGMA*Math.pow(temperaturaK,4);
+        double fullPotok = SIGMA * Math.pow(temperaturaK, 4);
 
-        return (SHAG*summa)/fullPotok;
+        return (SHAG * summa) / fullPotok;
     }
 
 
