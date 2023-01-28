@@ -3102,8 +3102,21 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
 
     @FXML
     private void showAbout(ActionEvent event) throws IOException {
-        System.out.println();
 
-        //todo Вызов окна о программе
+        String PATH = "aboutPage.fxml";
+
+        Stage stage = new Stage();
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(PATH));
+        Parent root = fxmlLoader.load();
+        Scene scene = new Scene(root);
+        stage.setTitle("О программе ИС2");
+        stage.setScene(scene);
+     //   Dimension sSize = Toolkit.getDefaultToolkit().getScreenSize ();
+     //   stage.setHeight(sSize.getHeight()*.8);
+      //  stage.setWidth(sSize.getWidth()*.8);
+        stage.setResizable(false);
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.show();
+
     }
 }
