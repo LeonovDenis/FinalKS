@@ -2393,8 +2393,8 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
         Scene scene = new Scene(root);
         stage.setTitle("Расчет параметров потока");
         stage.setScene(scene);
-        stage.centerOnScreen();
-        stage.initModality(Modality.APPLICATION_MODAL);
+        //stage.centerOnScreen();
+        stage.initModality(Modality.WINDOW_MODAL);
         stage.setResizable(false);
         stage.show();
 
