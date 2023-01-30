@@ -3,7 +3,6 @@ package ru.pelengator;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.lang.management.MonitorInfo;
 import java.net.NetworkInterface;
 import java.net.URL;
 import java.text.DecimalFormat;
@@ -21,6 +20,8 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -29,7 +30,6 @@ import javafx.concurrent.Worker;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.embed.swing.SwingNode;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -85,7 +85,6 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
     /**
      * Чекбокс на центральную зону.
      */
-    @FXML
     private CheckBox cbKvadrat;
     /**
      * Размер центральной зоны по ширине.
@@ -174,9 +173,12 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
      */
     @FXML
     private BorderPane bpDetectorPaneHolder;
-    /**
-     * Панель ско.
-     */
+
+    @FXML
+    private VBox vb_Protokol;
+
+    @FXML
+    private ScrollPane sp_Protokol;
 
     private VBox pnFlash;
     /**
@@ -835,9 +837,13 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
             int i = params.getmPowerValue();
             if (i == 0) {
                 i = 0x18; // 24 вольта
+                btnGaz.getStyleClass().clear();
+                btnGaz.getStyleClass().add("myGazRed");
                 startTimer();
             } else {
                 i = 0x00;// 0 вольт
+                btnGaz.getStyleClass().clear();
+                btnGaz.getStyleClass().add("myGaz");
                 stopTimer();
             }
 
@@ -878,6 +884,9 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
         lb_fps.setVisible(false);
 
         setMenuItems();//настройка менюшек
+
+        sp_Protokol.minHeightProperty().bind(bpDetectorPaneHolder.heightProperty().subtract(bpDetectorPaneHolder.widthProperty()).subtract(5));
+
     }
 
     private void createNetworcOptions() {
@@ -904,6 +913,8 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
          * Установка подсказки в комбобокс.
          */
         cbNetworkOptions.setPromptText(networkListPromptText);
+
+
     }
 
     private void setMenuItems() {

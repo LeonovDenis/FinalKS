@@ -173,6 +173,7 @@
 
         -fx-font-weight: bold;
         -fx-font-size: 24px;
+        -fx-alignment: center ;
        }
 .myGaz:hover {
         -fx-background-color:
@@ -180,6 +181,29 @@
            radial-gradient(center 30% 100%, radius 100%, #43e085, red);
            }
 .myGaz:pressed {
+        -fx-padding: 4 10 8 10;
+        -fx-background-insets: 2 0 0 0,2 0 3 0, 2 0 4 0, 2 0 5 0;
+}
+ .myGazRed{
+        -fx-padding: 2 10 10 10;
+        -fx-background-insets: 0,0 0 5 0, 0 0 6 0, 0 0 7 0;
+
+        -fx-background-radius: 8;
+
+        -fx-background-color:
+         linear-gradient(from 0% 93% to 0% 100%, #d34b33 0%, #d04e37 100%),#056b44,#d34b33,
+          radial-gradient(center 50% 50%, radius 100%, #d34b33, #d34b33);
+
+        -fx-font-weight: bold;
+        -fx-font-size: 24px;
+        -fx-alignment: center ;
+       }
+.myGazRed:hover {
+        -fx-background-color:
+           linear-gradient(from 0% 93% to 0% 100%, #11ba8a 0%, #43e085 100%),#056b44,#43e085,
+           radial-gradient(center 30% 100%, radius 100%,red, #43e085);
+           }
+.myGazRed:pressed {
         -fx-padding: 4 10 8 10;
         -fx-background-insets: 2 0 0 0,2 0 3 0, 2 0 4 0, 2 0 5 0;
 }

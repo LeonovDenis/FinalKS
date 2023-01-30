@@ -497,13 +497,31 @@
       </ScrollPane>
    </left>
    <center>
-      <BorderPane prefHeight="50.0" prefWidth="50.0">
+      <BorderPane fx:id="bpDetectorPaneHolder" prefHeight="50.0" prefWidth="50.0">
          <center>
             <SwingNode fx:id="snDetectorCapturedImage" BorderPane.alignment="CENTER" />
          </center>
          <BorderPane.margin>
             <Insets bottom="5.0" top="5.0" />
          </BorderPane.margin>
+         <bottom>
+            <ScrollPane fx:id="sp_Protokol" BorderPane.alignment="CENTER">
+               <BorderPane.margin>
+                  <Insets top="5.0" />
+               </BorderPane.margin>
+               <content>
+                  <VBox fx:id="vb_Protokol" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="100.0" minWidth="100.0">
+                     <children>
+                        <Label text="Итоговый протокол" textFill="#726d53">
+                           <font>
+                              <Font name="System Bold" size="20.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </VBox>
+               </content>
+            </ScrollPane>
+         </bottom>
       </BorderPane>
    </center>
    <right>
@@ -725,7 +743,7 @@
                                        </StackPane.margin></Label>
                                  </children>
                               </StackPane>
-                              <StackPane prefHeight="150.0" prefWidth="200.0" style="-fx-background-color: yellow;">
+                              <StackPane prefHeight="150.0" prefWidth="200.0" style="-fx-background-color: gray;">
                                  <children>
                                     <ImageView fx:id="iwGistSKO_H" fitHeight="180.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true" />
                                     <Label rotate="-90.0" text="Строки" textFill="#112e1d" StackPane.alignment="CENTER_RIGHT">
@@ -752,7 +770,7 @@
                         </Label>
                         <HBox alignment="CENTER" layoutX="10.0" layoutY="520.0" prefHeight="100.0" prefWidth="200.0" spacing="5.0">
                            <children>
-                              <StackPane style="-fx-background-color: yellow;">
+                              <StackPane style="-fx-background-color: gray;">
                                  <children>
                                     <ImageView fx:id="iwGistSignal_H" fitHeight="180.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true" />
                                     <Label rotate="-90.0" text="Строка" textFill="#112e1d" StackPane.alignment="CENTER_RIGHT">

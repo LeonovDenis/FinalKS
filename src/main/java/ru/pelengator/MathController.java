@@ -511,8 +511,8 @@ public class MathController implements Initializable {
         fieldOptions.get(i++).setTooltip(new Tooltip("Температура источника излучения"));
         fieldOptions.get(i++).setTooltip(new Tooltip("Постоянная Стефана-Больцмана"));
         fieldOptions.get(i++).setTooltip(new Tooltip("Постоянная Стефана-Больцмана"));
-        fieldOptions.get(i++).setTooltip(new Tooltip("Коэффициент черноты"));
-        fieldOptions.get(i++).setTooltip(new Tooltip("Коэффициент черноты"));
+        fieldOptions.get(i++).setTooltip(new Tooltip("Коэффициент черноты АЧТ"));
+        fieldOptions.get(i++).setTooltip(new Tooltip("Коэффициент черноты АЧТ"));
         fieldOptions.get(i++).setTooltip(new Tooltip("Диаметр диафрагмы источника излучения"));
         fieldOptions.get(i++).setTooltip(new Tooltip("Диаметр диафрагмы источника излучения"));
         fieldOptions.get(i++).setTooltip(new Tooltip("Расстояние между диафрагмой излучателя" +
