@@ -115,17 +115,17 @@ public class StendParams {
     private double detectivityStarPersent = 20.00;
     private double NETDPersent = 20.00;
     private double exposurePersent = 20.00;
-    private String persentColorArifm = "#ffffff";
-    private String persentColorQuadratic = "#ffffff";
-    private String persentColorSKO = "#ffffff";
-    private String persentColorVw = "#ffffff";
-    private String persentColorPorog = "#ffffff";
-    private String persentColorPorogStar = "#ffffff";
-    private String persentColorDetectivity = "#ffffff";
-    private String persentColorDetectivityStar = "#ffffff";
-    private String persentColorNETD = "#ffffff";
-    private String persentColorExposure = "#ffffff";
-    private String itogColor = "#ffffff";
+    private String persentColorArifmL = "#000000";
+    private String persentColorQuadraticL = "#000000";
+    private String persentColorSKOL = "#000000";
+    private String persentColorVwL = "#000000";
+    private String persentColorExposureL = "#000000";
+
+    private String persentColorArifmH = "#000000";
+    private String persentColorQuadraticH = "#000000";
+    private String persentColorSKOH = "#000000";
+    private String persentColorVwH = "#000000";
+    private String persentColorExposureH = "#000000";
 
     private StringProperty zakaz = new SimpleStringProperty();
     private StringProperty dogovor = new SimpleStringProperty();
@@ -248,7 +248,7 @@ public class StendParams {
 
         mPowerValue.set(Integer.parseInt(properties.getProperty("MPOWER", "0")));
 
-        PAUSE = Integer.parseInt(properties.getProperty("PAUSE", "50"));
+        PAUSE = Integer.parseInt(properties.getProperty("PAUSE", "20"));
         //  controller.getTfSpeedPlata().setText(String.valueOf(PAUSE));
 
         temp0 = Double.parseDouble(properties.getProperty("temp0", "303.0"));
@@ -289,17 +289,18 @@ public class StendParams {
         NETDPersent = Double.parseDouble(properties.getProperty("NETDPersent", "20.00"));
         exposurePersent = Double.parseDouble(properties.getProperty("exposurePersent", "20.00"));
 
-        persentColorArifm = properties.getProperty("persentColorArifm", "#FFFFFF");
-        persentColorQuadratic = properties.getProperty("persentColorQuadratic", "#FFFFFF");
-        persentColorSKO = properties.getProperty("persentColorSKO", "#FFFFFF");
-        persentColorVw = properties.getProperty("persentColorVw", "#FFFFFF");
-        persentColorPorog = properties.getProperty("persentColorPorog", "#FFFFFF");
-        persentColorPorogStar = properties.getProperty("persentColorPorogStar", "#FFFFFF");
-        persentColorDetectivity = properties.getProperty("persentColorDetectivity", "#FFFFFF");
-        persentColorDetectivityStar = properties.getProperty("persentColorDetectivityStar", "#FFFFFF");
-        persentColorNETD = properties.getProperty("persentColorNETD", "#FFFFFF");
-        persentColorExposure = properties.getProperty("persentColorExposure", "#FFFFFF");
-        itogColor = properties.getProperty("itogColor", "#FFFFFF");
+        persentColorArifmL = properties.getProperty("persentColorArifmL", "#000000");
+        persentColorQuadraticL = properties.getProperty("persentColorQuadraticL", "#000000");
+        persentColorSKOL = properties.getProperty("persentColorSKOL", "#000000");
+        persentColorVwL = properties.getProperty("persentColorVwL", "#000000");
+        persentColorExposureL = properties.getProperty("persentColorExposureL", "#000000");
+
+        persentColorArifmH = properties.getProperty("persentColorArifmH", "#000000");
+        persentColorQuadraticH = properties.getProperty("persentColorQuadraticH", "#000000");
+        persentColorSKOH = properties.getProperty("persentColorSKOH", "#000000");
+        persentColorVwH = properties.getProperty("persentColorVwH", "#000000");
+        persentColorExposureH = properties.getProperty("persentColorExposureH", "#000000");
+
 
         tbExel.set(Boolean.parseBoolean(properties.getProperty("tbExel", "true")));
         tbTxt.set(Boolean.parseBoolean(properties.getProperty("tbTxt", "true")));
@@ -463,18 +464,19 @@ public class StendParams {
         text = String.format(Locale.CANADA, "%.3f", tempValue_k.getValue());
         properties.setProperty("TEMPK", text);
 
-        properties.setProperty("persentColorArifm", persentColorArifm);
-        properties.setProperty("persentColorQuadratic", persentColorQuadratic);
-        properties.setProperty("persentColorSKO", persentColorSKO);
-        properties.setProperty("persentColorVw", persentColorVw);
-        properties.setProperty("persentColorPorog", persentColorPorog);
-        properties.setProperty("persentColorPorogStar", persentColorPorogStar);
-        properties.setProperty("persentColorDetectivity", persentColorDetectivity);
-        properties.setProperty("persentColorDetectivityStar", persentColorDetectivityStar);
-        properties.setProperty("persentColorNETD", persentColorNETD);
-        properties.setProperty("persentColorExposure", persentColorExposure);
+        properties.setProperty("persentColorArifmL", persentColorArifmL);
+        properties.setProperty("persentColorQuadraticL", persentColorQuadraticL);
+        properties.setProperty("persentColorSKOL", persentColorSKOL);
+        properties.setProperty("persentColorVwL", persentColorVwL);
+        properties.setProperty("persentColorExposureL", persentColorExposureL);
 
-        properties.setProperty("itogColor", itogColor);
+        properties.setProperty("persentColorArifmH", persentColorArifmH);
+        properties.setProperty("persentColorQuadraticH", persentColorQuadraticH);
+        properties.setProperty("persentColorSKOH", persentColorSKOH);
+        properties.setProperty("persentColorVwH", persentColorVwH);
+        properties.setProperty("persentColorExposureH", persentColorExposureH);
+
+
         properties.setProperty("tbExel", String.valueOf(tbExel.getValue()));
         properties.setProperty("tbTxt", String.valueOf(tbTxt.getValue()));
         properties.setProperty("tbPdf", String.valueOf(tbPdf.getValue()));
@@ -526,14 +528,6 @@ public class StendParams {
 
     public void setAreaACHT0(double areaACHT0) {
         this.areaACHT0 = areaACHT0;
-    }
-
-    public String getItogColor() {
-        return itogColor;
-    }
-
-    public void setItogColor(String itogColor) {
-        this.itogColor = itogColor;
     }
 
     public double getAreaACHT1() {
@@ -799,84 +793,84 @@ public class StendParams {
         this.exposurePersent = exposurePersent;
     }
 
-    public String getPersentColorArifm() {
-        return persentColorArifm;
+    public String getPersentColorArifmL() {
+        return persentColorArifmL;
     }
 
-    public void setPersentColorArifm(String persentColorArifm) {
-        this.persentColorArifm = persentColorArifm;
+    public void setPersentColorArifmL(String persentColorArifmL) {
+        this.persentColorArifmL = persentColorArifmL;
     }
 
-    public String getPersentColorQuadratic() {
-        return persentColorQuadratic;
+    public String getPersentColorQuadraticL() {
+        return persentColorQuadraticL;
     }
 
-    public void setPersentColorQuadratic(String persentColorQuadratic) {
-        this.persentColorQuadratic = persentColorQuadratic;
+    public void setPersentColorQuadraticL(String persentColorQuadraticL) {
+        this.persentColorQuadraticL = persentColorQuadraticL;
     }
 
-    public String getPersentColorSKO() {
-        return persentColorSKO;
+    public String getPersentColorSKOL() {
+        return persentColorSKOL;
     }
 
-    public void setPersentColorSKO(String persentColorSKO) {
-        this.persentColorSKO = persentColorSKO;
+    public void setPersentColorSKOL(String persentColorSKOL) {
+        this.persentColorSKOL = persentColorSKOL;
     }
 
-    public String getPersentColorVw() {
-        return persentColorVw;
+    public String getPersentColorVwL() {
+        return persentColorVwL;
     }
 
-    public void setPersentColorVw(String persentColorVw) {
-        this.persentColorVw = persentColorVw;
+    public void setPersentColorVwL(String persentColorVwL) {
+        this.persentColorVwL = persentColorVwL;
     }
 
-    public String getPersentColorPorog() {
-        return persentColorPorog;
+    public String getPersentColorExposureL() {
+        return persentColorExposureL;
     }
 
-    public void setPersentColorPorog(String persentColorPorog) {
-        this.persentColorPorog = persentColorPorog;
+    public void setPersentColorExposureL(String persentColorExposureL) {
+        this.persentColorExposureL = persentColorExposureL;
     }
 
-    public String getPersentColorPorogStar() {
-        return persentColorPorogStar;
+    public String getPersentColorArifmH() {
+        return persentColorArifmH;
     }
 
-    public void setPersentColorPorogStar(String persentColorPorogStar) {
-        this.persentColorPorogStar = persentColorPorogStar;
+    public void setPersentColorArifmH(String persentColorArifmH) {
+        this.persentColorArifmH = persentColorArifmH;
     }
 
-    public String getPersentColorDetectivity() {
-        return persentColorDetectivity;
+    public String getPersentColorQuadraticH() {
+        return persentColorQuadraticH;
     }
 
-    public void setPersentColorDetectivity(String persentColorDetectivity) {
-        this.persentColorDetectivity = persentColorDetectivity;
+    public void setPersentColorQuadraticH(String persentColorQuadraticH) {
+        this.persentColorQuadraticH = persentColorQuadraticH;
     }
 
-    public String getPersentColorDetectivityStar() {
-        return persentColorDetectivityStar;
+    public String getPersentColorSKOH() {
+        return persentColorSKOH;
     }
 
-    public void setPersentColorDetectivityStar(String persentColorDetectivityStar) {
-        this.persentColorDetectivityStar = persentColorDetectivityStar;
+    public void setPersentColorSKOH(String persentColorSKOH) {
+        this.persentColorSKOH = persentColorSKOH;
     }
 
-    public String getPersentColorNETD() {
-        return persentColorNETD;
+    public String getPersentColorVwH() {
+        return persentColorVwH;
     }
 
-    public void setPersentColorNETD(String persentColorNETD) {
-        this.persentColorNETD = persentColorNETD;
+    public void setPersentColorVwH(String persentColorVwH) {
+        this.persentColorVwH = persentColorVwH;
     }
 
-    public String getPersentColorExposure() {
-        return persentColorExposure;
+    public String getPersentColorExposureH() {
+        return persentColorExposureH;
     }
 
-    public void setPersentColorExposure(String persentColorExposure) {
-        this.persentColorExposure = persentColorExposure;
+    public void setPersentColorExposureH(String persentColorExposureH) {
+        this.persentColorExposureH = persentColorExposureH;
     }
 
     public String getDimention() {

@@ -6,7 +6,7 @@ import javafx.concurrent.Task;
 import javafx.scene.control.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.pelengator.ParamsController;
+import ru.pelengator.MeasController;
 import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.*;
@@ -25,7 +25,7 @@ public class SaveFilesService extends Service<Void> {
     /**
      * Ссылка на контроллер.
      */
-    private ParamsController controller;
+    private MeasController controller;
 
     private ExecutorService service;
     /**
@@ -48,7 +48,7 @@ public class SaveFilesService extends Service<Void> {
      *
      * @param controller
      */
-    public SaveFilesService(ParamsController controller, File pdfFile) {
+    public SaveFilesService(MeasController controller, File pdfFile) {
         this.controller = controller;
         this.pdfFile = pdfFile;
 
@@ -60,7 +60,7 @@ public class SaveFilesService extends Service<Void> {
         return new Task<>() {
             @Override
             protected Void call() throws Exception {
-                Platform.runLater(() -> controller.getpIndicator().setVisible(true));
+                Platform.runLater(() -> controller.getpIndicator2().setVisible(true));
 
                 service = Executors.newFixedThreadPool(MP);
 
@@ -122,10 +122,10 @@ public class SaveFilesService extends Service<Void> {
     @Override
     protected void succeeded() {
         super.succeeded();
-        Button btnGetData = controller.getBtnSave();
+        Button btnGetData = controller.getBtnSaveProt();
         Platform.runLater(() -> {
             btnGetData.setStyle("-fx-background-color: green");
-            controller.getpIndicator().setVisible(false);
+            controller.getpIndicator2().setVisible(false);
         });
     }
 
@@ -138,24 +138,24 @@ public class SaveFilesService extends Service<Void> {
     protected void failed() {
         super.failed();
         LOG.error("Failed!");
-        Button btnGetData = controller.getBtnSave();
+        Button btnGetData = controller.getBtnSaveProt();
         Platform.runLater(() -> {
             btnGetData.setStyle("-fx-background-color: red");
             controller.getLab_status().textProperty().unbind();
             controller.getLab_status().textProperty().setValue("Ошибка при записи файла");
-            controller.getpIndicator().setVisible(false);
+            controller.getpIndicator2().setVisible(false);
         });
     }
 
     @Override
     public boolean cancel() {
         LOG.error("Canceled!");
-        Button btnGetData = controller.getBtnSave();
+        Button btnGetData = controller.getBtnSaveProt();
         Platform.runLater(() -> {
             btnGetData.setStyle("-fx-background-color: red");
             controller.getLab_status().textProperty().unbind();
             controller.getLab_status().textProperty().setValue("Отмена записи файла");
-            controller.getpIndicator().setVisible(false);
+            controller.getpIndicator2().setVisible(false);
         });
         return super.cancel();
     }
@@ -189,7 +189,7 @@ public class SaveFilesService extends Service<Void> {
     class PdfTask implements Callable<String> {
         @Override
         public String call() throws Exception {
-            boolean b = saveOrder(controller.getController().getSelExp(), controller.getScrlPane(), pdfFile);
+            boolean b = saveOrder(controller.getController().getSelExp(), controller.getScrlPaneEp(), pdfFile);//правка
             if (!b) {
                 throw new IOException("PDF файл записан");
             //    return "PDF файл записан";

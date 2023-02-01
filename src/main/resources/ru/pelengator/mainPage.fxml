@@ -435,7 +435,7 @@
                               <Font size="18.0" />
                            </font>
                         </TextField>
-                        <Button fx:id="btnGetData" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="myBtn" stylesheets="@cp.css" text="Старт" textFill="#112e1d" GridPane.columnIndex="2" GridPane.rowIndex="21">
+                        <Button fx:id="btnGetData" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#startGetData" styleClass="myBtn" stylesheets="@cp.css" text="Старт" textFill="#112e1d" GridPane.columnIndex="2" GridPane.rowIndex="21">
                            <font>
                               <Font size="18.0" />
                            </font>
@@ -881,10 +881,16 @@
                 <font>
                   <Font size="14.0" fx:id="x3" />
                 </font>
+                     <BorderPane.margin>
+                        <Insets left="5.0" />
+                     </BorderPane.margin>
               </Label>
                </left>
                <right>
-              <Label fx:id="lab_exp_status" font="$x3" maxWidth="-1.0" prefWidth="200.0" text="Статус бар" BorderPane.alignment="CENTER" />
+              <Label fx:id="lab_exp_status" alignment="CENTER_RIGHT" contentDisplay="RIGHT" font="$x3" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="350.0" text="Статус бар" textAlignment="RIGHT" BorderPane.alignment="CENTER_RIGHT">
+                     <BorderPane.margin>
+                        <Insets right="5.0" />
+                     </BorderPane.margin></Label>
                </right>
                <center>
                   <ProgressBar fx:id="pb_exp" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="30.0" progress="0.0" BorderPane.alignment="CENTER">
@@ -895,6 +901,9 @@
                </center>
             </BorderPane>
       </children>
+         <padding>
+            <Insets bottom="10.0" />
+         </padding>
     </HBox>
    </bottom>
 </BorderPane>

@@ -5,7 +5,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.pelengator.service.ParamsService;
+import ru.pelengator.service.MeasService;
 
 import java.io.*;
 import java.util.*;
@@ -180,7 +180,7 @@ public class XlsSaveClass {
      * @param service
      * @param pdfFile
      */
-    public void saveXlFile(ParamsService service, File pdfFile) {
+    public void saveXlFile(MeasService service, File pdfFile) {
 
         String[] splitedName = pdfFile.getName().split("\\.");
 

@@ -3,32 +3,30 @@ package ru.pelengator.service;
 import javafx.application.Platform;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
-
-import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.pelengator.API.utils.StatisticsUtils;
-import ru.pelengator.API.utils.Utils;
-import ru.pelengator.ParamsController;
+import ru.pelengator.MeasController;
 import ru.pelengator.model.ExpInfo;
 import ru.pelengator.model.StendParams;
 
 import java.awt.image.BufferedImage;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import static ru.pelengator.API.utils.Utils.*;
 
 /**
  * Сервис расчета параметров.
  */
-public class ParamsService extends Service<Void> {
+public class MeasService extends Service<Void> {
     /**
      * Логгер.
      */
-    private static final Logger LOG = LoggerFactory.getLogger(ParamsService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(MeasService.class);
 
     //Массивы исходных данных
     private double[][] arifmeticMeanValue_0;
@@ -40,11 +38,6 @@ public class ParamsService extends Service<Void> {
     private double[][] quadraticMeanValue_delta;
     //Массивы расчитанные
     double[][] voltWatka;
-    double[][] porogSensivity;
-    double[][] porogSensivityStar;
-    double[][] dDetectivity;
-    double[][] dDetectivityStar;
-    double[][] netd;
     double[][] eExposure;
 
     //переменные
@@ -60,18 +53,10 @@ public class ParamsService extends Service<Void> {
     private double quadraticMean;
     private double SKO;
     private double vw;
-    private double porog;
-    private double porogStar;
-    private double detectivity;
-    private double detectivityStar;
-    private double NETD;
     private double exposure;
-    private Double vWHeterogeneity;
-
     private byte[] buffToTXT;
     private int bpInCenter;
     private int bpAll;
-
     private int bpInDiametr;
 
     private boolean withDefPx;
@@ -79,7 +64,7 @@ public class ParamsService extends Service<Void> {
     /**
      * Лист с фреймами.
      */
-    private ArrayList<Utils.Frame> frList;
+    private ArrayList<Frame> frList;
     /**
      * Лист с квадратами для печати.
      */
@@ -87,15 +72,14 @@ public class ParamsService extends Service<Void> {
     /**
      * Ссылка на контроллер.
      */
-    private ParamsController controller;
+    private MeasController controller;
     /**
      * Контейер для гистограмм и квадратов.
      */
-    private VBox pane;
-    /**
-     * Контейер для итога.
-     */
-    private VBox pane1;
+    private VBox scrlPaneSa;
+    private VBox scrlPaneSq;
+    private VBox scrlPaneSigma;
+    private VBox scrlPaneSu;
 
     /**
      * Заготовка для отрисовки квадрата.
@@ -103,7 +87,7 @@ public class ParamsService extends Service<Void> {
     private BufferedImage tempImage;
 
 
-    public ParamsService(ParamsController controller) {
+    public MeasService(MeasController controller) {
         this.controller = controller;
     }
 
@@ -130,50 +114,28 @@ public class ParamsService extends Service<Void> {
 
                 updateMessage("Расчет срендего арифм.");
                 arifmeticMean = calculateAndCheckArifmSignal(
-                        controller.getCbArifmeticMean().isSelected(),
+                       true,
                         noCorrection);
                 updateProgress(0.25, 1);
                 updateMessage("Расчет среднего квадрат.");
                 quadraticMean = calculateAndCheckQuadraticSignal(
-                        controller.getCbQuadraticMean().isSelected(),
+                        true,
                         noCorrection);
                 updateProgress(0.3, 1);
                 updateMessage("Расчет шума");
-                SKO = calculateAndCheckSKO(controller.getCbSKO().isSelected(),
+                SKO = calculateAndCheckSKO(true,
                         noCorrection);
                 updateProgress(0.35, 1);
                 updateMessage("Расчет вольтовой чувств.");
-                vw = calculateAndCheckVw(controller.getCbVw().isSelected(),
+                vw = calculateAndCheckVw(true,
                         noCorrection);
                 updateProgress(0.45, 1);
-                updateMessage("Расчет порога чувств.");
-                porog = calculateAndCheckPorog(controller.getCbPorog().isSelected(),
-                        noCorrection);
-                updateProgress(0.5, 1);
-                updateMessage("Расчет удельного порога чувств.");
-                porogStar = calculateAndCheckPorogStar(controller.getCbPorogStar().isSelected(),
-                        noCorrection);
-                updateProgress(0.55, 1);
-                updateMessage("Расчет обнаружительной способности");
-                detectivity = calculateAndCheckDetectivity(controller.getCbDetectivity().isSelected(),
-                        noCorrection);
-                updateProgress(0.65, 1);
-                updateMessage("Расчет удельной обнаруж. способности");
-                detectivityStar = calculateAndCheckDetectivityStar(controller.getCbDetectivityStar().isSelected(),
-                        noCorrection);
-                updateProgress(0.7, 1);
-                updateMessage("Расчет NETD");
-                NETD = calculateAndCheckNETD(controller.getCbNETD().isSelected(),
-                        noCorrection);
                 updateProgress(0.75, 1);
                 updateMessage("Расчет пороговой облученности");
-                exposure = calculateAndCheckExposure(controller.getCbExposure().isSelected(),
+                exposure = calculateAndCheckExposure(true,
                         noCorrection);
                 updateProgress(0.8, 1);
-
-
                 updateMessage("Расчет итоговой дефектности");
-                calculateAllDefects();
                 updateMessage("Запись параметров");
                 saveExpData();
                 updateProgress(0.85, 1);
@@ -185,12 +147,6 @@ public class ParamsService extends Service<Void> {
                 return null;
             }
 
-            private void calculateAllDefects() {
-                badBigPoints = bedPxToList(params.getItogColor());
-                bpAll = badBigPoints.size();
-                bpInCenter = bbpInCentral(badBigPoints, 32, sizeX, sizeY);
-                bpInDiametr =bbpInDiametr(badBigPoints, StendParams.getDiametr(),sizeX, sizeY);
-            }
         };
     }
 
@@ -204,7 +160,7 @@ public class ParamsService extends Service<Void> {
      */
     private double calculateAndCheckExposure(boolean selected, boolean noCorrection) {
         double persent = params.getExposurePersent();
-        String color = params.getPersentColorExposure();
+        String color = params.getPersentColorExposureL();
         DEF_TYPE type = DEF_TYPE.TYPE_EXPOSURE;
 
         eExposure = exposure(quadraticMeanValue_1, quadraticMeanValue_0, SKOValue,
@@ -214,124 +170,11 @@ public class ParamsService extends Service<Void> {
             return -1;
         }
 
-        return addBpToList(frList.get(9).getBpList(), eExposure, noCorrection,
+        return addBpToList(frList.get(4).getBpList(), eExposure, noCorrection,
                 persent, color, type);
     }
 
-    /**
-     * Расчет NETD и проверка брака.
-     *
-     * @param selected     считаем ли.
-     * @param noCorrection с учетом бракованных пикселей или нет.
-     * @return среднее значение по ФПУ.
-     */
-    private double calculateAndCheckNETD(boolean selected, boolean noCorrection) {
-        double persent = params.getNETDPersent();
-        String color = params.getPersentColorNETD();
-        DEF_TYPE type = DEF_TYPE.TYPE_NETD;
 
-        netd = NETD(arifmeticMeanValue_1, arifmeticMeanValue_0, SKOValue,
-                params.getTemp1(), params.getTemp0());
-
-        if (!selected) {
-            return -1;
-        }
-
-        return addBpToList(frList.get(8).getBpList(), netd, noCorrection,
-                persent, color, type);
-    }
-
-    /**
-     * Расчет удельной обнаруж. способн. и проверка брака.
-     *
-     * @param selected     считаем ли.
-     * @param noCorrection с учетом бракованных пикселей или нет.
-     * @return среднее значение по ФПУ.
-     */
-    private double calculateAndCheckDetectivityStar(boolean selected, boolean noCorrection) {
-        double persent = params.getDetectivityStarPersent();
-        String color = params.getPersentColorDetectivityStar();
-        DEF_TYPE type = DEF_TYPE.TYPE_DETECTIVITY_STAR;
-
-        dDetectivityStar = detectivityStar(quadraticMeanValue_1, quadraticMeanValue_0, SKOValue,
-                params.getPotok(), params.getfEfect(), params.getAreaFPU0());
-
-        if (!selected) {
-            return -1;
-        }
-
-        return addBpToList(frList.get(7).getBpList(), dDetectivityStar, noCorrection,
-                persent, color, type);
-    }
-
-    /**
-     * Расчет обнаруж. способн и проверка брака.
-     *
-     * @param selected     считаем ли.
-     * @param noCorrection с учетом бракованных пикселей или нет.
-     * @return среднее значение по ФПУ.
-     */
-    private double calculateAndCheckDetectivity(boolean selected, boolean noCorrection) {
-        double persent = params.getDetectivityPersent();
-        String color = params.getPersentColorDetectivity();
-        DEF_TYPE type = DEF_TYPE.TYPE_DETECTIVITY;
-
-        dDetectivity = detectivity(quadraticMeanValue_1, quadraticMeanValue_0, SKOValue,
-                params.getPotok(), params.getfEfect());
-
-        if (!selected) {
-            return -1;
-        }
-
-        return addBpToList(frList.get(6).getBpList(), dDetectivity, noCorrection,
-                persent, color, type);
-    }
-
-    /**
-     * Расчет удельного порога и проверка брака.
-     *
-     * @param selected     считаем ли.
-     * @param noCorrection с учетом бракованных пикселей или нет.
-     * @return среднее значение по ФПУ.
-     */
-    private double calculateAndCheckPorogStar(boolean selected, boolean noCorrection) {
-        double persent = params.getPorogStarPersent();
-        String color = params.getPersentColorPorogStar();
-        DEF_TYPE type = DEF_TYPE.TYPE_POROG_STAR;
-
-        porogSensivityStar = porogSensivityStar(quadraticMeanValue_1, quadraticMeanValue_0, SKOValue,
-                params.getPotok(), params.getfEfect(), params.getAreaFPU0());
-
-        if (!selected) {
-            return -1;
-        }
-
-        return addBpToList(frList.get(5).getBpList(), porogSensivityStar, noCorrection,
-                persent, color, type);
-    }
-
-    /**
-     * Расчет порога и проверка брака.
-     *
-     * @param selected     считаем ли.
-     * @param noCorrection с учетом бракованных пикселей или нет.
-     * @return среднее значение по ФПУ.
-     */
-    private double calculateAndCheckPorog(boolean selected, boolean noCorrection) {
-        double persent = params.getPorogPersent();
-        String color = params.getPersentColorPorog();
-        DEF_TYPE type = DEF_TYPE.TYPE_POROG;
-
-        porogSensivity = porogSensivity(quadraticMeanValue_1, quadraticMeanValue_0, SKOValue,
-                params.getPotok(), params.getfEfect());
-
-        if (!selected) {
-            return -1;
-        }
-
-        return addBpToList(frList.get(4).getBpList(), porogSensivity, noCorrection,
-                persent, color, type);
-    }
 
     /**
      * Расчет вольтовой чувствительности и проверка брака.
@@ -342,12 +185,10 @@ public class ParamsService extends Service<Void> {
      */
     private double calculateAndCheckVw(boolean selected, boolean noCorrection) {
         double persent = params.getVwPersent();
-        String color = params.getPersentColorVw();
+        String color = params.getPersentColorVwL();
         DEF_TYPE type = DEF_TYPE.TYPE_VW;
 
         voltWatka = voltWatka(quadraticMeanValue_1, quadraticMeanValue_0, params.getPotok());
-
-        vWHeterogeneity = calculateHeterogeneity(voltWatka, noCorrection, persent);
 
         if (!selected) {
             return -1;
@@ -367,7 +208,7 @@ public class ParamsService extends Service<Void> {
      */
     private double calculateAndCheckSKO(boolean selected, boolean noCorrection) {
         double persent = params.getSKOPersent();
-        String color = params.getPersentColorSKO();
+        String color = params.getPersentColorSKOL();
         DEF_TYPE type = DEF_TYPE.TYPE_SKO;
 
         if (!selected) {
@@ -388,7 +229,7 @@ public class ParamsService extends Service<Void> {
      */
     private double calculateAndCheckQuadraticSignal(boolean selected, boolean noCorrection) {
         double persent = params.getQuadraticMeanPersent();
-        String color = params.getPersentColorQuadratic();
+        String color = params.getPersentColorQuadraticL();
         DEF_TYPE type = DEF_TYPE.TYPE_QUADRATIC;
 
         if (!selected) {
@@ -410,7 +251,7 @@ public class ParamsService extends Service<Void> {
     private double calculateAndCheckArifmSignal(boolean selected,
                                                 boolean noCorrection) {
         double persent = params.getArifmeticMeanPersent();
-        String color = params.getPersentColorArifm();
+        String color = params.getPersentColorArifmL();
         DEF_TYPE type = DEF_TYPE.TYPE_ARIFMETIC;
 
         if (!selected) {
@@ -454,7 +295,7 @@ public class ParamsService extends Service<Void> {
         int[][] dta = controller.getController().getSelExp().getDataArray0().get(0);
         sizeY = dta.length;
         sizeX = dta[0].length;
-        noCorrection = controller.getCbWithBP().isSelected();
+        noCorrection = true;
 
         arifmeticMeanValue_0 = new double[sizeY][sizeX];
         arifmeticMeanValue_1 = new double[sizeY][sizeX];
@@ -465,12 +306,8 @@ public class ParamsService extends Service<Void> {
         quadraticMeanValue_delta = new double[sizeY][sizeX];
 
         voltWatka = new double[sizeY][sizeX];
-        porogSensivity = new double[sizeY][sizeX];
-        porogSensivityStar = new double[sizeY][sizeX];
-        dDetectivity = new double[sizeY][sizeX];
-        dDetectivityStar = new double[sizeY][sizeX];
-        netd = new double[sizeY][sizeX];
         eExposure = new double[sizeY][sizeX];
+
         params = controller.getController().getSelExp().getParams();
 
 
@@ -492,49 +329,41 @@ public class ParamsService extends Service<Void> {
         quadraticMean = 0;
         SKO = 0;
         vw = 0;
-        porog = 0;
-        porogStar = 0;
-        detectivity = 0;
-        detectivityStar = 0;
-        NETD = 0;
         exposure = 0;
         frList = new ArrayList<>();
         scList = new ArrayList<>();
         badBigPoints = new ArrayList<>();
 
-        frList.add(new Utils.Frame("Среднее арифметическое сигнала, В",
+        frList.add(new Frame("Среднее арифметическое сигнала, В",
                 sizeX, sizeY));
-        frList.add(new Utils.Frame("Среднее квадратичное сигнала, В",
+        frList.add(new Frame("Среднее квадратичное сигнала, В",
                 sizeX, sizeY));
-        frList.add(new Utils.Frame("СКО сигнала (шум), В",
+        frList.add(new Frame("СКО сигнала (шум), В",
                 sizeX, sizeY));
-        frList.add(new Utils.Frame("Вольтовая чувствительность, В\u00B7Вт\u00AF \u00B9",
+        frList.add(new Frame("Вольтовая чувствительность, В\u00B7Вт\u00AF \u00B9",
                 sizeX, sizeY));
-        frList.add(new Utils.Frame("Порог чувствительности, Вт\u00B7Гц-\u00BD",
+        frList.add(new Frame("Пороговая облученность, Вт\u00B7см\u00AF \u00B2",
                 sizeX, sizeY));
-        frList.add(new Utils.Frame("Удельный порог чувствительности, Вт\u00B7Гц-\u00BD\u00B7см\u00AF \u00B9",
-                sizeX, sizeY));
-        frList.add(new Utils.Frame("Обнаружительная способность, Вт\u00AF \u00B9\u00B7Гц\u00BD",
-                sizeX, sizeY));
-        frList.add(new Utils.Frame("Удельная обнаруж. способность, Вт\u00AF \u00B9\u00B7Гц\u00BD\u00B7см",
-                sizeX, sizeY));
-        frList.add(new Utils.Frame("NETD, К",
-                sizeX, sizeY));
-        frList.add(new Utils.Frame("Пороговая облученность, Вт\u00B7см\u00AF \u00B2",
-                sizeX, sizeY));
-        vWHeterogeneity = null;
-        pane = controller.getScrlPane();
-        pane1 = controller.getScrlPane1();
+
+
+         scrlPaneSa=controller.getScrlPaneSa();
+         scrlPaneSq=controller.getScrlPaneSq();
+         scrlPaneSigma=controller.getScrlPaneSigma();
+         scrlPaneSu=controller.getScrlPaneSu();
+
         tempImage = controller.getController().getSelExp().getTempImage();
         bpInCenter = -1;
         bpAll = -1;
         bpInDiametr = -1;
-        withDefPx = controller.getCbWithBP().isSelected();
+        withDefPx = true;
         buffToTXT = null;
         Platform.runLater(() -> {
-            clearPane(pane);
-            clearPane(pane1);
+            clearPane(scrlPaneSa);
+            clearPane(scrlPaneSq);
+            clearPane(scrlPaneSigma);
+            clearPane(scrlPaneSu);
         });
+        params=controller.getController().getParams();
     }
 
     /**
@@ -564,10 +393,7 @@ public class ParamsService extends Service<Void> {
         Platform.runLater(() -> {
             fillTextFields();
             fillTextLabels();
-            showGistAndImage(pane);
-            if (controller.getCbPrint().isSelected()) {
-                fillItogpane(pane1);
-            }
+            showGistAndImage(scrlPaneSa);
         });
     }
 
@@ -579,7 +405,7 @@ public class ParamsService extends Service<Void> {
     private void showGistAndImage(VBox pane) {
 
 
-        if (controller.getCbArifmeticMean().isSelected() && params.getArifmeticMeanPersent() != 0) {
+        if ( params.getArifmeticMeanPersent() != 0) {
 
             RaspredData raspred = makeRaspred(arifmeticMeanValue_delta, "0.000E00", noCorrection, params.getArifmeticMeanPersent());
 
@@ -587,85 +413,37 @@ public class ParamsService extends Service<Void> {
                     "Число диодов", raspred, tempImage, frList.get(0).getBpList(), scList, controller);
         }
 
-        if (controller.getCbQuadraticMean().isSelected() && params.getQuadraticMeanPersent() != 0) {
+        if (params.getQuadraticMeanPersent() != 0) {
 
             RaspredData raspred = makeRaspred(quadraticMeanValue_delta, "0.000E00", noCorrection, params.getQuadraticMeanPersent());
 
             showGistAndImageBox(pane, "Среднее квадратичное сигнала, В",
                     "Число диодов", raspred, tempImage, frList.get(1).getBpList(), scList, controller);
         }
-        if (controller.getCbSKO().isSelected() && params.getSKOPersent() != 0) {
+        if (params.getSKOPersent() != 0) {
 
             RaspredData raspred = makeRaspred(SKOValue, "0.000E00", noCorrection, params.getSKOPersent());
 
             showGistAndImageBox(pane, "СКО сигнала (шум), В",
                     "Число диодов", raspred, tempImage, frList.get(2).getBpList(), scList, controller);
         }
-        if (controller.getCbVw().isSelected() && params.getVwPersent() != 0) {
+        if (params.getVwPersent() != 0) {
 
             RaspredData raspred = makeRaspred(voltWatka, "0.000E00", noCorrection, params.getVwPersent());
 
             showGistAndImageBox(pane, "Вольтовая чувствительность, В\u00B7Вт\u00AF \u00B9",
                     "Число диодов", raspred, tempImage, frList.get(3).getBpList(), scList, controller);
         }
-        if (controller.getCbPorog().isSelected() && params.getPorogPersent() != 0) {
 
-            RaspredData raspred = makeRaspred(porogSensivity, "0.000E00", noCorrection, params.getPorogPersent());
-
-            showGistAndImageBox(pane, "Порог чувствительности, Вт\u00B7Гц-\u00BD",
-                    "Число диодов", raspred, tempImage, frList.get(4).getBpList(), scList, controller);
-        }
-        if (controller.getCbPorogStar().isSelected() && params.getPorogStarPersent() != 0) {
-
-            RaspredData raspred = makeRaspred(porogSensivityStar, "0.000E00", noCorrection, params.getPorogStarPersent());
-
-            showGistAndImageBox(pane, "Удельный порог чувствительности, Вт\u00B7Гц-\u00BD\u00B7см\u00AF \u00B9",
-                    "Число диодов", raspred, tempImage, frList.get(5).getBpList(), scList, controller);
-        }
-        if (controller.getCbDetectivity().isSelected() && params.getDetectivityPersent() != 0) {
-
-            RaspredData raspred = makeRaspred(dDetectivity, "0.000E00", noCorrection, params.getDetectivityPersent());
-
-            showGistAndImageBox(pane, "Обнаружительная способность, Вт\u00AF \u00B9\u00B7Гц\u00BD",
-                    "Число диодов", raspred, tempImage, frList.get(6).getBpList(), scList, controller);
-        }
-        if (controller.getCbDetectivityStar().isSelected() && params.getDetectivityStarPersent() != 0) {
-
-            RaspredData raspred = makeRaspred(dDetectivityStar, "0.000E00", noCorrection, params.getDetectivityStarPersent());
-
-            showGistAndImageBox(pane, "Удельная обнаруж. способность, Вт\u00AF \u00B9\u00B7Гц\u00BD\u00B7см",
-                    "Число диодов", raspred, tempImage, frList.get(7).getBpList(), scList, controller);
-        }
-        if (controller.getCbNETD().isSelected() && params.getNETDPersent() != 0) {
-
-            RaspredData raspred = makeRaspred(netd, "0.000E00", noCorrection, params.getNETDPersent());
-
-            showGistAndImageBox(pane, "NETD, К",
-                    "Число диодов", raspred, tempImage, frList.get(8).getBpList(), scList, controller);
-        }
-        if (controller.getCbExposure().isSelected() && params.getExposurePersent() != 0) {
+        if (params.getExposurePersent() != 0) {
 
             RaspredData raspred = makeRaspred(eExposure, "0.000E00", noCorrection, params.getExposurePersent());
 
             showGistAndImageBox(pane, "Пороговая облученность, Вт\u00B7см\u00AF \u00B2",
-                    "Число диодов", raspred, tempImage, frList.get(9).getBpList(), scList, controller);
+                    "Число диодов", raspred, tempImage, frList.get(4).getBpList(), scList, controller);
         }
     }
 
-    /**
-     * Заполнение полей брака.
-     *
-     * @param pane панель.
-     */
-    private void fillItogpane(VBox pane) {
-        Platform.runLater(() -> {
-            showImageBox(pane, tempImage, badBigPoints, scList, controller);
-            controller.getLbItog().setText(String.valueOf(bpAll));
-            controller.getLbItog1().setText(String.valueOf(bpInCenter));
-            controller.getLbItog2().setText(String.valueOf(bpInDiametr));
-        });
-
-    }
 
     /**
      * Переделать.
@@ -757,12 +535,7 @@ public class ParamsService extends Service<Void> {
         controller.getLbQuadraticMean().setText(frList.get(1).getBpList().size() == 0 ? "--" : String.valueOf(frList.get(1).getBpList().size()));
         controller.getLbSKO().setText(frList.get(2).getBpList().size() == 0 ? "--" : String.valueOf(frList.get(2).getBpList().size()));
         controller.getLbVw().setText(frList.get(3).getBpList().size() == 0 ? "--" : String.valueOf(frList.get(3).getBpList().size()));
-        controller.getLbPorog().setText(frList.get(4).getBpList().size() == 0 ? "--" : String.valueOf(frList.get(4).getBpList().size()));
-        controller.getLbPorogStar().setText(frList.get(5).getBpList().size() == 0 ? "--" : String.valueOf(frList.get(5).getBpList().size()));
-        controller.getLbDetectivity().setText(frList.get(6).getBpList().size() == 0 ? "--" : String.valueOf(frList.get(6).getBpList().size()));
-        controller.getLbDetectivityStar().setText(frList.get(7).getBpList().size() == 0 ? "--" : String.valueOf(frList.get(7).getBpList().size()));
-        controller.getLbNETD().setText(frList.get(8).getBpList().size() == 0 ? "--" : String.valueOf(frList.get(8).getBpList().size()));
-        controller.getLbExposure().setText(frList.get(9).getBpList().size() == 0 ? "--" : String.valueOf(frList.get(9).getBpList().size()));
+        controller.getLbExposure().setText(frList.get(4).getBpList().size() == 0 ? "--" : String.valueOf(frList.get(4).getBpList().size()));
 
         ////////////////////  32*32
 
@@ -770,12 +543,7 @@ public class ParamsService extends Service<Void> {
         controller.getLbQuadraticMean1().setText(bpInCentral(frList, 1, 32) == 0 ? "--" : String.valueOf(bpInCentral(frList, 1, 32)));
         controller.getLbSKO1().setText(bpInCentral(frList, 2, 32) == 0 ? "--" : String.valueOf(bpInCentral(frList, 2, 32)));
         controller.getLbVw1().setText(bpInCentral(frList, 3, 32) == 0 ? "--" : String.valueOf(bpInCentral(frList, 3, 32)));
-        controller.getLbPorog1().setText(bpInCentral(frList, 4, 32) == 0 ? "--" : String.valueOf(bpInCentral(frList, 4, 32)));
-        controller.getLbPorogStar1().setText(bpInCentral(frList, 5, 32) == 0 ? "--" : String.valueOf(bpInCentral(frList, 5, 32)));
-        controller.getLbDetectivity1().setText(bpInCentral(frList, 6, 32) == 0 ? "--" : String.valueOf(bpInCentral(frList, 6, 32)));
-        controller.getLbDetectivityStar1().setText(bpInCentral(frList, 7, 32) == 0 ? "--" : String.valueOf(bpInCentral(frList, 7, 32)));
-        controller.getLbNETD1().setText(bpInCentral(frList, 8, 32) == 0 ? "--" : String.valueOf(bpInCentral(frList, 8, 32)));
-        controller.getLbExposure1().setText(bpInCentral(frList, 9, 32) == 0 ? "--" : String.valueOf(bpInCentral(frList, 9, 32)));
+        controller.getLbExposure1().setText(bpInCentral(frList, 4, 32) == 0 ? "--" : String.valueOf(bpInCentral(frList, 4, 32)));
 
         ////////////////////  диаметр
         int diametr = StendParams.getDiametr();
@@ -783,12 +551,7 @@ public class ParamsService extends Service<Void> {
         controller.getLbQuadraticMean2().setText(bpInDiametr(frList, 1, diametr) == 0 ? "--" : String.valueOf(bpInDiametr(frList, 1, diametr)));
         controller.getLbSKO2().setText(bpInDiametr(frList, 2, diametr) == 0 ? "--" : String.valueOf(bpInDiametr(frList, 2, diametr)));
         controller.getLbVw2().setText(bpInDiametr(frList, 3, diametr) == 0 ? "--" : String.valueOf(bpInDiametr(frList, 3, diametr)));
-        controller.getLbPorog2().setText(bpInDiametr(frList, 4, diametr) == 0 ? "--" : String.valueOf(bpInDiametr(frList, 4, diametr)));
-        controller.getLbPorogStar2().setText(bpInDiametr(frList, 5, diametr) == 0 ? "--" : String.valueOf(bpInDiametr(frList, 5, diametr)));
-        controller.getLbDetectivity2().setText(bpInDiametr(frList, 6, diametr) == 0 ? "--" : String.valueOf(bpInDiametr(frList, 6, diametr)));
-        controller.getLbDetectivityStar2().setText(bpInDiametr(frList, 7, diametr) == 0 ? "--" : String.valueOf(bpInDiametr(frList, 7, diametr)));
-        controller.getLbNETD2().setText(bpInDiametr(frList, 8, diametr) == 0 ? "--" : String.valueOf(bpInDiametr(frList, 8, diametr)));
-        controller.getLbExposure2().setText(bpInDiametr(frList, 9, diametr) == 0 ? "--" : String.valueOf(bpInDiametr(frList, 9, diametr)));
+        controller.getLbExposure2().setText(bpInDiametr(frList, 4, diametr) == 0 ? "--" : String.valueOf(bpInDiametr(frList, 4, diametr)));
 
     }
 
@@ -797,48 +560,23 @@ public class ParamsService extends Service<Void> {
      */
     private void fillTextFields() {
 
-        if (controller.getCbArifmeticMean().isSelected()) {
+
             controller.getTfArifmeticMean().setText(arifmeticMean == -1 ? "--" :
                     String.format(Locale.CANADA, "%.3e", arifmeticMean).toUpperCase());
-        }
-        if (controller.getCbQuadraticMean().isSelected()) {
+
             controller.getTfQuadraticMean().setText(quadraticMean == -1 ? "--" :
                     String.format(Locale.CANADA, "%.3e", quadraticMean).toUpperCase());
-        }
-        if (controller.getCbSKO().isSelected()) {
+
             controller.getTfSKO().setText(SKO == -1 ? "--" :
                     String.format(Locale.CANADA, "%.3e", SKO).toUpperCase());
-        }
-        if (controller.getCbVw().isSelected()) {
+
+
             controller.getTfVw().setText(vw == -1 ? "--" :
                     String.format(Locale.CANADA, "%.3e", vw).toUpperCase());
-            controller.getLbVw_raspr().setText(vw == -1 ? "--" :
-                    String.format(Locale.CANADA, "%.2f", vWHeterogeneity).toUpperCase());
-        }
-        if (controller.getCbPorog().isSelected()) {
-            controller.getTfPorog().setText(porog == -1 ? "--" :
-                    String.format(Locale.CANADA, "%.3e", porog).toUpperCase());
-        }
-        if (controller.getCbPorogStar().isSelected()) {
-            controller.getTfPorogStar().setText(porogStar == -1 ? "--" :
-                    String.format(Locale.CANADA, "%.3e", porogStar).toUpperCase());
-        }
-        if (controller.getCbDetectivity().isSelected()) {
-            controller.getTfDetectivity().setText(detectivity == -1 ? "--" :
-                    String.format(Locale.CANADA, "%.3e", detectivity).toUpperCase());
-        }
-        if (controller.getCbDetectivityStar().isSelected()) {
-            controller.getTfDetectivityStar().setText(detectivityStar == -1 ? "--" :
-                    String.format(Locale.CANADA, "%.3e", detectivityStar).toUpperCase());
-        }
-        if (controller.getCbNETD().isSelected()) {
-            controller.getTfNETD().setText(NETD == -1 ? "--" :
-                    String.format(Locale.CANADA, "%.3e", NETD).toUpperCase());
-        }
-        if (controller.getCbExposure().isSelected()) {
+
             controller.getTfExposure().setText(exposure == -1 ? "--" :
                     String.format(Locale.CANADA, "%.3e", exposure).toUpperCase());
-        }
+
     }
 
     /**
@@ -851,11 +589,6 @@ public class ParamsService extends Service<Void> {
         exp.setQuadraticMean(quadraticMean);
         exp.setSKO(SKO);
         exp.setVw(vw);
-        exp.setPorog(porog);
-        exp.setPorogStar(porogStar);
-        exp.setDetectivity(detectivity);
-        exp.setDetectivityStar(detectivityStar);
-        exp.setNETD(NETD);
         exp.setExposure(exposure);
         exp.setFrList(frList);
         exp.setScList(scList);
@@ -874,13 +607,9 @@ public class ParamsService extends Service<Void> {
     protected void succeeded() {
         super.succeeded();
         controller.getController().save();
-        Button btnParams = controller.getController().getBtnParams();
-        ParamsController paramsController = controller.getController().getParamsFxmlLoader().getController();
-        Button btnStart = paramsController.getBtnStart();
+
+        MeasController measController = controller.getController().getMeasFxmlLoader().getController();
         Platform.runLater(() -> {
-            controller.setButtonsDisable(false, false, false);
-            btnParams.setStyle("-fx-background-color: green");
-            btnStart.setStyle("-fx-background-color: green");
             controller.getpIndicator2().setVisible(false);
         });
 
@@ -895,13 +624,8 @@ public class ParamsService extends Service<Void> {
     protected void failed() {
         super.failed();
         LOG.error("Failed!");
-        Button btnParams = controller.getController().getBtnParams();
-        ParamsController paramsController = controller.getController().getParamsFxmlLoader().getController();
-        Button btnStart = paramsController.getBtnStart();
+        MeasController measController  = controller.getController().getMeasFxmlLoader().getController();
         Platform.runLater(() -> {
-            controller.getBtnSave().setDisable(true);
-            btnParams.setStyle("-fx-background-color: red");
-            btnStart.setStyle("-fx-background-color: red");
             controller.getController().getLab_exp_status().textProperty().unbind();
             controller.getController().getLab_exp_status().textProperty().setValue("");
             controller.getpIndicator2().setVisible(false);
@@ -911,12 +635,9 @@ public class ParamsService extends Service<Void> {
     @Override
     public boolean cancel() {
         LOG.error("Canceled!");
-        Button btnParams = controller.getController().getBtnParams();
-        ParamsController paramsController = controller.getController().getParamsFxmlLoader().getController();
-        Button btnStart = paramsController.getBtnStart();
+
+        MeasController measController  = controller.getController().getMeasFxmlLoader().getController();
         Platform.runLater(() -> {
-            btnParams.setStyle("-fx-background-color: red");
-            btnStart.setStyle("-fx-background-color: red");
             controller.getController().getLab_exp_status().textProperty().unbind();
             controller.getController().getLab_exp_status().textProperty().setValue("Отмена записи файла");
             controller.getpIndicator2().setVisible(false);
@@ -935,11 +656,6 @@ public class ParamsService extends Service<Void> {
         doubles.add(quadraticMeanValue_delta);
         doubles.add(SKOValue);
         doubles.add(voltWatka);
-        doubles.add(porogSensivity);
-        doubles.add(porogSensivityStar);
-        doubles.add(dDetectivity);
-        doubles.add(dDetectivityStar);
-        doubles.add(netd);
         doubles.add(eExposure);
         return doubles;
     }

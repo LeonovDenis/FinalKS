@@ -25,18 +25,16 @@ import org.decimal4j.util.DoubleRounder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.pelengator.App;
-import ru.pelengator.ParamsController;
+import ru.pelengator.MeasController;
 import ru.pelengator.model.SampleBarChart;
 import ru.pelengator.model.ExpInfo;
 import ru.pelengator.model.StendParams;
 import ru.pelengator.service.DocMaker;
 import ru.pelengator.service.ImagePanel;
-import ru.pelengator.service.ParamsService;
+import ru.pelengator.service.MeasService;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.geom.Arc2D;
-import java.awt.geom.Area;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.awt.image.WritableRaster;
@@ -1862,7 +1860,7 @@ public class Utils {
      */
     public static HBox showGistAndImageBox(VBox pane, String Xname, String Yname,
                                            RaspredData raspredData, BufferedImage tempImage, ArrayList<BadPoint> bpList,
-                                           ArrayList<BufferedImage> scList, ParamsController controller) {
+                                           ArrayList<BufferedImage> scList, MeasController controller) {
         String selectedDist = controller.getController().getCbDimOptions().getSelectionModel().getSelectedItem();
         int DEAMETR = StendParams.getDiametr();
 
@@ -1933,7 +1931,7 @@ public class Utils {
      * @return
      */
     public static HBox showImageBox(VBox pane, BufferedImage tempImage, List<BadBigPoint> bpList,
-                                    ArrayList<BufferedImage> scList, ParamsController controller) {
+                                    ArrayList<BufferedImage> scList, MeasController controller) {
         String selectedDist = controller.getController().getCbDimOptions().getSelectionModel().getSelectedItem();
 
         String[] splitedSize = selectedDist.split("\\*");
@@ -2185,7 +2183,7 @@ public class Utils {
      * @param service
      * @param pdfFile
      */
-    public static void saveExel(ParamsService service, File pdfFile) {
+    public static void saveExel(MeasService service, File pdfFile) {
         LOG.trace("Saving Exel file");
         XlsSaveClass xlsSaveClass = new XlsSaveClass();
         xlsSaveClass.saveXlFile(service, pdfFile);

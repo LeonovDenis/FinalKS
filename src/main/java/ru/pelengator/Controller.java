@@ -20,8 +20,6 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -2396,9 +2394,9 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
     private void startPotok(ActionEvent event) throws IOException {
         Stage stage = new Stage();
 
-        potokFxmlLoader = new FXMLLoader(getClass().getResource("mathPage.fxml"));
-        Parent root = potokFxmlLoader.load();
-        MathController mathController = potokFxmlLoader.getController();
+        mathFxmlLoader = new FXMLLoader(getClass().getResource("mathPage.fxml"));
+        Parent root = mathFxmlLoader.load();
+        MathController mathController = mathFxmlLoader.getController();
         mathController.initController(this);
         stage.setOnCloseRequest(t -> mathController.saveValuesToParams());
         Scene scene = new Scene(root);
@@ -2463,15 +2461,13 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
     /**
      * Старт расчета параметров.
      *
-     * @param event
      */
-    @FXML
-    private void startParams(ActionEvent event) throws IOException {
+    public void startParams() throws IOException {
         Stage stage = new Stage();
-        paramsFxmlLoader = new FXMLLoader(getClass().getResource("paramsPage.fxml"));
-        Parent root = paramsFxmlLoader.load();
-        ParamsController paramsController = paramsFxmlLoader.getController();
-        paramsController.initController(this);
+        measFxmlLoader = new FXMLLoader(getClass().getResource("measPage.fxml"));
+        Parent root = measFxmlLoader.load();
+        MeasController measController = measFxmlLoader.getController();
+        measController.initController(this);
         Scene scene = new Scene(root);
         stage.setTitle("Расчет характеристик ФПУ");
         stage.setScene(scene);
@@ -2492,9 +2488,7 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
         if (dataService == null) {
             initDataservice();
         }
-        getPb_exp().visibleProperty().bind(dataService.runningProperty());
-        getPb_exp().progressProperty().bind(dataService.progressProperty());
-        getLab_exp_status().textProperty().bind(dataService.messageProperty());
+
         if (dataService.getState() == Worker.State.RUNNING) {
             dataService.cancel();
             dataService = null;
@@ -2512,13 +2506,13 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
 
     FXMLLoader driverFxmlLoader;
 
-    FXMLLoader potokFxmlLoader;
+    FXMLLoader mathFxmlLoader;
     FXMLLoader fieldsFxmlLoader;
     FXMLLoader tempFxmlLoader;
-    FXMLLoader paramsFxmlLoader;
+    FXMLLoader measFxmlLoader;
 
-    public FXMLLoader getParamsFxmlLoader() {
-        return paramsFxmlLoader;
+    public FXMLLoader getMeasFxmlLoader() {
+        return measFxmlLoader;
     }
 
     public ComboBox<String> getCbDimOptions() {

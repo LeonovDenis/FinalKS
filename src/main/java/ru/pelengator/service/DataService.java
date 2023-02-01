@@ -15,6 +15,7 @@ import ru.pelengator.API.utils.Utils;
 import ru.pelengator.Controller;
 
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -81,6 +82,8 @@ public class DataService extends Service<Void> implements DetectorListener {
      */
     private AtomicBoolean flag_2ndTry = new AtomicBoolean(true);
 
+    private Thread dopThread;
+
     /**
      * Конструктор.
      *
@@ -99,6 +102,7 @@ public class DataService extends Service<Void> implements DetectorListener {
                 LOG.trace("Staring task");
                 updateMessage("Старт Сервиса");
                 updateProgress(0.0, 1);
+                binding();
                 updateMessage("Инициализация");
                 initParams();
                 //////////////////////////////Первый поток////////////////
@@ -108,7 +112,7 @@ public class DataService extends Service<Void> implements DetectorListener {
                     addListnr();
                     dataArray_0.clear();
                     while (dataArray_0.size() < count) {
-                        updateMessage("Набор кадров... 1-я часть " + dataArray_0.size() + "/" + count);
+                        updateMessage("Набор кадров... 1-я часть: " + dataArray_0.size() + "/" + count+".");
                         updateProgress((0.5D / count) * dataArray_0.size(), 1);
                     }
                     removeListener();
@@ -128,10 +132,10 @@ public class DataService extends Service<Void> implements DetectorListener {
                 do {
                     dataArray_1.clear();
                     addListnr();
-                    updateMessage("Задание на выборку: " + count + " значений");
+                    updateMessage("Задание на выборку: " + count + " значений.");
                     //набор массива кадров
                     while (dataArray_1.size() < count) {
-                        updateMessage("Набор кадров... 2-я часть " + dataArray_1.size() + "/" + count);
+                        updateMessage("Набор кадров... 2-я часть: " + dataArray_1.size() + "/" + count +".");
                         updateProgress((0.5D / count) * dataArray_1.size() + 0.5D, 1);
                     }
                     removeListener();
@@ -145,24 +149,42 @@ public class DataService extends Service<Void> implements DetectorListener {
                 } while (flag_2ndTry.get());
 
                 ////////////////////////////////////конец////////////////
-                updateProgress(0.98, 1);
-                updateMessage("Проверка потоков на корректность.");
+                updateProgress(1, 1);
 
                 takeStat();
                 takeAverage();
-                proofFail();
 
                 updateMessage("Сохранение данных");
                 saveExpData();
                 updateMessage("Данные сохранены");
                 updateMessage("");
-                updateProgress(1, 1);
+
+                Platform.runLater(() -> {
+                    try {
+                        controller.startParams();
+                    } catch (IOException e) {
+                        LOG.error(e.getMessage());
+                        throw new RuntimeException(e);
+                    }
+                });
                 return null;
+            }
+
+            private void binding() {
+
+                Platform.runLater(() -> {
+                    controller.getPb_exp().visibleProperty().bind(runningProperty());
+                    controller.getPb_exp().progressProperty().bind(progressProperty());
+                    controller.getLab_exp_status().textProperty().bind(messageProperty());
+                });
+
             }
 
 
         };
     }
+
+    private static boolean partFlag = false;
 
     /**
      * Показ окна подтверждения выхода на следующие условия.
@@ -171,8 +193,13 @@ public class DataService extends Service<Void> implements DetectorListener {
      * @param flag_2ndTry флаг повтора операции.
      */
     private void showAndWait(AtomicBoolean flag_pause, AtomicBoolean flag_2ndTry) {
+        if (partFlag) {
+            flag_2ndTry.set(false);
+            flag_pause.set(true);
+            return;
+        }
 
-        ButtonType repeatBtn = new ButtonType("Повторить набор", ButtonBar.ButtonData.BACK_PREVIOUS);
+        //  ButtonType repeatBtn = new ButtonType("Повторить набор", ButtonBar.ButtonData.BACK_PREVIOUS);
         ButtonType goNextBtn = new ButtonType("Продолжить", ButtonBar.ButtonData.NEXT_FORWARD);
         ButtonType cancelBtn = new ButtonType("Отмена", ButtonBar.ButtonData.CANCEL_CLOSE);
 
@@ -180,9 +207,10 @@ public class DataService extends Service<Void> implements DetectorListener {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Info");
             alert.setHeaderText(null);
-            alert.setContentText("Данные набраны. Продолжаем?");
+            alert.setContentText("Первая часть данных собрана!\nУберите задвижку с оптического тракта и нажмите кнопку \"Продолжить\".");
+            partFlag=!partFlag;
             alert.getButtonTypes().clear();
-            alert.getButtonTypes().addAll(repeatBtn, goNextBtn, cancelBtn);
+            alert.getButtonTypes().addAll(goNextBtn, cancelBtn);
             Rectangle2D bounds = Screen.getPrimary().getBounds();
             alert.setX(bounds.getMaxX() / 2 - alert.getDialogPane().getWidth() / 2);
             alert.setY(bounds.getMaxY() / 2 + alert.getDialogPane().getHeight() * 2);
@@ -289,7 +317,7 @@ public class DataService extends Service<Void> implements DetectorListener {
             Rectangle2D bounds = Screen.getPrimary().getBounds();
             alert.setX(bounds.getMaxX() / 2 - alert.getDialogPane().getWidth() / 2);
             alert.setY(bounds.getMaxY() / 2 + alert.getDialogPane().getHeight() * 2);
-            alert.show();
+            alert.showAndWait();
         });
     }
 
@@ -383,12 +411,6 @@ public class DataService extends Service<Void> implements DetectorListener {
     @Override
     protected void succeeded() {
         super.succeeded();
-        Button btnGetData = controller.getBtnGetData();
-
-        Platform.runLater(() -> {
-            btnGetData.setStyle("-fx-background-color: green");
-            controller.getBtnParams().setDisable(false);
-        });
 
         controller.save();
     }
@@ -405,9 +427,7 @@ public class DataService extends Service<Void> implements DetectorListener {
     protected void failed() {
         super.failed();
         LOG.error("DataServise Failed!");
-        Button btnGetData = controller.getBtnGetData();
         Platform.runLater(() -> {
-            btnGetData.setStyle("-fx-background-color: red");
             controller.getLab_exp_status().textProperty().unbind();
             controller.getLab_exp_status().textProperty().setValue("");
         });
@@ -417,9 +437,7 @@ public class DataService extends Service<Void> implements DetectorListener {
     @Override
     public boolean cancel() {
         LOG.error("DataServise Canceled!");
-        Button btnGetData = controller.getBtnGetData();
         Platform.runLater(() -> {
-            btnGetData.setStyle("-fx-background-color: red");
             controller.getLab_exp_status().textProperty().unbind();
             controller.getLab_exp_status().textProperty().setValue("");
         });
