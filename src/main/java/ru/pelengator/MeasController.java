@@ -186,11 +186,9 @@ public class MeasController implements Initializable {
      * Прогрессиндикатор.
      */
     @FXML
-    private ProgressIndicator pIndicator0;
+    private ProgressIndicator pIndicatorSaveExp;
     @FXML
-    private ProgressIndicator pIndicator1;
-    @FXML
-    private ProgressIndicator pIndicator2;
+    private ProgressIndicator pIndicatorSavePDF;
     @FXML
     private ComboBox cbExpOptions;
     /**
@@ -225,6 +223,7 @@ public class MeasController implements Initializable {
          */
         btnStart.setOnAction(event -> {
             LOG.trace("Start Service");
+            controller.getSelExp().setParams(controller.getParams());
             service.restart();//Стартуем сервис
         });
 
@@ -247,11 +246,11 @@ public class MeasController implements Initializable {
         });
 
         btnSaveExp.setOnAction(event -> {
-            LOG.trace("Save exp pressed");
+            LOG.debug("Save exp pressed");
         });
 
         btnSaveProt.setOnAction(event -> {
-            LOG.trace("Save file pressed");
+            LOG.debug("Save file pressed");
             saveAllInFile(event);
         });
 
@@ -290,7 +289,7 @@ public class MeasController implements Initializable {
         Stage stage = (Stage) source.getScene().getWindow();
 
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Сохранить протокол измерений");
+        fileChooser.setTitle("Сохранить протокол измерений характеристик ФПУ");
         fileChooser.setInitialDirectory(new File(System.getProperty("user.dir")));
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("PDF", "*.pdf"),
@@ -579,6 +578,10 @@ public class MeasController implements Initializable {
         return scrlPaneEp;
     }
 
+    public VBox[] getScrlPaneS() {
+        return new VBox[]{scrlPaneSa,scrlPaneSq,scrlPaneSigma,scrlPaneSu,scrlPaneEp};
+    }
+
     public Button getBtnSaveProt() {
         return btnSaveProt;
     }
@@ -635,8 +638,8 @@ public class MeasController implements Initializable {
         this.controller = controller;
     }
 
-    public ProgressIndicator getpIndicator2() {
-        return pIndicator2;
+    public ProgressIndicator getpIndicatorSavePDF() {
+        return pIndicatorSavePDF;
     }
 
     private void startServiceOnTap(ActionEvent event) {

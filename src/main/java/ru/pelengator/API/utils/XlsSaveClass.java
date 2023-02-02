@@ -192,11 +192,6 @@ public class XlsSaveClass {
             strings.add("Среднее квадратичное сигнала");
             strings.add("СКО сигнала (шум)");
             strings.add("Вольтовая чувствительность");
-            strings.add("Порог чувствительности");
-            strings.add("Удельный порог чувствительности");
-            strings.add("Обнаружительная способность");
-            strings.add("Удельная обнаруж. способность");
-            strings.add("NEDT");
             strings.add("Пороговая облученность");
 
             /**
@@ -225,13 +220,16 @@ public class XlsSaveClass {
              * Подписи к столбцам и строкам
              */
             Map<Integer, Double[]> header = new TreeMap<>();
-            Double[] doubles = new Double[list.get(0).length];
-            for (int i = 0; i < list.get(0).length; i++) {
+            Double[] doubles = new Double[list.get(0)[0].length];
+            for (int i = 0; i < list.get(0)[0].length; i++) {
                 doubles[i] = (i) * 1.0D;
             }
-            header.put(128, doubles);
-            Double[] headers = header.get(128);
+            int length = list.get(0).length;
+            header.put(length, doubles);
+            Double[] headers = header.get(length);
             int i = 0;
+
+
             /**
              * Заполнитель страниц
              */
@@ -239,7 +237,7 @@ public class XlsSaveClass {
                     sheets) {
                 Set<Integer> rows = maps.get(i).keySet();
                 fillRowsAndCells(maps.get(i), sheet, rows);
-                Row header0 = sheet.createRow(headers.length + 1);
+                Row header0 = sheet.createRow(length + 1);
                 fillHeader(header0, headers, 1);
                 i++;
             }
@@ -264,13 +262,14 @@ public class XlsSaveClass {
      */
     private void fillMap(Map<Integer, Double[]> map, double[][] dataArray) {
         for (int i = 0; i < dataArray.length; i++) {
-            Double[] objects = new Double[dataArray.length + 1];
+            Double[] objects = new Double[dataArray[0].length + 1];
             objects[0] = Double.valueOf(dataArray.length - 1 - i);
-            for (int j = 0; j < dataArray.length; j++) {
+            for (int j = 0; j < dataArray[0].length; j++) {
                 objects[j + 1] = dataArray[i][j];
             }
             map.put((i + 1), objects);
         }
+        System.out.println("fd");
     }
 
 }

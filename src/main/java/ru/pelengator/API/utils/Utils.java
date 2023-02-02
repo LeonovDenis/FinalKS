@@ -8,14 +8,11 @@ import javafx.collections.ObservableMap;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.embed.swing.SwingNode;
 import javafx.event.ActionEvent;
-import javafx.geometry.Insets;
-import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.chart.*;
 import javafx.scene.control.Button;
-import javafx.scene.control.Separator;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -77,17 +74,18 @@ public class Utils {
 
     /**
      * Выдача атрибутов Jar файла
+     *
      * @param absolutePath путь
      * @return файл атрибутов
      */
     private static Attributes getAtributeJarFile(String absolutePath) throws IOException {
 
-            JarFile jarFile = new JarFile(absolutePath);
-            Attributes mainAttributes = jarFile.getManifest().getMainAttributes();
+        JarFile jarFile = new JarFile(absolutePath);
+        Attributes mainAttributes = jarFile.getManifest().getMainAttributes();
 
-            for (Object o : mainAttributes.keySet()) {
-                System.out.println( " "+o+"L "+ mainAttributes.getValue(o.toString()));
-            }
+        for (Object o : mainAttributes.keySet()) {
+            System.out.println(" " + o + "L " + mainAttributes.getValue(o.toString()));
+        }
 
         return mainAttributes;
     }
@@ -928,12 +926,11 @@ public class Utils {
         @Override
         public String toString() {
             StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.append("BadPoint{[").append(X).append(":").append(Y).append("]:");
-            for (DEF_TYPE def : list) {
-                stringBuilder.append(def.shotValue).append(";");
-            }
+            stringBuilder.append("BadPoint[").append(X).append(":").append(Y).append("]:");
+          //  for (DEF_TYPE def : list) {
+          //      stringBuilder.append(def.shotValue).append(";");
+          //  }
             stringBuilder.deleteCharAt(stringBuilder.length() - 1);
-            stringBuilder.append("}");
             return stringBuilder.toString();
         }
 
@@ -1753,13 +1750,14 @@ public class Utils {
      * @param data         данные
      * @param noCorrection true -если с учетом дефектов, false - если без учета
      * @param persent      процент отклонения от среднего
-     * @param color        цет дефектного пикселя
+     * @param colorL       цет дефектного пикселя
+     * @param colorH       цет дефектного пикселя
      * @param type         тип дефекта
      * @return
      */
     public static double addBpToList(ArrayList<BadPoint> bpList, double[][] data,
                                      boolean noCorrection, double persent,
-                                     String color, DEF_TYPE type) {
+                                     String colorL, String colorH, DEF_TYPE type) {
 
         double[] lines = makeMaxMeanMinNew(data, true, FALSE, 140);
 
@@ -1771,11 +1769,17 @@ public class Utils {
 
             for (int h = 0; h < sizeY; h++) {
                 for (int w = 0; w < sizeX; w++) {
-                    if (
-                            Math.abs(mean - data[h][w]) >= Math.abs(mean * (persent * 0.01))
-                    ) {
+                    if (Math.abs(mean - data[h][w]) >= Math.abs(mean * (persent * 0.01))) {
                         if (bpList != null) {
-                            Color awtColor = convertcolor(color);
+
+                            Color awtColor=null;
+
+                            if (mean - data[h][w] >= 0) {
+                                awtColor = convertcolor(colorL);
+                            } else {
+                                awtColor = convertcolor(colorH);
+                            }
+
                             BadPoint badPoint = new BadPoint(w, h, type,
                                     awtColor, data[h][w], sizeY);
                             bpList.add(badPoint);
@@ -1861,6 +1865,7 @@ public class Utils {
     public static HBox showGistAndImageBox(VBox pane, String Xname, String Yname,
                                            RaspredData raspredData, BufferedImage tempImage, ArrayList<BadPoint> bpList,
                                            ArrayList<BufferedImage> scList, MeasController controller) {
+
         String selectedDist = controller.getController().getCbDimOptions().getSelectionModel().getSelectedItem();
         int DEAMETR = StendParams.getDiametr();
 
@@ -1879,44 +1884,79 @@ public class Utils {
         scList.add(bufferedImageToOrder);
 
         Image imageToFX2 = SwingFXUtils
-                .toFXImage(bufferedImageTolist, null);
+                .toFXImage(badImage2, null);
 
         imageView.imageProperty().set(imageToFX2);
-        imageView.fitHeightProperty().bind(pane.widthProperty().divide(3.0));
-        imageView.fitWidthProperty().bind(pane.widthProperty().divide(3.0));
+        //   imageView.fitHeightProperty().bind(pane.widthProperty().divide(3.0));
+        //   imageView.fitWidthProperty().bind(pane.widthProperty().divide(3.0));
 
         imageView.setOnMouseClicked(event -> {
             showBigImage(badImage2, w, h);
         });
 
-        StackPane stackPane = new StackPane();
-        stackPane.getChildren().add(imageView);
-
+        //   StackPane stackPane = new StackPane();
+        //   stackPane.getChildren().add(imageView);
 
         pane.setAlignment(Pos.BASELINE_CENTER);
         badImage2.flush();
         bufferedImageTolist.flush();
         bufferedImageToOrder.flush();
 
-        Separator separator = new Separator();
-        separator.setOrientation(Orientation.HORIZONTAL);
-        separator.setPrefSize(pane.getWidth(), 10);
-        separator.getHalignment();
-        separator.setPadding(new Insets(20, 5, 5, 5));
+        //   Separator separator = new Separator();
+        //   separator.setOrientation(Orientation.HORIZONTAL);
+        //    separator.setPrefSize(pane.getWidth(), 10);
+        //    separator.getHalignment();
+        //    separator.setPadding(new Insets(20, 5, 5, 5));
 
-        HBox hBox = new HBox();
-        hBox.getChildren().add(bar_chart);
+        //    HBox hBox = new HBox();
+        //     hBox.getChildren().add(bar_chart);
 
-        pane.getChildren().add(hBox);
-        HBox hBox1 = new HBox();
-        hBox1.setPadding(new Insets(0, 0, 0, 60));
-        hBox1.getChildren().add(stackPane);
+        //     pane.getChildren().add(hBox);
+        //      HBox hBox1 = new HBox();
+        //      hBox1.setPadding(new Insets(0, 0, 0, 60));
+        //      hBox1.getChildren().add(stackPane);
 
-        pane.getChildren().add(hBox1);
-        HBox hBox2 = new HBox();
-        hBox2.getChildren().add(separator);
+        //      pane.getChildren().add(hBox1);
+        //      HBox hBox2 = new HBox();
+        //      hBox2.getChildren().add(separator);
 
-        pane.getChildren().add(hBox2);
+        //      pane.getChildren().add(hBox2);
+        pane.getChildren().add(imageView);
+        return null;
+    }
+
+    public static HBox showGistAndImageBox(VBox pane, BufferedImage tempImage, ArrayList<BadPoint> bpList,
+                                           ArrayList<BufferedImage> scList, MeasController controller) {
+
+        String selectedDist = controller.getController().getCbDimOptions().getSelectionModel().getSelectedItem();
+        int DEAMETR = StendParams.getDiametr();
+
+
+        String[] splitedSize = selectedDist.split("\\*");
+        int w = Integer.parseInt(splitedSize[0]);
+        int h = Integer.parseInt(splitedSize[1]);
+
+        ImageView imageView = new ImageView();
+        BufferedImage badImage2 = fillTempImage(tempImage, bpList, DEAMETR);
+        BufferedImage bufferedImageToOrder = saveImg(badImage2, false);
+        BufferedImage bufferedImageTolist = saveImg(badImage2, true);
+        scList.add(bufferedImageToOrder);
+
+        Image imageToFX2 = SwingFXUtils
+                .toFXImage(badImage2, null);
+
+        imageView.imageProperty().set(imageToFX2);
+
+        imageView.setOnMouseClicked(event -> {
+            showBigImage(badImage2, w, h);
+        });
+
+        pane.setAlignment(Pos.BASELINE_CENTER);
+        badImage2.flush();
+        bufferedImageTolist.flush();
+        bufferedImageToOrder.flush();
+
+        pane.getChildren().add(imageView);
         return null;
     }
 
@@ -2145,13 +2185,13 @@ public class Utils {
      * Сохранение отчета
      *
      * @param exp     эксперимента
-     * @param src     узел в которомвсе картинки
+     * @param src     узел в котором все картинки
      * @param pdfFile пдф файл
      * @return
      */
-    public static boolean saveOrder(ExpInfo exp, Node src, File pdfFile) {
+    public static boolean saveOrder(ExpInfo exp, File pdfFile, Node... src) {
         LOG.trace("Startsaving PDF file");
-        DocMaker docMaker = new DocMaker(exp, src, pdfFile);
+        DocMaker docMaker = new DocMaker(exp, pdfFile, src);
         boolean b = docMaker.save();
         if (!b) {
             return false;

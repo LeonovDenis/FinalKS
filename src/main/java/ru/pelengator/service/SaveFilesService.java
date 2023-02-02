@@ -60,7 +60,7 @@ public class SaveFilesService extends Service<Void> {
         return new Task<>() {
             @Override
             protected Void call() throws Exception {
-                Platform.runLater(() -> controller.getpIndicator2().setVisible(true));
+                Platform.runLater(() -> controller.getpIndicatorSavePDF().setVisible(true));
 
                 service = Executors.newFixedThreadPool(MP);
 
@@ -125,7 +125,7 @@ public class SaveFilesService extends Service<Void> {
         Button btnGetData = controller.getBtnSaveProt();
         Platform.runLater(() -> {
             btnGetData.setStyle("-fx-background-color: green");
-            controller.getpIndicator2().setVisible(false);
+            controller.getpIndicatorSavePDF().setVisible(false);
         });
     }
 
@@ -143,7 +143,7 @@ public class SaveFilesService extends Service<Void> {
             btnGetData.setStyle("-fx-background-color: red");
             controller.getLab_status().textProperty().unbind();
             controller.getLab_status().textProperty().setValue("Ошибка при записи файла");
-            controller.getpIndicator2().setVisible(false);
+            controller.getpIndicatorSavePDF().setVisible(false);
         });
     }
 
@@ -155,7 +155,7 @@ public class SaveFilesService extends Service<Void> {
             btnGetData.setStyle("-fx-background-color: red");
             controller.getLab_status().textProperty().unbind();
             controller.getLab_status().textProperty().setValue("Отмена записи файла");
-            controller.getpIndicator2().setVisible(false);
+            controller.getpIndicatorSavePDF().setVisible(false);
         });
         return super.cancel();
     }
@@ -176,8 +176,7 @@ public class SaveFilesService extends Service<Void> {
     class TxtTask implements Callable<String> {
         @Override
         public String call() throws Exception {
-            if (controller.getController().getSelExp().isPrintBpList()
-                    && controller.getController().getParams().isTbTxt()) {
+            if (controller.getController().getParams().isTbTxt()) {
                 saveTxt(controller.getController().getSelExp(), pdfFile);
             } else {
                 return "Txt файл Не записан";
@@ -189,7 +188,7 @@ public class SaveFilesService extends Service<Void> {
     class PdfTask implements Callable<String> {
         @Override
         public String call() throws Exception {
-            boolean b = saveOrder(controller.getController().getSelExp(), controller.getScrlPaneEp(), pdfFile);//правка
+            boolean b = saveOrder(controller.getController().getSelExp(), pdfFile,controller.getScrlPaneS());//правка
             if (!b) {
                 throw new IOException("PDF файл записан");
             //    return "PDF файл записан";

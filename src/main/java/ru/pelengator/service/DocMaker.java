@@ -24,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.pelengator.API.utils.ImageUtils;
 import ru.pelengator.model.ExpInfo;
+import ru.pelengator.model.StendParams;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -36,6 +37,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static ru.pelengator.API.utils.Utils.bpInCentral;
+import static ru.pelengator.API.utils.Utils.bpInDiametr;
 import static ru.pelengator.App.loadFilePath;
 
 /**
@@ -52,12 +54,12 @@ public class DocMaker {
     private static PDResources pDResources;
     private static String fileName = "protokol.pdf";
     private static File pdfFile;
-    private static Node src;
+    private static Node[] src;
     private static ExpInfo exp;
     private static List<String> fontNames;
     private static PDFont myFont;
 
-    public DocMaker(ExpInfo exp, Node src, File pdfFile) {
+    public DocMaker(ExpInfo exp, File pdfFile, Node... src) {
 
         this.map = createList(exp);
         this.pdfFile = pdfFile;
@@ -135,6 +137,7 @@ public class DocMaker {
             hashMap.put("TXT_2_0", "---");
             hashMap.put("TXT_3_0", "---");
             hashMap.put("TXT_4_0", "---");
+            hashMap.put("TXT_5_0", "---");
         } else {
             hashMap.put("TXT_0_0", exp.getParams().getTXT_0_0());
             hashMap.put("TXT_1_0", String.format(Locale.CANADA, "%.2e", value).toUpperCase());
@@ -144,10 +147,12 @@ public class DocMaker {
                 hashMap.put("TXT_2_0", String.format(Locale.CANADA, "%.2f", persent));
                 hashMap.put("TXT_3_0", String.valueOf(bpInCentral(exp.getFrList(), 0, 32)));
                 hashMap.put("TXT_4_0", String.valueOf(exp.getFrList().get(0).getBpList().size()));
+                hashMap.put("TXT_5_0", String.valueOf(bpInDiametr(exp.getFrList(), 0, StendParams.getDiametr())));
             } else {
                 hashMap.put("TXT_2_0", "---");
                 hashMap.put("TXT_3_0", "---");
                 hashMap.put("TXT_4_0", "---");
+                hashMap.put("TXT_5_0", "---");
             }
         }
         //2
@@ -158,6 +163,7 @@ public class DocMaker {
             hashMap.put("TXT_2_1", "---");
             hashMap.put("TXT_3_1", "---");
             hashMap.put("TXT_4_1", "---");
+            hashMap.put("TXT_5_1", "---");
         } else {
             hashMap.put("TXT_0_1", exp.getParams().getTXT_0_1());
             hashMap.put("TXT_1_1", String.format(Locale.CANADA, "%.2e", value).toUpperCase());
@@ -167,10 +173,12 @@ public class DocMaker {
                 hashMap.put("TXT_2_1", String.format(Locale.CANADA, "%.2f", persent));
                 hashMap.put("TXT_3_1", String.valueOf(bpInCentral(exp.getFrList(), 1, 32)));
                 hashMap.put("TXT_4_1", String.valueOf(exp.getFrList().get(1).getBpList().size()));
+                hashMap.put("TXT_5_1", String.valueOf(bpInDiametr(exp.getFrList(), 1, StendParams.getDiametr())));
             } else {
                 hashMap.put("TXT_2_1", "---");
                 hashMap.put("TXT_3_1", "---");
                 hashMap.put("TXT_4_1", "---");
+                hashMap.put("TXT_5_1", "---");
             }
         }
         //3
@@ -181,6 +189,7 @@ public class DocMaker {
             hashMap.put("TXT_2_2", "---");
             hashMap.put("TXT_3_2", "---");
             hashMap.put("TXT_4_2", "---");
+            hashMap.put("TXT_5_2", "---");
         } else {
             hashMap.put("TXT_0_2", exp.getParams().getTXT_0_2());
             hashMap.put("TXT_1_2", String.format(Locale.CANADA, "%.2e", value).toUpperCase());
@@ -190,10 +199,12 @@ public class DocMaker {
                 hashMap.put("TXT_2_2", String.format(Locale.CANADA, "%.2f", persent));
                 hashMap.put("TXT_3_2", String.valueOf(bpInCentral(exp.getFrList(), 2, 32)));
                 hashMap.put("TXT_4_2", String.valueOf(exp.getFrList().get(2).getBpList().size()));
+                hashMap.put("TXT_5_2", String.valueOf(bpInDiametr(exp.getFrList(), 2, StendParams.getDiametr())));
             } else {
                 hashMap.put("TXT_2_2", "---");
                 hashMap.put("TXT_3_2", "---");
                 hashMap.put("TXT_4_2", "---");
+                hashMap.put("TXT_5_2", "---");
             }
         }
 
@@ -205,6 +216,7 @@ public class DocMaker {
             hashMap.put("TXT_2_3", "---");
             hashMap.put("TXT_3_3", "---");
             hashMap.put("TXT_4_3", "---");
+            hashMap.put("TXT_5_3", "---");
         } else {
             hashMap.put("TXT_0_3", exp.getParams().getTXT_0_3());
             hashMap.put("TXT_1_3", String.format(Locale.CANADA, "%.2e", value).toUpperCase());
@@ -214,148 +226,38 @@ public class DocMaker {
                 hashMap.put("TXT_2_3", String.format(Locale.CANADA, "%.2f", persent));
                 hashMap.put("TXT_3_3", String.valueOf(bpInCentral(exp.getFrList(), 3, 32)));
                 hashMap.put("TXT_4_3", String.valueOf(exp.getFrList().get(3).getBpList().size()));
+                hashMap.put("TXT_5_3", String.valueOf(bpInDiametr(exp.getFrList(), 3, StendParams.getDiametr())));
             } else {
                 hashMap.put("TXT_2_3", "---");
                 hashMap.put("TXT_3_3", "---");
                 hashMap.put("TXT_4_3", "---");
+                hashMap.put("TXT_5_3", "---");
             }
         }
         //5
-        value = exp.getPorog();
+        value = exp.getExposure();
         if (value < 0 || Double.isNaN(value)) {
             hashMap.put("TXT_0_4", "---");
             hashMap.put("TXT_1_4", "---");
             hashMap.put("TXT_2_4", "---");
             hashMap.put("TXT_3_4", "---");
             hashMap.put("TXT_4_4", "---");
+            hashMap.put("TXT_5_4", "---");
         } else {
-            hashMap.put("TXT_0_4", exp.getParams().getTXT_0_4());
+            hashMap.put("TXT_0_4", exp.getParams().getTXT_0_9());
             hashMap.put("TXT_1_4", String.format(Locale.CANADA, "%.2e", value).toUpperCase());
 
-            persent = exp.getParams().getPorogPersent();
+            persent = exp.getParams().getExposurePersent();
             if (persent != 0) {
                 hashMap.put("TXT_2_4", String.format(Locale.CANADA, "%.2f", persent));
                 hashMap.put("TXT_3_4", String.valueOf(bpInCentral(exp.getFrList(), 4, 32)));
                 hashMap.put("TXT_4_4", String.valueOf(exp.getFrList().get(4).getBpList().size()));
+                hashMap.put("TXT_5_4", String.valueOf(bpInDiametr(exp.getFrList(), 4, StendParams.getDiametr())));
             } else {
                 hashMap.put("TXT_2_4", "---");
                 hashMap.put("TXT_3_4", "---");
                 hashMap.put("TXT_4_4", "---");
-            }
-        }
-        //6
-        value = exp.getPorogStar();
-        if (value < 0 || Double.isNaN(value)) {
-            hashMap.put("TXT_0_5", "---");
-            hashMap.put("TXT_1_5", "---");
-            hashMap.put("TXT_2_5", "---");
-            hashMap.put("TXT_3_5", "---");
-            hashMap.put("TXT_4_5", "---");
-        } else {
-            hashMap.put("TXT_0_5", exp.getParams().getTXT_0_5());
-            hashMap.put("TXT_1_5", String.format(Locale.CANADA, "%.2e", value).toUpperCase());
-
-            persent = exp.getParams().getNETDPersent();
-            if (persent != 0) {
-                hashMap.put("TXT_2_5", String.format(Locale.CANADA, "%.2f", persent));
-                hashMap.put("TXT_3_5", String.valueOf(bpInCentral(exp.getFrList(), 5, 32)));
-                hashMap.put("TXT_4_5", String.valueOf(exp.getFrList().get(5).getBpList().size()));
-            } else {
-                hashMap.put("TXT_2_5", "---");
-                hashMap.put("TXT_3_5", "---");
-                hashMap.put("TXT_4_5", "---");
-            }
-        }
-        //7
-        value = exp.getDetectivity();
-        if (value < 0 || Double.isNaN(value)) {
-            hashMap.put("TXT_0_6", "---");
-            hashMap.put("TXT_1_6", "---");
-            hashMap.put("TXT_2_6", "---");
-            hashMap.put("TXT_3_6", "---");
-            hashMap.put("TXT_4_6", "---");
-        } else {
-            hashMap.put("TXT_0_6", exp.getParams().getTXT_0_6());
-            hashMap.put("TXT_1_6", String.format(Locale.CANADA, "%.2e", value).toUpperCase());
-
-            persent = exp.getParams().getDetectivityPersent();
-            if (persent != 0) {
-                hashMap.put("TXT_2_6", String.format(Locale.CANADA, "%.2f", persent));
-                hashMap.put("TXT_3_6", String.valueOf(bpInCentral(exp.getFrList(), 6, 32)));
-                hashMap.put("TXT_4_6", String.valueOf(exp.getFrList().get(6).getBpList().size()));
-            } else {
-                hashMap.put("TXT_2_6", "---");
-                hashMap.put("TXT_3_6", "---");
-                hashMap.put("TXT_4_6", "---");
-            }
-        }
-        //8
-        value = exp.getDetectivityStar();
-        if (value < 0 || Double.isNaN(value)) {
-            hashMap.put("TXT_0_7", "---");
-            hashMap.put("TXT_1_7", "---");
-            hashMap.put("TXT_2_7", "---");
-            hashMap.put("TXT_3_7", "---");
-            hashMap.put("TXT_4_7", "---");
-        } else {
-            hashMap.put("TXT_0_7", exp.getParams().getTXT_0_7());
-            hashMap.put("TXT_1_7", String.format(Locale.CANADA, "%.2e", value).toUpperCase());
-
-            persent = exp.getParams().getDetectivityStarPersent();
-            if (persent != 0) {
-                hashMap.put("TXT_2_7", String.format(Locale.CANADA, "%.2f", persent));
-                hashMap.put("TXT_3_7", String.valueOf(bpInCentral(exp.getFrList(), 7, 32)));
-                hashMap.put("TXT_4_7", String.valueOf(exp.getFrList().get(7).getBpList().size()));
-            } else {
-                hashMap.put("TXT_2_7", "---");
-                hashMap.put("TXT_3_7", "---");
-                hashMap.put("TXT_4_7", "---");
-            }
-        }
-        //9
-        value = exp.getNETD();
-        if (value < 0 || Double.isNaN(value)) {
-            hashMap.put("TXT_0_8", "---");
-            hashMap.put("TXT_1_8", "---");
-            hashMap.put("TXT_2_8", "---");
-            hashMap.put("TXT_3_8", "---");
-            hashMap.put("TXT_4_8", "---");
-        } else {
-            hashMap.put("TXT_0_8", exp.getParams().getTXT_0_8());
-            hashMap.put("TXT_1_8", String.format(Locale.CANADA, "%.2e", value).toUpperCase());
-
-            persent = exp.getParams().getNETDPersent();
-            if (persent != 0) {
-                hashMap.put("TXT_2_8", String.format(Locale.CANADA, "%.2f", persent));
-                hashMap.put("TXT_3_8", String.valueOf(bpInCentral(exp.getFrList(), 8, 32)));
-                hashMap.put("TXT_4_8", String.valueOf(exp.getFrList().get(8).getBpList().size()));
-            } else {
-                hashMap.put("TXT_2_8", "---");
-                hashMap.put("TXT_3_8", "---");
-                hashMap.put("TXT_4_8", "---");
-            }
-        }
-        //10
-        value = exp.getExposure();
-        if (value < 0 || Double.isNaN(value)) {
-            hashMap.put("TXT_0_9", "---");
-            hashMap.put("TXT_1_9", "---");
-            hashMap.put("TXT_2_9", "---");
-            hashMap.put("TXT_3_9", "---");
-            hashMap.put("TXT_4_9", "---");
-        } else {
-            hashMap.put("TXT_0_9", exp.getParams().getTXT_0_9());
-            hashMap.put("TXT_1_9", String.format(Locale.CANADA, "%.2e", value).toUpperCase());
-
-            persent = exp.getParams().getExposurePersent();
-            if (persent != 0) {
-                hashMap.put("TXT_2_9", String.format(Locale.CANADA, "%.2f", persent));
-                hashMap.put("TXT_3_9", String.valueOf(bpInCentral(exp.getFrList(), 9, 32)));
-                hashMap.put("TXT_4_9", String.valueOf(exp.getFrList().get(9).getBpList().size()));
-            } else {
-                hashMap.put("TXT_2_9", "---");
-                hashMap.put("TXT_3_9", "---");
-                hashMap.put("TXT_4_9", "---");
+                hashMap.put("TXT_5_4", "---");
             }
         }
 
@@ -436,33 +338,219 @@ public class DocMaker {
         LOG.debug("saved " + name + ":" + value);
     }
 
-
-    public boolean saveImages() {
+    /**
+     * public boolean saveImages() {
+     * LOG.trace("Startsaving parse images to PDF file");
+     * try {
+     * ArrayList<PDImageXObject> list = new ArrayList<>();
+     * AtomicBoolean flag = new AtomicBoolean(false);
+     * Platform.runLater(() -> {
+     * try {
+     * <p>
+     * VBox vbox = (VBox) src;
+     * ObservableList<Node> children = vbox.getChildren();
+     * Node[] nodes = children.toArray(new Node[0]);
+     * for (int i = 0; i < nodes.length; i = i + 3) {
+     * BufferedImage bufImage;
+     * if (nodes[i] instanceof HBox) {
+     * HBox node = (HBox) nodes[i];
+     * Node chartNode = node.getChildren().get(0);
+     * if (chartNode instanceof Chart) {
+     * BarChart<String, Number> bar_chart = (BarChart<String, Number>) chartNode;
+     * bar_chart.getStylesheets().add(this.getClass().getResource("chart.css").toExternalForm());
+     * bufImage = SwingFXUtils.fromFXImage(nodes[i].snapshot(null, null), null);
+     * bar_chart.getStylesheets().clear();
+     * } else {
+     * bufImage = SwingFXUtils.fromFXImage(nodes[i].snapshot(null, null), null);
+     * }
+     * } else {
+     * bufImage = SwingFXUtils.fromFXImage(nodes[i].snapshot(null, null), null);
+     * }
+     * <p>
+     * ByteArrayOutputStream bos = new ByteArrayOutputStream();
+     * try {
+     * ImageIO.write(bufImage, ImageUtils.FORMAT_PNG, bos);
+     * bos.flush();
+     * } catch (Exception e) {
+     * LOG.error("Error in parse chart images", e.getMessage());
+     * }
+     * PDImageXObject pdImage = null;
+     * pdImage = PDImageXObject.createFromByteArray(pDDocument, bos.toByteArray(),
+     * nodes[i].getId());
+     * list.add(pdImage);
+     * bos.close();
+     * }
+     * } catch (IOException e) {
+     * LOG.error("ERROR {}", e.getCause());
+     * } finally {
+     * flag.set(true);
+     * }
+     * });
+     * while (!flag.get()) {
+     * TimeUnit.MILLISECONDS.sleep(500);
+     * }
+     * <p>
+     * for (BufferedImage bi :
+     * exp.getScList()) {
+     * ByteArrayOutputStream bos = new ByteArrayOutputStream();
+     * try {
+     * ImageIO.write(bi, ImageUtils.FORMAT_PNG, bos);
+     * bos.flush();
+     * } catch (Exception e) {
+     * e.printStackTrace();
+     * }
+     * PDImageXObject pdImage = null;
+     * pdImage = PDImageXObject.createFromByteArray(pDDocument, bos.toByteArray(),
+     * "");
+     * list.add(pdImage);
+     * bos.close();
+     * }
+     * <p>
+     * int listSize = list.size();
+     * float x = 30;
+     * float y = 0;
+     * float k = 0;
+     * PDPage tempPage = pDDocument.getPage(3);
+     * for (int i = 0; i < listSize / 2; i++) {
+     * //   if (i % 2 == 0) {
+     * PDFCloneUtility cloner = new PDFCloneUtility(pDDocument);
+     * COSDictionary pageDictionary = (COSDictionary) cloner.cloneForNewDocument(tempPage);
+     * PDPage page2 = new PDPage(pageDictionary);
+     * pDDocument.addPage(page2);
+     * y = page2.getMediaBox().getHeight() - 150;
+     * k = page2.getMediaBox().getWidth();
+     * //   }
+     * <p>
+     * PDImageXObject img = list.get(i);
+     * float height = img.getHeight();
+     * float width = img.getWidth();
+     * try (PDPageContentStream contentStream = new PDPageContentStream(pDDocument,
+     * pDDocument.getPage(pDDocument.getNumberOfPages() - 1),
+     * PDPageContentStream.AppendMode.APPEND, true)) {
+     * contentStream.drawImage(img, (k - width) / 2, y - height, width, height);
+     * }
+     * y = y - height;
+     * <p>
+     * PDImageXObject img2 = list.get(i + listSize / 2);
+     * height = img2.getHeight();
+     * width = img2.getWidth();
+     * try (PDPageContentStream contentStream = new PDPageContentStream(pDDocument,
+     * pDDocument.getPage(pDDocument.getNumberOfPages() - 1),
+     * PDPageContentStream.AppendMode.APPEND, true)) {
+     * contentStream.drawImage(img2, (k - width) / 2, y - height, width, height);
+     * }
+     * <p>
+     * }
+     * if (listSize % 2 == 1) {
+     * //Итоговая страница 4
+     * PDPage page = pDDocument.getPage(3);
+     * y = page.getMediaBox().getHeight() - 150;
+     * k = page.getMediaBox().getWidth();
+     * //   }
+     * <p>
+     * float height = 100;
+     * float width = 100;
+     * try (PDPageContentStream contentStream = new PDPageContentStream(pDDocument,
+     * pDDocument.getPage(3),
+     * PDPageContentStream.AppendMode.APPEND, true)) {
+     * contentStream.beginText();
+     * <p>
+     * contentStream.setFont(myFont, 12);
+     * contentStream.setLeading(14.5f);
+     * contentStream.newLineAtOffset(150, 680);
+     * String text1 = "Дефектные элементы по всем выбранным параметрам";
+     * contentStream.showText(text1);
+     * contentStream.newLineAtOffset(20, -15);
+     * contentStream.setFont(myFont, 10);
+     * String text2 = "Всего дефектных элементов в центральной зоне 32*32 px: " + exp.getBpInCenter();
+     * contentStream.showText(text2);
+     * contentStream.newLine();
+     * <p>
+     * String text3 = String.format("Всего дефектных элементов в зоне %d*%d px: %d",
+     * exp.getSizeX(), exp.getSizeY(), exp.getBpAll());
+     * contentStream.showText(text3);
+     * <p>
+     * byte[] bytes = exp.getBuffToTXT();
+     * <p>
+     * try (BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(bytes)));) {
+     * float h = 10.5f;
+     * contentStream.setLeading(h);
+     * <p>
+     * contentStream.setFont(myFont, 8);
+     * contentStream.newLineAtOffset(-90, -350);
+     * String line;
+     * int count = 0;
+     * for (int i = 0; i < 2; i++) {
+     * <p>
+     * while ((line = br.readLine()) != null && (count++) < 50) {
+     * contentStream.newLine();
+     * contentStream.showText(line);
+     * if ((count) > 24 && i == 0) {
+     * break;
+     * }
+     * }
+     * contentStream.newLineAtOffset(260, h * 25);
+     * }
+     * <p>
+     * } catch (Exception e) {
+     * LOG.error("Error while printing list pdf");
+     * }
+     * <p>
+     * contentStream.endText();
+     * }
+     * <p>
+     * y = 320;
+     * PDImageXObject img = list.get(listSize - 1);
+     * height = img.getHeight();
+     * width = img.getWidth();
+     * try (PDPageContentStream contentStream = new PDPageContentStream(pDDocument,
+     * pDDocument.getPage(3),
+     * PDPageContentStream.AppendMode.APPEND, true)) {
+     * contentStream.drawImage(img, (k - width) / 2, y, width, height);
+     * <p>
+     * }
+     * } else {
+     * <p>
+     * pDDocument.removePage(3);
+     * }
+     * <p>
+     * <p>
+     * } catch (
+     * Exception e) {
+     * LOG.error("Exeption in images {}", e.getMessage());
+     * return false;
+     * <p>
+     * } finally {
+     * try {
+     * <p>
+     * if (pDDocument != null) {
+     * pDDocument.save(pdfFile);
+     * pDDocument.close();
+     * }
+     * <p>
+     * } catch (Exception e) {
+     * LOG.error("Exeption in saveFile {}", e.getMessage());
+     * return false;
+     * }
+     * return true;
+     * }
+     * }
+     */
+    public boolean saveBoxes() {
         LOG.trace("Startsaving parse images to PDF file");
         try {
             ArrayList<PDImageXObject> list = new ArrayList<>();
+            ArrayList<PDImageXObject> listWithLines = new ArrayList<>();
             AtomicBoolean flag = new AtomicBoolean(false);
             Platform.runLater(() -> {
                 try {
-                    VBox vbox = (VBox) src;
-                    ObservableList<Node> children = vbox.getChildren();
-                    Node[] nodes = children.toArray(new Node[0]);
-                    for (int i = 0; i < nodes.length; i = i + 3) {
+
+                    VBox[] nodes = (VBox[]) src;
+
+                    for (int i = 0; i < nodes.length; i++) {
                         BufferedImage bufImage;
-                        if (nodes[i] instanceof HBox) {
-                            HBox node = (HBox) nodes[i];
-                            Node chartNode = node.getChildren().get(0);
-                            if (chartNode instanceof Chart) {
-                                BarChart<String, Number> bar_chart = (BarChart<String, Number>) chartNode;
-                                bar_chart.getStylesheets().add(this.getClass().getResource("chart.css").toExternalForm());
-                                bufImage = SwingFXUtils.fromFXImage(nodes[i].snapshot(null, null), null);
-                                bar_chart.getStylesheets().clear();
-                            } else {
-                                bufImage = SwingFXUtils.fromFXImage(nodes[i].snapshot(null, null), null);
-                            }
-                        } else {
-                            bufImage = SwingFXUtils.fromFXImage(nodes[i].snapshot(null, null), null);
-                        }
+
+                        bufImage = SwingFXUtils.fromFXImage(nodes[i].snapshot(null, null), null);
 
                         ByteArrayOutputStream bos = new ByteArrayOutputStream();
                         try {
@@ -499,54 +587,77 @@ public class DocMaker {
                 PDImageXObject pdImage = null;
                 pdImage = PDImageXObject.createFromByteArray(pDDocument, bos.toByteArray(),
                         "");
-                list.add(pdImage);
+                listWithLines.add(pdImage);
                 bos.close();
             }
 
-            int listSize = list.size();
-            float x = 30;
-            float y = 0;
-            float k = 0;
-            PDPage tempPage = pDDocument.getPage(3);
-            for (int i = 0; i < listSize / 2; i++) {
-                //   if (i % 2 == 0) {
-                PDFCloneUtility cloner = new PDFCloneUtility(pDDocument);
-                COSDictionary pageDictionary = (COSDictionary) cloner.cloneForNewDocument(tempPage);
-                PDPage page2 = new PDPage(pageDictionary);
-                pDDocument.addPage(page2);
-                y = page2.getMediaBox().getHeight() - 150;
-                k = page2.getMediaBox().getWidth();
-                //   }
 
-                PDImageXObject img = list.get(i);
-                float height = img.getHeight();
-                float width = img.getWidth();
-                try (PDPageContentStream contentStream = new PDPageContentStream(pDDocument,
-                        pDDocument.getPage(pDDocument.getNumberOfPages() - 1),
-                        PDPageContentStream.AppendMode.APPEND, true)) {
-                    contentStream.drawImage(img, (k - width) / 2, y - height, width, height);
-                }
-                y = y - height;
+            //Cтраница 3
 
-                PDImageXObject img2 = list.get(i + listSize / 2);
-                height = img2.getHeight();
-                width = img2.getWidth();
-                try (PDPageContentStream contentStream = new PDPageContentStream(pDDocument,
-                        pDDocument.getPage(pDDocument.getNumberOfPages() - 1),
-                        PDPageContentStream.AppendMode.APPEND, true)) {
-                    contentStream.drawImage(img2, (k - width) / 2, y - height, width, height);
+            try (PDPageContentStream contentStream = new PDPageContentStream(pDDocument,
+                    pDDocument.getPage(2),
+                    PDPageContentStream.AppendMode.APPEND, true)) {
+                contentStream.beginText();
+
+                contentStream.setFont(myFont, 12);
+                contentStream.setLeading(14.5f);
+                contentStream.newLineAtOffset(100, 475);
+                String text1 = "Среднее арифметическое сигнала, В";
+                contentStream.showText(text1);
+                contentStream.newLineAtOffset(275, 0);
+                contentStream.setFont(myFont, 12);
+                String text2 = "Среднее квадратичное сигнала, В";
+                contentStream.showText(text2);
+                contentStream.newLineAtOffset(-220, -195);
+                contentStream.setFont(myFont, 12);
+                String text4 = "СКО сигнала (шум), В";
+                contentStream.showText(text4);
+                contentStream.newLineAtOffset(220, 0);
+                contentStream.setFont(myFont, 12);
+                String text5 = "Пороговая облученность, Вт\u00B7см\u00AF \u00B2";
+                contentStream.showText(text5);
+
+                contentStream.endText();
+            }
+
+            float x = 150;
+            float y = 320;
+
+            try (PDPageContentStream contentStream = new PDPageContentStream(pDDocument,
+                    pDDocument.getPage(2),
+                    PDPageContentStream.AppendMode.APPEND, true)) {
+                for (int i = 0; i < list.size(); i++) {
+
+                    if (i == 0) {
+
+                    } else if (i == 1) {
+                        x = 390;
+                        y = 320;
+                    } else if (i == 2) {
+                        x = 150;
+                        y = 120;
+                    } else if (i == 3) {
+                        continue;
+                    } else if (i == 4) {
+                        x = 390;
+                        y = 120;
+                    }
+
+                    PDImageXObject img = list.get(i);
+                    contentStream.drawImage(list.get(i), x, y, img.getWidth(), img.getHeight());
                 }
+
 
             }
-            if (listSize % 2 == 1) {
+
+
+            if (true) {
                 //Итоговая страница 4
                 PDPage page = pDDocument.getPage(3);
-                y = page.getMediaBox().getHeight() - 150;
-                k = page.getMediaBox().getWidth();
+                float y5 = page.getMediaBox().getHeight() - 150;
+                float k5 = page.getMediaBox().getWidth();
                 //   }
 
-                float height = 100;
-                float width = 100;
                 try (PDPageContentStream contentStream = new PDPageContentStream(pDDocument,
                         pDDocument.getPage(3),
                         PDPageContentStream.AppendMode.APPEND, true)) {
@@ -562,10 +673,13 @@ public class DocMaker {
                     String text2 = "Всего дефектных элементов в центральной зоне 32*32 px: " + exp.getBpInCenter();
                     contentStream.showText(text2);
                     contentStream.newLine();
-
-                    String text3 = String.format("Всего дефектных элементов в зоне %d*%d px: %d",
-                            exp.getSizeX(), exp.getSizeY(), exp.getBpAll());
+                    String text3 = String.format("Всего дефектных элементов в зоне диаметром %d px: %d",
+                            140, exp.getBpInDiametr());
                     contentStream.showText(text3);
+                    contentStream.newLine();
+                    String text4 = String.format("Всего дефектных элементов в зоне %d*%d px: %d",
+                            exp.getSizeX(), exp.getSizeY(), exp.getBpAll());
+                    contentStream.showText(text4);
 
                     byte[] bytes = exp.getBuffToTXT();
 
@@ -596,21 +710,16 @@ public class DocMaker {
                     contentStream.endText();
                 }
 
-                y = 320;
-                PDImageXObject img = list.get(listSize - 1);
-                height = img.getHeight();
-                width = img.getWidth();
+                y5 = 300;
+                PDImageXObject img1 = listWithLines.get(3);
+              float  height1 = img1.getHeight();
+                float  width1 = img1.getWidth();
                 try (PDPageContentStream contentStream = new PDPageContentStream(pDDocument,
                         pDDocument.getPage(3),
                         PDPageContentStream.AppendMode.APPEND, true)) {
-                    contentStream.drawImage(img, (k - width) / 2, y, width, height);
-
+                    contentStream.drawImage(img1, (k5 - width1) / 2, y5, width1, height1);
                 }
-            } else {
-
-                pDDocument.removePage(3);
             }
-
 
         } catch (
                 Exception e) {
@@ -632,6 +741,7 @@ public class DocMaker {
             return true;
         }
     }
+
 
     /**
      * Добавление шрифтов в документ
@@ -685,7 +795,7 @@ public class DocMaker {
             return false;
         }
 
-        if (!saveImages()) {
+        if (!saveBoxes()) {
             return false;
         }
 

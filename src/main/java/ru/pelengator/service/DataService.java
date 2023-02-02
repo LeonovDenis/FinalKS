@@ -5,6 +5,9 @@ import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.control.*;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -194,6 +197,7 @@ public class DataService extends Service<Void> implements DetectorListener {
      */
     private void showAndWait(AtomicBoolean flag_pause, AtomicBoolean flag_2ndTry) {
         if (partFlag) {
+            partFlag=!partFlag;
             flag_2ndTry.set(false);
             flag_pause.set(true);
             return;
@@ -206,9 +210,13 @@ public class DataService extends Service<Void> implements DetectorListener {
         Platform.runLater(() -> {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Info");
+
             alert.setHeaderText(null);
-            alert.setContentText("Первая часть данных собрана!\nУберите задвижку с оптического тракта и нажмите кнопку \"Продолжить\".");
+            Label label = new Label("Первая часть данных собрана!\nУберите задвижку с оптического тракта.\nНажмите кнопку \"Продолжить\".");
+            alert.getDialogPane().setPrefSize(310, 120);
+            alert.getDialogPane().setContent(label);
             partFlag=!partFlag;
+
             alert.getButtonTypes().clear();
             alert.getButtonTypes().addAll(goNextBtn, cancelBtn);
             Rectangle2D bounds = Screen.getPrimary().getBounds();

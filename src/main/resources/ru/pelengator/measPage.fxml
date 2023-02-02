@@ -24,7 +24,7 @@
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
 
-<StackPane minHeight="970.0" minWidth="1200.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.pelengator.MeasController">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="875.0" prefWidth="1700.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.pelengator.MeasController">
    <children>
       <TabPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" side="BOTTOM" tabMinHeight="30.0">
          <tabs>
@@ -69,13 +69,13 @@
                                     <RowConstraints maxHeight="1.7976931348623157E308" minHeight="-Infinity" vgrow="SOMETIMES" />
                                     <RowConstraints maxHeight="1.7976931348623157E308" minHeight="-Infinity" prefHeight="7.0" vgrow="SOMETIMES" />
                                     <RowConstraints maxHeight="-Infinity" vgrow="SOMETIMES" />
-                                    <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="-Infinity" minHeight="7.0" vgrow="SOMETIMES" />
                                     <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" vgrow="SOMETIMES" />
-                                    <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="-Infinity" minHeight="7.0" vgrow="SOMETIMES" />
                                     <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" vgrow="SOMETIMES" />
-                                    <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="-Infinity" minHeight="7.0" vgrow="SOMETIMES" />
                                     <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" vgrow="SOMETIMES" />
-                                    <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="-Infinity" minHeight="7.0" vgrow="SOMETIMES" />
                                     <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" vgrow="SOMETIMES" />
                                     <RowConstraints />
                                     <RowConstraints />
@@ -290,7 +290,10 @@
                                           <Font name="System Bold" size="20.0" />
                                        </font>
                                     </Label>
-                                    <VBox fx:id="scrlPaneSq" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="130.0" minWidth="130.0" GridPane.rowIndex="9" />
+                                    <VBox fx:id="scrlPaneSq" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="130.0" minWidth="130.0" GridPane.rowIndex="9">
+                                       <GridPane.margin>
+                                          <Insets />
+                                       </GridPane.margin></VBox>
                                     <VBox fx:id="scrlPaneSigma" alignment="CENTER" layoutX="10.0" layoutY="396.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="130.0" minWidth="130.0" GridPane.rowIndex="11" />
                                     <VBox fx:id="scrlPaneSu" alignment="CENTER" layoutX="10.0" layoutY="426.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="130.0" minWidth="130.0" GridPane.rowIndex="13" />
                                     <VBox fx:id="scrlPaneEp" alignment="CENTER" layoutX="10.0" layoutY="456.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="130.0" minWidth="130.0" GridPane.rowIndex="15" />
@@ -332,7 +335,10 @@
                                           <Font name="System Bold" size="20.0" />
                                        </font>
                                     </Label>
-                                    <VBox fx:id="scrlPaneSa" alignment="CENTER" layoutX="10.0" layoutY="181.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="130.0" minWidth="130.0" GridPane.rowIndex="7" />
+                                    <VBox fx:id="scrlPaneSa" alignment="CENTER" layoutX="10.0" layoutY="181.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="130.0" minWidth="130.0" GridPane.rowIndex="7">
+                                       <GridPane.margin>
+                                          <Insets left="5.0" />
+                                       </GridPane.margin></VBox>
                                     <ColorPicker fx:id="cpArifmeticMeanH" layoutX="690.0" layoutY="154.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="30.0" scaleX="2.0" scaleY="2.0" scaleZ="2.0" styleClass="button" stylesheets="@cp.css" GridPane.columnIndex="10" GridPane.halignment="CENTER" GridPane.rowIndex="7" GridPane.valignment="CENTER">
                                        <value>
                                           <Color red="0.6973684430122375" green="0.555311918258667" blue="0.555311918258667" />
@@ -563,7 +569,7 @@
                                                 </ImageView>
                                              </graphic>
                                           </Button>
-                                          <ProgressIndicator fx:id="pIndicator0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="45.0" prefWidth="45.0" visible="false" />
+                                          <ProgressIndicator maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="45.0" prefWidth="45.0" visible="false" />
                                        </children>
                                     </StackPane>
                                     <Button fx:id="btnReset" alignment="CENTER" contentDisplay="GRAPHIC_ONLY" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0" textAlignment="CENTER" textFill="#112e1d" GridPane.columnIndex="1" GridPane.rowIndex="1">
@@ -592,7 +598,7 @@
                                                 </ImageView>
                                              </graphic>
                                           </Button>
-                                          <ProgressIndicator fx:id="pIndicator1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="28.0" prefWidth="28.0" visible="false" />
+                                          <ProgressIndicator fx:id="pIndicatorSaveExp" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="28.0" prefWidth="28.0" visible="false" />
                                        </children>
                                     </StackPane>
                                     <StackPane GridPane.columnIndex="1" GridPane.rowIndex="7">
@@ -609,7 +615,7 @@
                                                 </ImageView>
                                              </graphic>
                                           </Button>
-                                          <ProgressIndicator fx:id="pIndicator2" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="28.0" prefWidth="28.0" visible="false" />
+                                          <ProgressIndicator fx:id="pIndicatorSavePDF" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="28.0" prefWidth="28.0" visible="false" />
                                        </children>
                                     </StackPane>
                                     <Separator prefWidth="200.0" GridPane.columnSpan="2" GridPane.rowIndex="6" />

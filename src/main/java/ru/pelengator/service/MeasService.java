@@ -81,6 +81,8 @@ public class MeasService extends Service<Void> {
     private VBox scrlPaneSigma;
     private VBox scrlPaneSu;
 
+    private VBox scrlPaneEp;
+
     /**
      * Заготовка для отрисовки квадрата.
      */
@@ -98,7 +100,6 @@ public class MeasService extends Service<Void> {
             @Override
             protected Void call() throws Exception {
                 LOG.trace("Starting");
-                Platform.runLater(() -> controller.getpIndicator2().setVisible(true));
 
                 updateMessage("Старт");
                 updateProgress(0.0, 1);
@@ -114,7 +115,7 @@ public class MeasService extends Service<Void> {
 
                 updateMessage("Расчет срендего арифм.");
                 arifmeticMean = calculateAndCheckArifmSignal(
-                       true,
+                        true,
                         noCorrection);
                 updateProgress(0.25, 1);
                 updateMessage("Расчет среднего квадрат.");
@@ -136,6 +137,7 @@ public class MeasService extends Service<Void> {
                         noCorrection);
                 updateProgress(0.8, 1);
                 updateMessage("Расчет итоговой дефектности");
+                calculateAllDefects();
                 updateMessage("Запись параметров");
                 saveExpData();
                 updateProgress(0.85, 1);
@@ -160,7 +162,8 @@ public class MeasService extends Service<Void> {
      */
     private double calculateAndCheckExposure(boolean selected, boolean noCorrection) {
         double persent = params.getExposurePersent();
-        String color = params.getPersentColorExposureL();
+        String colorL = params.getPersentColorExposureL();
+        String colorH = params.getPersentColorExposureH();
         DEF_TYPE type = DEF_TYPE.TYPE_EXPOSURE;
 
         eExposure = exposure(quadraticMeanValue_1, quadraticMeanValue_0, SKOValue,
@@ -171,9 +174,8 @@ public class MeasService extends Service<Void> {
         }
 
         return addBpToList(frList.get(4).getBpList(), eExposure, noCorrection,
-                persent, color, type);
+                persent, colorL, colorH, type);
     }
-
 
 
     /**
@@ -185,7 +187,8 @@ public class MeasService extends Service<Void> {
      */
     private double calculateAndCheckVw(boolean selected, boolean noCorrection) {
         double persent = params.getVwPersent();
-        String color = params.getPersentColorVwL();
+        String colorL = params.getPersentColorVwL();
+        String colorH = params.getPersentColorVwH();
         DEF_TYPE type = DEF_TYPE.TYPE_VW;
 
         voltWatka = voltWatka(quadraticMeanValue_1, quadraticMeanValue_0, params.getPotok());
@@ -195,7 +198,7 @@ public class MeasService extends Service<Void> {
         }
 
         return addBpToList(frList.get(3).getBpList(), voltWatka, noCorrection,
-                persent, color, type);
+                persent, colorL, colorH, type);
     }
 
 
@@ -208,7 +211,8 @@ public class MeasService extends Service<Void> {
      */
     private double calculateAndCheckSKO(boolean selected, boolean noCorrection) {
         double persent = params.getSKOPersent();
-        String color = params.getPersentColorSKOL();
+        String colorL = params.getPersentColorSKOL();
+        String colorH = params.getPersentColorSKOH();
         DEF_TYPE type = DEF_TYPE.TYPE_SKO;
 
         if (!selected) {
@@ -217,7 +221,7 @@ public class MeasService extends Service<Void> {
         }
 
         return addBpToList(frList.get(2).getBpList(), SKOValue, noCorrection,
-                persent, color, type);
+                persent, colorL, colorH, type);
     }
 
     /**
@@ -229,7 +233,8 @@ public class MeasService extends Service<Void> {
      */
     private double calculateAndCheckQuadraticSignal(boolean selected, boolean noCorrection) {
         double persent = params.getQuadraticMeanPersent();
-        String color = params.getPersentColorQuadraticL();
+        String colorL = params.getPersentColorQuadraticL();
+        String colorH = params.getPersentColorQuadraticH();
         DEF_TYPE type = DEF_TYPE.TYPE_QUADRATIC;
 
         if (!selected) {
@@ -238,7 +243,7 @@ public class MeasService extends Service<Void> {
         }
 
         return addBpToList(frList.get(1).getBpList(), quadraticMeanValue_delta, noCorrection,
-                persent, color, type);
+                persent, colorL, colorH, type);
     }
 
     /**
@@ -251,7 +256,8 @@ public class MeasService extends Service<Void> {
     private double calculateAndCheckArifmSignal(boolean selected,
                                                 boolean noCorrection) {
         double persent = params.getArifmeticMeanPersent();
-        String color = params.getPersentColorArifmL();
+        String colorL = params.getPersentColorArifmL();
+        String colorH = params.getPersentColorArifmH();
         DEF_TYPE type = DEF_TYPE.TYPE_ARIFMETIC;
 
         if (!selected) {
@@ -260,7 +266,7 @@ public class MeasService extends Service<Void> {
         }
 
         return addBpToList(frList.get(0).getBpList(), arifmeticMeanValue_delta, noCorrection,
-                persent, color, type);
+                persent, colorL, colorH, type);
     }
 
     /**
@@ -301,6 +307,7 @@ public class MeasService extends Service<Void> {
         arifmeticMeanValue_1 = new double[sizeY][sizeX];
         quadraticMeanValue_0 = new double[sizeY][sizeX];
         quadraticMeanValue_1 = new double[sizeY][sizeX];
+
         SKOValue = new double[sizeY][sizeX];
         arifmeticMeanValue_delta = new double[sizeY][sizeX];
         quadraticMeanValue_delta = new double[sizeY][sizeX];
@@ -309,7 +316,6 @@ public class MeasService extends Service<Void> {
         eExposure = new double[sizeY][sizeX];
 
         params = controller.getController().getSelExp().getParams();
-
 
         dataArrayStat_0 = new StatisticsUtils[sizeY][sizeX];
         dataArrayStat_1 = new StatisticsUtils[sizeY][sizeX];
@@ -346,10 +352,11 @@ public class MeasService extends Service<Void> {
                 sizeX, sizeY));
 
 
-         scrlPaneSa=controller.getScrlPaneSa();
-         scrlPaneSq=controller.getScrlPaneSq();
-         scrlPaneSigma=controller.getScrlPaneSigma();
-         scrlPaneSu=controller.getScrlPaneSu();
+        scrlPaneSa = controller.getScrlPaneSa();
+        scrlPaneSq = controller.getScrlPaneSq();
+        scrlPaneSigma = controller.getScrlPaneSigma();
+        scrlPaneSu = controller.getScrlPaneSu();
+        scrlPaneEp = controller.getScrlPaneEp();
 
         tempImage = controller.getController().getSelExp().getTempImage();
         bpInCenter = -1;
@@ -362,8 +369,9 @@ public class MeasService extends Service<Void> {
             clearPane(scrlPaneSq);
             clearPane(scrlPaneSigma);
             clearPane(scrlPaneSu);
+            clearPane(scrlPaneEp);
         });
-        params=controller.getController().getParams();
+        params = controller.getController().getParams();
     }
 
     /**
@@ -394,6 +402,10 @@ public class MeasService extends Service<Void> {
             fillTextFields();
             fillTextLabels();
             showGistAndImage(scrlPaneSa);
+            showGistAndImage(scrlPaneSq);
+            showGistAndImage(scrlPaneSigma);
+            showGistAndImage(scrlPaneSu);
+            showGistAndImage(scrlPaneEp);
         });
     }
 
@@ -405,7 +417,7 @@ public class MeasService extends Service<Void> {
     private void showGistAndImage(VBox pane) {
 
 
-        if ( params.getArifmeticMeanPersent() != 0) {
+        if (params.getArifmeticMeanPersent() != 0 && pane == scrlPaneSa) {
 
             RaspredData raspred = makeRaspred(arifmeticMeanValue_delta, "0.000E00", noCorrection, params.getArifmeticMeanPersent());
 
@@ -413,21 +425,21 @@ public class MeasService extends Service<Void> {
                     "Число диодов", raspred, tempImage, frList.get(0).getBpList(), scList, controller);
         }
 
-        if (params.getQuadraticMeanPersent() != 0) {
+        if (params.getQuadraticMeanPersent() != 0 && pane == scrlPaneSq) {
 
             RaspredData raspred = makeRaspred(quadraticMeanValue_delta, "0.000E00", noCorrection, params.getQuadraticMeanPersent());
 
             showGistAndImageBox(pane, "Среднее квадратичное сигнала, В",
                     "Число диодов", raspred, tempImage, frList.get(1).getBpList(), scList, controller);
         }
-        if (params.getSKOPersent() != 0) {
+        if (params.getSKOPersent() != 0 && pane == scrlPaneSigma) {
 
             RaspredData raspred = makeRaspred(SKOValue, "0.000E00", noCorrection, params.getSKOPersent());
 
             showGistAndImageBox(pane, "СКО сигнала (шум), В",
                     "Число диодов", raspred, tempImage, frList.get(2).getBpList(), scList, controller);
         }
-        if (params.getVwPersent() != 0) {
+        if (params.getVwPersent() != 0 && pane == scrlPaneSu) {
 
             RaspredData raspred = makeRaspred(voltWatka, "0.000E00", noCorrection, params.getVwPersent());
 
@@ -435,7 +447,7 @@ public class MeasService extends Service<Void> {
                     "Число диодов", raspred, tempImage, frList.get(3).getBpList(), scList, controller);
         }
 
-        if (params.getExposurePersent() != 0) {
+        if (params.getExposurePersent() != 0 && pane == scrlPaneEp) {
 
             RaspredData raspred = makeRaspred(eExposure, "0.000E00", noCorrection, params.getExposurePersent());
 
@@ -444,6 +456,13 @@ public class MeasService extends Service<Void> {
         }
     }
 
+    private void calculateAllDefects() {
+
+        badBigPoints = bedPxToList("000000");
+        bpAll = frList.get(3).getBpList().size();
+        bpInCenter = bpInCentral(frList, 3, 32);
+        bpInDiametr = bpInDiametr(frList, 3, StendParams.getDiametr());
+    }
 
     /**
      * Переделать.
@@ -461,28 +480,33 @@ public class MeasService extends Service<Void> {
         //перебиваем все кадры
         int x, y = 0;
 
-        for (Frame fr : frList) {
-            //если в кадре есть дефекты,то
-            if (!fr.getBpList().isEmpty()) {
-                //список брака в этом кадре
-                ArrayList<BadPoint> bpList = fr.getBpList();
-                //перебираем все пиксели
-                for (BadPoint bp :
-                        bpList) {
-                    x = bp.getX();
-                    y = bp.getY();
+        //если в кадре есть дефекты,то
+        if (!frList.get(3).getBpList().isEmpty()) {
+            //список брака в этом кадре
+            ArrayList<BadPoint> bpList = frList.get(3).getBpList();
+            //перебираем все пиксели
+            int w = frList.get(3).getSizeX();
+            int h = frList.get(3).getSizeY();
 
-                    if (tempMatrix[y][x] == null) {//если еще нет такого пикселя
+            int nizIndexX = (w - StendParams.getDiametr()) / 2;
+            int verhIndexX = (nizIndexX +  StendParams.getDiametr() - 1);
+            int nizIndexY = (h -  StendParams.getDiametr()) / 2;
+            int verhIndexY = (nizIndexY +  StendParams.getDiametr() - 1);
+
+            for (BadPoint bp :
+                    bpList) {
+                x = bp.getX();
+                y = bp.getY();
+
+                if (bp.getX() >= nizIndexX && bp.getX() <= verhIndexX
+                        && bp.getY() >= nizIndexY && bp.getY() <= verhIndexY) {
                         BadBigPoint badbBigPoint = new BadBigPoint(bp, convertcolor(color));
                         tempMatrix[y][x] = badbBigPoint;
-                    } else {//если есть, то добавляем в пиксель тип брака
-                        tempMatrix[y][x].addToList(bp);
-                    }
                 }
             }
         }
 
-        //Если массив имеет попадания, то создаём лист идобавляем точки
+        //Если массив имеет попадания, то создаём лист и добавляем точки
 
         for (int h = 0; h < sizeY; h++) {
             for (int w = 0; w < sizeX; w++) {
@@ -560,22 +584,20 @@ public class MeasService extends Service<Void> {
      */
     private void fillTextFields() {
 
+        controller.getTfArifmeticMean().setText(arifmeticMean == -1 ? "--" :
+                String.format(Locale.CANADA, "%.3e", arifmeticMean).toUpperCase());
 
-            controller.getTfArifmeticMean().setText(arifmeticMean == -1 ? "--" :
-                    String.format(Locale.CANADA, "%.3e", arifmeticMean).toUpperCase());
+        controller.getTfQuadraticMean().setText(quadraticMean == -1 ? "--" :
+                String.format(Locale.CANADA, "%.3e", quadraticMean).toUpperCase());
 
-            controller.getTfQuadraticMean().setText(quadraticMean == -1 ? "--" :
-                    String.format(Locale.CANADA, "%.3e", quadraticMean).toUpperCase());
+        controller.getTfSKO().setText(SKO == -1 ? "--" :
+                String.format(Locale.CANADA, "%.3e", SKO).toUpperCase());
 
-            controller.getTfSKO().setText(SKO == -1 ? "--" :
-                    String.format(Locale.CANADA, "%.3e", SKO).toUpperCase());
+        controller.getTfVw().setText(vw == -1 ? "--" :
+                String.format(Locale.CANADA, "%.3e", vw).toUpperCase());
 
-
-            controller.getTfVw().setText(vw == -1 ? "--" :
-                    String.format(Locale.CANADA, "%.3e", vw).toUpperCase());
-
-            controller.getTfExposure().setText(exposure == -1 ? "--" :
-                    String.format(Locale.CANADA, "%.3e", exposure).toUpperCase());
+        controller.getTfExposure().setText(exposure == -1 ? "--" :
+                String.format(Locale.CANADA, "%.3e", exposure).toUpperCase());
 
     }
 
@@ -607,12 +629,6 @@ public class MeasService extends Service<Void> {
     protected void succeeded() {
         super.succeeded();
         controller.getController().save();
-
-        MeasController measController = controller.getController().getMeasFxmlLoader().getController();
-        Platform.runLater(() -> {
-            controller.getpIndicator2().setVisible(false);
-        });
-
     }
 
     @Override
@@ -624,11 +640,9 @@ public class MeasService extends Service<Void> {
     protected void failed() {
         super.failed();
         LOG.error("Failed!");
-        MeasController measController  = controller.getController().getMeasFxmlLoader().getController();
         Platform.runLater(() -> {
             controller.getController().getLab_exp_status().textProperty().unbind();
             controller.getController().getLab_exp_status().textProperty().setValue("");
-            controller.getpIndicator2().setVisible(false);
         });
     }
 
@@ -636,11 +650,9 @@ public class MeasService extends Service<Void> {
     public boolean cancel() {
         LOG.error("Canceled!");
 
-        MeasController measController  = controller.getController().getMeasFxmlLoader().getController();
         Platform.runLater(() -> {
             controller.getController().getLab_exp_status().textProperty().unbind();
             controller.getController().getLab_exp_status().textProperty().setValue("Отмена записи файла");
-            controller.getpIndicator2().setVisible(false);
         });
         return super.cancel();
     }
