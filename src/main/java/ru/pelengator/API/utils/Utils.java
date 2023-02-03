@@ -269,13 +269,14 @@ public class Utils {
 
         int width = src.getWidth();
         int height = src.getHeight();
-        int[][] tempData = new int[height][width];
-
+        int[][] tempData = new int[height][width]; //в отсчетах
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
                 tempData[y][x] = src.getRGB(x, y) & 0xffffff;
             }
         }
+
+
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
                 src.setRGB(x, y, qvantFilterRGB(tempData[y][x]));

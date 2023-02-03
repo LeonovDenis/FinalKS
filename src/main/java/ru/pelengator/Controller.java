@@ -20,6 +20,8 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -64,7 +66,7 @@ import ru.pelengator.API.*;
 import ru.pelengator.API.devises.china.ChinaDriver;
 import ru.pelengator.API.devises.china.ChinaDriverEthernet;
 import ru.pelengator.API.driver.FT_STATUS;
-import ru.pelengator.API.transformer.MyChinaRgbImageTransformer;
+import ru.pelengator.API.transformer.MyMinusTransformer;
 import ru.pelengator.model.*;
 import ru.pelengator.service.DataService;
 import ru.pelengator.service.TimeChartService;
@@ -97,8 +99,22 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
     /**
      * Поле ввода диаметра
      */
+    @FXML
+    private TextField tf_minus;
+
+    @FXML
+    private ToggleButton bt_correction;
 
     private TextField tf_diam;
+
+    @FXML
+    private Label lb_lowValueGist;
+    @FXML
+    private Label lb_medValueGist;
+    @FXML
+    private Label lb_hiValueGist;
+
+
     ////////////////////////////////////////////////////////////////испытания
     public MultipleAxesLineChart timechart;
     private TimeChartService median_chart_service;
@@ -582,7 +598,7 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
     private static final AtomicBoolean isImageFrash = new AtomicBoolean(false);
     private static int detectorCounter = 0;
 
-    private final DetectorImageTransformer imageTransformer = new MyChinaRgbImageTransformer();
+    private final DetectorImageTransformer imageTransformer = new MyMinusTransformer();//new MyChinaRgbImageTransformer();
 
 
     private boolean async = false;
@@ -885,6 +901,84 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
 
         sp_Protokol.minHeightProperty().bind(bpDetectorPaneHolder.heightProperty().subtract(bpDetectorPaneHolder.widthProperty()).subtract(5));
 
+        initeDopFunctions();
+    }
+
+    private void initeDopFunctions() {
+
+        tf_minus.setOnAction(event -> {
+            int i = parseIntText(event, false);
+            if (i < 0) {
+                i = 0;
+            } else if (i > 5000) {
+                i = 5000;
+            }
+            int roundValue = Math.round(i / MASHTAB);
+            if (imageTransformer instanceof MyMinusTransformer) {
+                ((MyMinusTransformer) imageTransformer).setMinusValue(roundValue);
+
+                //    lb_lowValueGist.setText(String.format("%.1f В",i/1000.0).replace(",","."));
+                //    lb_medValueGist.setText(String.format("%.1f В",((2500+i/2.0)/1000.0)).replace(",","."));
+                //     lb_hiValueGist.setText(String.format("%.1f В",5.0).replace(",","."));
+
+                BufferedImage bufferedImage = fillPolosa(ivPolosa, pnGist);
+                ivPolosa.setImage(SwingFXUtils.toFXImage(bufferedImage, null));
+            }
+        });
+
+
+        bt_correction.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                twoPointCorrectionEnebled();
+            } else {
+                twoPointCorrectionDisebled();
+            }
+        });
+    }
+
+    private void twoPointCorrectionDisebled() {
+
+        correction = null;
+    }
+
+    private static TwoPointCorrection correction = null;
+
+    private void twoPointCorrectionEnebled() {
+
+        String path = getParams().getCorrectionFilePath();
+
+        if (TwoPointCorrection.isCorrectionFileAlive(path)) {
+
+            TwoPointCorrection correction = TwoPointCorrection.loadData(path);//если ок, то грузим данные
+            this.correction = correction;
+
+        } else {
+            try {
+                startShowCerrWindow();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
+        }
+
+    }
+
+    private void startShowCerrWindow() throws IOException {
+
+        Stage stage = new Stage();
+
+        FXMLLoader   corrFxmlLoader = new FXMLLoader(getClass().getResource("corrPage.fxml"));
+        Parent root = corrFxmlLoader.load();
+        CorrController corrController = corrFxmlLoader.getController();
+        corrController.initController(this);
+
+        Scene scene = new Scene(root);
+        stage.setTitle("Загрузка файла коррекции");
+        stage.setScene(scene);
+        stage.centerOnScreen();
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.setResizable(false);
+        stage.show();
     }
 
     private void createNetworcOptions() {
@@ -1106,17 +1200,49 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
         tfInt.focusedProperty().addListener((observableValue, aBoolean, t1) -> {
             if (!t1) {
                 tfInt.fireEvent(EnterEvent);
+            } else {
+                Platform.runLater(() -> {
+                    if (tfInt.isFocused() && !tfInt.getText().isEmpty()) {
+                        tfInt.selectAll();
+                    }
+                });
             }
         });
         tfVR0.focusedProperty().addListener((observableValue, aBoolean, t1) -> {
             if (!t1) {
                 tfVR0.fireEvent(EnterEvent);
+            } else {
+                Platform.runLater(() -> {
+                    if (tfVR0.isFocused() && !tfVR0.getText().isEmpty()) {
+                        tfVR0.selectAll();
+                    }
+                });
             }
         });
         tfVOS.focusedProperty().addListener((observableValue, aBoolean, t1) -> {
             if (!t1) {
                 tfVOS.fireEvent(EnterEvent);
+            } else {
+                Platform.runLater(() -> {
+                    if (tfVOS.isFocused() && !tfVOS.getText().isEmpty()) {
+                        tfVOS.selectAll();
+                    }
+                });
             }
+
+        });
+
+        tf_minus.focusedProperty().addListener((observableValue, aBoolean, t1) -> {
+            if (!t1) {
+                tf_minus.fireEvent(EnterEvent);
+            } else {
+                Platform.runLater(() -> {
+                    if (tf_minus.isFocused() && !tf_minus.getText().isEmpty()) {
+                        tf_minus.selectAll();
+                    }
+                });
+            }
+
         });
 
         /**
@@ -1614,9 +1740,19 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
                         return;
                     }
                     int[][] frameData = device.getFrame();
+
                     if (frameData != null) {
+
+                        if (correction != null) {
+                            correction.correct(frameData);
+                        }
+
+                        StatData statDataMain = new StatData(frameData);
+                        float[] dataArray = statDataMain.getDataArray();
+
+                        minusSignalFromData(frameData, MyMinusTransformer.getMinusValue());
                         StatData statData = new StatData(frameData);
-                        float[] dataArray = statData.getDataArray();
+
                         float[] skoArray = statData.getSKOArray();
                         float[] skoArrayHorisontal = statData.getSKOArrayHorisontal();
                         float[] signalFromStroka = statData.getSignalFromStroka(stroka);
@@ -1721,6 +1857,14 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
 
         executor = Executors.newScheduledThreadPool(2);
         executor.scheduleWithFixedDelay(task, 0, 120, TimeUnit.MILLISECONDS);
+    }
+
+    private void minusSignalFromData(int[][] frameData, int value) {
+        for (int y = 0; y < frameData.length; y++) {
+            for (int x = 0; x < frameData[0].length; x++) {
+                frameData[y][x] = frameData[y][x] - value < 0 ? 0 : frameData[y][x] - value;
+            }
+        }
     }
 
 
@@ -2460,7 +2604,6 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
 
     /**
      * Старт расчета параметров.
-     *
      */
     public void startParams() throws IOException {
         Stage stage = new Stage();
@@ -3076,14 +3219,16 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
     @FXML
     private void loadExp(ActionEvent event) throws IOException {
 
-        //todo Загрузка файла.
-        //todo Парсинг.
+        PdfExp.loadExp(this);
+        LOG.debug("loadExp");
+
     }
 
     @FXML
     private void saveExp(ActionEvent event) throws IOException {
 
-        //todo Вызов окна сохранения файла
+        PdfExp.SaveExp(this);
+        LOG.debug("SaveExp");
     }
 
     @FXML
@@ -3097,9 +3242,9 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
         Scene scene = new Scene(root);
         stage.setTitle("Руководство по эксплуатации");
         stage.setScene(scene);
-        Dimension sSize = Toolkit.getDefaultToolkit().getScreenSize ();
-        stage.setHeight(sSize.getHeight()*.8);
-        stage.setWidth(sSize.getWidth()*.8);
+        Dimension sSize = Toolkit.getDefaultToolkit().getScreenSize();
+        stage.setHeight(sSize.getHeight() * .8);
+        stage.setWidth(sSize.getWidth() * .8);
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.setAlwaysOnTop(true);
         stage.show();

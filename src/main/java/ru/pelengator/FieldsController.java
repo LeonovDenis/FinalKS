@@ -6,15 +6,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.net.URL;
 import java.nio.ByteOrder;
 import java.util.*;
 
-import static javafx.scene.input.KeyEvent.KEY_PRESSED;
 import static ru.pelengator.API.utils.Utils.*;
 
 public class FieldsController implements Initializable {
@@ -49,8 +46,6 @@ public class FieldsController implements Initializable {
     @FXML
     private TextField tfNomer;
     @FXML
-    private TextField tfCopy;
-    @FXML
     private TextField tfOtk;
     @FXML
     private TextField tfData;
@@ -62,28 +57,10 @@ public class FieldsController implements Initializable {
     private TextField TXT_0_2;
     @FXML
     private TextField TXT_0_3;
-    @FXML
-    private TextField TXT_0_4;
-    @FXML
-    private TextField TXT_0_5;
-    @FXML
-    private TextField TXT_0_6;
-    @FXML
-    private TextField TXT_0_7;
-    @FXML
-    private TextField TXT_0_8;
-    @FXML
+       @FXML
     private TextField TXT_0_9;
     @FXML
     private Label tx1;
-    @FXML
-    private Label tx2;
-    @FXML
-    private Label tx3;
-    @FXML
-    private Label tx4;
-    @FXML
-    private Label tx5;
     @FXML
     private Label tx6;
     @FXML
@@ -141,7 +118,6 @@ public class FieldsController implements Initializable {
         tfMetodika.textProperty().bindBidirectional(controller.getParams().metodikaProperty());
         tfNomer_0.textProperty().bindBidirectional(controller.getParams().nomer_0Property());
         tfNomer.textProperty().bindBidirectional(controller.getParams().nomerProperty());
-        tfCopy.textProperty().bindBidirectional(controller.getParams().copyProperty());
         tfOtk.textProperty().bindBidirectional(controller.getParams().otkProperty());
 
         tfData.textProperty().bindBidirectional(controller.getParams().dataProperty());
@@ -152,11 +128,7 @@ public class FieldsController implements Initializable {
         TXT_0_1.textProperty().bindBidirectional(controller.getParams().TXT_0_1Property());
         TXT_0_2.textProperty().bindBidirectional(controller.getParams().TXT_0_2Property());
         TXT_0_3.textProperty().bindBidirectional(controller.getParams().TXT_0_3Property());
-        TXT_0_4.textProperty().bindBidirectional(controller.getParams().TXT_0_4Property());
-        TXT_0_5.textProperty().bindBidirectional(controller.getParams().TXT_0_5Property());
-        TXT_0_6.textProperty().bindBidirectional(controller.getParams().TXT_0_6Property());
-        TXT_0_7.textProperty().bindBidirectional(controller.getParams().TXT_0_7Property());
-        TXT_0_8.textProperty().bindBidirectional(controller.getParams().TXT_0_8Property());
+
         TXT_0_9.textProperty().bindBidirectional(controller.getParams().TXT_0_9Property());
         tbExel.selectedProperty().bindBidirectional(controller.getParams().tbExelProperty());
         tbTxt.selectedProperty().bindBidirectional(controller.getParams().tbTxtProperty());

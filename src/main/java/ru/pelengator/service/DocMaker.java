@@ -90,7 +90,7 @@ public class DocMaker {
         hashMap.put("nomer_2", exp.getParams().getNomer_0());
         hashMap.put("nomer_3", exp.getParams().getNomer_0());
         hashMap.put("nomer", exp.getParams().getNomer());
-        hashMap.put("copy", exp.getParams().getCopy());
+       // hashMap.put("copy", exp.getParams().getCopy());
         hashMap.put("otk", exp.getParams().getOtk());
         hashMap.put("data", exp.getParams().getData());
 

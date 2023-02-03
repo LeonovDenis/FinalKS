@@ -127,6 +127,8 @@ public class StendParams {
     private String persentColorVwH = "#000000";
     private String persentColorExposureH = "#000000";
 
+    private String correctionFilePath = "";
+
     private StringProperty zakaz = new SimpleStringProperty();
     private StringProperty dogovor = new SimpleStringProperty();
     private StringProperty metodika = new SimpleStringProperty();
@@ -213,6 +215,7 @@ public class StendParams {
             }
         }
 
+        correctionFilePath=properties.getProperty("correctionFilePath", "");
 
         zakaz.set(properties.getProperty("zakaz", "\"АО Дукс\""));
         dogovor.set(properties.getProperty("dogovor", "9-2021/051 от 06.10.2021 г."));
@@ -340,6 +343,8 @@ public class StendParams {
 
     private void save(String PATH) {
         LOG.trace("Save params");
+
+        properties.setProperty("correctionFilePath", correctionFilePath);
 
         properties.setProperty("zakaz", zakaz.getValue());
         properties.setProperty("dogovor", dogovor.getValue());
@@ -1298,6 +1303,14 @@ public class StendParams {
 
     public double getLyambdaMax() {
         return lyambdaMax;
+    }
+
+    public String getCorrectionFilePath() {
+        return correctionFilePath;
+    }
+
+    public void setCorrectionFilePath(String correctionFilePath) {
+        this.correctionFilePath = correctionFilePath;
     }
 
     public void setLyambdaMax(double lyambdaMax) {

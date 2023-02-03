@@ -109,13 +109,13 @@ public class DataService extends Service<Void> implements DetectorListener {
                 updateMessage("Инициализация");
                 initParams();
                 //////////////////////////////Первый поток////////////////
-                updateMessage("Задание на выборку: " + count + " значений.");
+                updateMessage("Задание на выборку: " + count + " значений");
 
                 do {
                     addListnr();
                     dataArray_0.clear();
                     while (dataArray_0.size() < count) {
-                        updateMessage("Набор кадров... 1-я часть: " + dataArray_0.size() + "/" + count+".");
+                        updateMessage("Набор кадров... 1-я часть: " + dataArray_0.size() + "/" + count+"");
                         updateProgress((0.5D / count) * dataArray_0.size(), 1);
                     }
                     removeListener();
@@ -135,10 +135,10 @@ public class DataService extends Service<Void> implements DetectorListener {
                 do {
                     dataArray_1.clear();
                     addListnr();
-                    updateMessage("Задание на выборку: " + count + " значений.");
+                    updateMessage("Задание на выборку: " + count + " значений");
                     //набор массива кадров
                     while (dataArray_1.size() < count) {
-                        updateMessage("Набор кадров... 2-я часть: " + dataArray_1.size() + "/" + count +".");
+                        updateMessage("Набор кадров... 2-я часть: " + dataArray_1.size() + "/" + count +"");
                         updateProgress((0.5D / count) * dataArray_1.size() + 0.5D, 1);
                     }
                     removeListener();

@@ -56,11 +56,6 @@
                   <Insets bottom="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
             </TextField>
-            <TextField fx:id="tfCopy" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="7">
-               <GridPane.margin>
-                  <Insets bottom="5.0" right="5.0" top="5.0" />
-               </GridPane.margin>
-            </TextField>
             <TextField fx:id="tfOtk" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="8">
                <GridPane.margin>
                   <Insets bottom="5.0" right="5.0" top="5.0" />
@@ -107,11 +102,6 @@
                   <Insets left="5.0" />
                </GridPane.margin>
             </Label>
-            <Label contentDisplay="CENTER" layoutX="10.0" layoutY="216.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Копия протокола" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="7">
-               <GridPane.margin>
-                  <Insets left="5.0" />
-               </GridPane.margin>
-            </Label>
             <Label contentDisplay="CENTER" layoutX="10.0" layoutY="255.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Фамилия ОТК" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="8">
                <GridPane.margin>
                   <Insets left="5.0" />
@@ -147,32 +137,7 @@
                   <Insets left="5.0" right="5.0" />
                </GridPane.margin>
             </Label>
-            <Label fx:id="tx2" text="reserv" GridPane.columnIndex="4" GridPane.rowIndex="6">
-               <GridPane.margin>
-                  <Insets left="5.0" />
-               </GridPane.margin>
-            </Label>
-            <Label fx:id="tx3" text="reserv" GridPane.columnIndex="4" GridPane.rowIndex="7">
-               <GridPane.margin>
-                  <Insets left="5.0" />
-               </GridPane.margin>
-            </Label>
-            <Label fx:id="tx4" text="reserv" GridPane.columnIndex="4" GridPane.rowIndex="8">
-               <GridPane.margin>
-                  <Insets left="5.0" />
-               </GridPane.margin>
-            </Label>
-            <Label fx:id="tx5" text="reserv" GridPane.columnIndex="4" GridPane.rowIndex="9">
-               <GridPane.margin>
-                  <Insets left="5.0" />
-               </GridPane.margin>
-            </Label>
-            <Label text="reserv" GridPane.columnIndex="4" GridPane.rowIndex="10">
-               <GridPane.margin>
-                  <Insets left="5.0" />
-               </GridPane.margin>
-            </Label>
-            <Label fx:id="tx6" text="Пороговая облученность, Вт×см-2" GridPane.columnIndex="4" GridPane.rowIndex="11">
+            <Label fx:id="tx6" text="Пороговая облученность, Вт×см-2" GridPane.columnIndex="4" GridPane.rowIndex="6">
                <GridPane.margin>
                   <Insets left="5.0" />
                </GridPane.margin>
@@ -181,12 +146,7 @@
             <TextField fx:id="TXT_0_1" alignment="CENTER" GridPane.columnIndex="5" GridPane.rowIndex="3" />
             <TextField fx:id="TXT_0_2" alignment="CENTER" GridPane.columnIndex="5" GridPane.rowIndex="4" />
             <TextField fx:id="TXT_0_3" alignment="CENTER" GridPane.columnIndex="5" GridPane.rowIndex="5" />
-            <TextField fx:id="TXT_0_4" alignment="CENTER" GridPane.columnIndex="5" GridPane.rowIndex="6" />
-            <TextField fx:id="TXT_0_5" alignment="CENTER" GridPane.columnIndex="5" GridPane.rowIndex="7" />
-            <TextField fx:id="TXT_0_7" alignment="CENTER" GridPane.columnIndex="5" GridPane.rowIndex="9" />
-            <TextField fx:id="TXT_0_8" alignment="CENTER" GridPane.columnIndex="5" GridPane.rowIndex="10" />
-            <TextField fx:id="TXT_0_6" alignment="CENTER" GridPane.columnIndex="5" GridPane.rowIndex="8" />
-            <TextField fx:id="TXT_0_9" alignment="CENTER" GridPane.columnIndex="5" GridPane.rowIndex="11" />
+            <TextField fx:id="TXT_0_9" alignment="CENTER" GridPane.columnIndex="5" GridPane.rowIndex="6" />
             <Label contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Печать отчетов" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="10">
                <GridPane.margin>
                   <Insets left="5.0" />

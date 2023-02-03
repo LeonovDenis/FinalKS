@@ -218,3 +218,33 @@
     -fx-padding: 0 0 0 0;
     -fx-font-size : 16px;
 }
+
+.mytoggle-button {
+             -fx-padding: 2 10 10 10;
+            -fx-background-insets: 0,0 0 5 0, 0 0 6 0, 0 0 7 0;
+
+            -fx-background-radius: 8;
+
+            -fx-background-color:
+             linear-gradient(from 0% 93% to 0% 100%, #11ba8a 0%, #43e085 100%),#056b44,#43e085,
+              radial-gradient(center 50% 50%, radius 100%, #43e085, #23c265);
+
+            -fx-font-weight: bold;
+            -fx-font-size: 16px;
+            -fx-alignment: center ;
+}
+
+.mytoggle-button:selected {
+             -fx-padding: 2 10 10 10;
+            -fx-background-insets: 0,0 0 5 0, 0 0 6 0, 0 0 7 0;
+
+            -fx-background-radius: 8;
+
+            -fx-background-color:
+             linear-gradient(from 0% 93% to 0% 100%, #d34b33 0%, #d04e37 100%),#056b44,#d34b33,
+              radial-gradient(center 50% 50%, radius 100%, #d34b33, #d34b33);
+
+            -fx-font-weight: bold;
+            -fx-font-size: 16px;
+            -fx-alignment: center ;
+}

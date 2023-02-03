@@ -48,6 +48,7 @@
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -93,7 +94,7 @@
             </Menu>
             <Menu fx:id="menu_Order_M" mnemonicParsing="false" text="Отчёт">
               <items>
-            <MenuItem fx:id="menu_fields" mnemonicParsing="false" onAction="#startFields" text="Подготовка отчета" />
+            <MenuItem fx:id="menu_fields" mnemonicParsing="false" onAction="#startFields" text="Предварительная настройка" />
               </items>
             </Menu>
             <Menu fx:id="menu_Window_M" mnemonicParsing="false" text="Окно">
@@ -386,11 +387,6 @@
                               </Label>
                            </children>
                         </VBox>
-                        <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="myBtn" stylesheets="@cp.css" text="Старт" textFill="#112e1d" GridPane.columnIndex="2" GridPane.rowIndex="15">
-                           <font>
-                              <Font size="18.0" />
-                           </font>
-                        </Button>
                         <VBox GridPane.columnIndex="1" GridPane.rowIndex="16">
                            <children>
                               <Label alignment="TOP_LEFT" contentDisplay="TOP" text="Вычитание сигнала" textFill="#726d53">
@@ -398,7 +394,7 @@
                                     <Font name="System Bold" size="18.0" />
                                  </font>
                               </Label>
-                              <Label alignment="TOP_LEFT" contentDisplay="TOP" graphicTextGap="0.0" layoutX="10.0" layoutY="10.0" text="Вычитание постоянной величины из сигнала" textFill="#726d53" wrapText="true">
+                              <Label alignment="TOP_LEFT" contentDisplay="TOP" graphicTextGap="0.0" layoutX="10.0" layoutY="10.0" text="Вычитание постоянной величины из сигнала, мВ" textFill="#726d53" wrapText="true">
                                  <font>
                                     <Font size="14.0" />
                                  </font>
@@ -430,7 +426,7 @@
                               <Image url="@newImg/resize.png" />
                            </image>
                         </ImageView>
-                        <TextField alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" promptText="0-5000" styleClass="myTf" stylesheets="@cp.css" text="0" GridPane.columnIndex="2" GridPane.rowIndex="16">
+                        <TextField fx:id="tf_minus" alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" promptText="0-5000" styleClass="myTf" stylesheets="@cp.css" text="0" GridPane.columnIndex="2" GridPane.rowIndex="16">
                            <font>
                               <Font size="18.0" />
                            </font>
@@ -483,6 +479,11 @@
                               <ComboBox fx:id="cbNetworkOptions" prefWidth="150.0" />
                            </children>
                         </FlowPane>
+                        <ToggleButton fx:id="bt_correction" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="mytoggle-button" stylesheets="@cp.css" text="Коррекция" textAlignment="CENTER" textFill="#112e1d" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="15" GridPane.valignment="CENTER">
+                           <font>
+                              <Font name="System Bold" size="14.0" />
+                           </font>
+                        </ToggleButton>
                      </children>
                      <padding>
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
@@ -690,7 +691,7 @@
                               <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
                            </rowConstraints>
                            <children>
-                              <Label text="0.0 B" textFill="#726d53" GridPane.halignment="LEFT" GridPane.valignment="TOP">
+                              <Label fx:id="lb_lowValueGist" text="0.0 B" textFill="#726d53" GridPane.halignment="LEFT" GridPane.valignment="TOP">
                                  <font>
                                     <Font size="16.0" />
                                  </font>
@@ -698,7 +699,7 @@
                                     <Insets left="3.0" />
                                  </GridPane.margin>
                               </Label>
-                              <Label text="5.0 B" textFill="#726d53" GridPane.columnIndex="4" GridPane.halignment="RIGHT" GridPane.valignment="TOP">
+                              <Label fx:id="lb_hiValueGist" text="5.0 B" textFill="#726d53" GridPane.columnIndex="4" GridPane.halignment="RIGHT" GridPane.valignment="TOP">
                                  <font>
                                     <Font size="16.0" />
                                  </font>
@@ -706,7 +707,7 @@
                                     <Insets right="3.0" />
                                  </GridPane.margin>
                               </Label>
-                              <Label layoutX="86.0" layoutY="10.0" text="2.5 B" textFill="#726d53" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="TOP">
+                              <Label fx:id="lb_medValueGist" layoutX="86.0" layoutY="10.0" text="2.5 B" textFill="#726d53" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="TOP">
                                  <font>
                                     <Font size="16.0" />
                                  </font>

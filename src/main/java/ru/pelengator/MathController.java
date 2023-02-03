@@ -586,6 +586,12 @@ public class MathController implements Initializable {
             tx.focusedProperty().addListener((observableValue, aBoolean, t1) -> {
                 if (!t1) {
                     tx.fireEvent(EnterEvent);
+                }else{
+                    Platform.runLater(() -> {
+                        if (tx.isFocused() && !tx.getText().isEmpty()) {
+                            tx.selectAll();
+                        }
+                    });
                 }
             });
         }

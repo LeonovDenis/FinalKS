@@ -22,6 +22,7 @@ import ru.pelengator.service.SaveFilesService;
 
 import java.io.File;
 import java.net.URL;
+import java.sql.SQLOutput;
 import java.util.*;
 
 import static javafx.scene.input.KeyEvent.KEY_PRESSED;
@@ -255,6 +256,9 @@ public class MeasController implements Initializable {
         });
 
         setLostFocusAction();
+
+        cbExpOptions.setPromptText("Выберите испытание");
+
     }
 
     /**
@@ -469,6 +473,12 @@ public class MeasController implements Initializable {
         startServiceOnTap(event);
     }
 
+
+    @FXML
+    public void  saveTempDataExp(ActionEvent event) {
+      //  cbExpOptions
+        LOG.debug("saveTempDataExp pushed");
+    }
 
     public TextField getTfArifmeticMean() {
         return tfArifmeticMean;
