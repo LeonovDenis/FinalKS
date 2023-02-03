@@ -209,7 +209,7 @@ public class DataService extends Service<Void> implements DetectorListener {
 
         Platform.runLater(() -> {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Info");
+            alert.setTitle("Инфо");
 
             alert.setHeaderText(null);
             Label label = new Label("Первая часть данных собрана!\nУберите задвижку с оптического тракта.\nНажмите кнопку \"Продолжить\".");

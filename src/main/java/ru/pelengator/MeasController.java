@@ -17,6 +17,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.pelengator.model.TwoPointCorrection;
 import ru.pelengator.service.MeasService;
 import ru.pelengator.service.SaveFilesService;
 
@@ -172,6 +173,9 @@ public class MeasController implements Initializable {
     @FXML
     private Button btnSaveProt;
 
+    @FXML
+    private Button btnCorr;
+
 
     /**
      * Текстовое поле прогрессбара.
@@ -190,6 +194,9 @@ public class MeasController implements Initializable {
     private ProgressIndicator pIndicatorSaveExp;
     @FXML
     private ProgressIndicator pIndicatorSavePDF;
+
+    @FXML
+    private ProgressIndicator prIndicatorCorr;
     @FXML
     private ComboBox cbExpOptions;
     /**
@@ -475,9 +482,63 @@ public class MeasController implements Initializable {
 
 
     @FXML
-    public void  saveTempDataExp(ActionEvent event) {
-      //  cbExpOptions
+    public void saveTempDataExp(ActionEvent event) {
+        //  cbExpOptions
         LOG.debug("saveTempDataExp pushed");
+    }
+    private double[][] arifmeticMeanValue_0;
+    private double[][] arifmeticMeanValue_1;
+
+    @FXML
+    public void saveCorrData(ActionEvent event) {
+        Platform.runLater(() -> {
+            prIndicatorCorr.setVisible(true);
+        });
+        Node source = (Node) event.getSource();
+        Stage stage = (Stage) source.getScene().getWindow();
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Сохранить данные корректировки");
+        fileChooser.setInitialDirectory(new File(System.getProperty("user.dir")));
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("CORR DATA", "*.corr"),
+                new FileChooser.ExtensionFilter("All Files", "*.*"));
+
+        File file = fileChooser.showSaveDialog(stage);
+        if (file == null) {
+            return;
+        }
+        boolean b = false;
+
+        try {
+            TwoPointCorrection coreFile = new TwoPointCorrection(getArifmeticMeanValue_0(), getArifmeticMeanValue_1());
+            b = coreFile.saveFile(file.getAbsolutePath());
+
+        } catch (Exception e) {
+            // ignore
+        } finally {
+            if (!b) {
+                Button btn = (Button) source;
+                Platform.runLater(() -> {
+                    btn.setStyle("-fx-background-color: red");
+                    prIndicatorCorr.setVisible(false);
+                //    lab_status.textProperty().setValue("Ошибка при записи файла");
+                //    lab_status.visibleProperty().setValue(true);
+                });
+            } else {
+                Button btn = (Button) source;
+                controller.getParams().setCorrectionFilePath(file.getAbsolutePath());
+                Platform.runLater(() -> {
+                    btn.setStyle("-fx-background-color: green");
+                    prIndicatorCorr.setVisible(false);
+                 //   lab_status.textProperty().setValue("Файл успешно записан");
+                 //   lab_status.visibleProperty().setValue(true);
+                });
+            }
+
+
+        }
+
     }
 
     public TextField getTfArifmeticMean() {
@@ -589,7 +650,7 @@ public class MeasController implements Initializable {
     }
 
     public VBox[] getScrlPaneS() {
-        return new VBox[]{scrlPaneSa,scrlPaneSq,scrlPaneSigma,scrlPaneSu,scrlPaneEp};
+        return new VBox[]{scrlPaneSa, scrlPaneSq, scrlPaneSigma, scrlPaneSu, scrlPaneEp};
     }
 
     public Button getBtnSaveProt() {
@@ -680,4 +741,19 @@ public class MeasController implements Initializable {
 
     }
 
+    public double[][] getArifmeticMeanValue_0() {
+        return arifmeticMeanValue_0;
+    }
+
+    public void setArifmeticMeanValue_0(double[][] arifmeticMeanValue_0) {
+        this.arifmeticMeanValue_0 = arifmeticMeanValue_0;
+    }
+
+    public double[][] getArifmeticMeanValue_1() {
+        return arifmeticMeanValue_1;
+    }
+
+    public void setArifmeticMeanValue_1(double[][] arifmeticMeanValue_1) {
+        this.arifmeticMeanValue_1 = arifmeticMeanValue_1;
+    }
 }

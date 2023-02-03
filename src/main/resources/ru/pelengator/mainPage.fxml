@@ -90,6 +90,9 @@
               <items>
             <MenuItem fx:id="menu_LoadExp" mnemonicParsing="false" onAction="#loadExp" text="Загрузить" />
             <MenuItem fx:id="menu_SaveExp" mnemonicParsing="false" onAction="#saveExp" text="Сохранить" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem fx:id="menu_LoadCorr" mnemonicParsing="false" onAction="#loadCorrFile" text="Загрузить файл коррекции" />
+                  <MenuItem fx:id="menu_GetData" mnemonicParsing="false" onAction="#startGetData" text="Сбор данных" />
               </items>
             </Menu>
             <Menu fx:id="menu_Order_M" mnemonicParsing="false" text="Отчёт">
@@ -377,7 +380,7 @@
                                     <Font name="System Bold" size="18.0" />
                                  </font>
                               </Label>
-                              <Label alignment="TOP_LEFT" contentDisplay="TOP" graphicTextGap="0.0" layoutX="10.0" layoutY="10.0" text="Устранение неоднородности сигнала" textFill="#726d53" wrapText="true">
+                              <Label alignment="TOP_LEFT" contentDisplay="TOP" graphicTextGap="0.0" layoutX="10.0" layoutY="10.0" text="Устранение неоднородности фона" textFill="#726d53" wrapText="true">
                                  <font>
                                     <Font size="14.0" />
                                  </font>

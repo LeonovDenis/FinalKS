@@ -621,7 +621,15 @@ public class MeasService extends Service<Void> {
         exp.setSizeX(sizeX);
         exp.setSizeY(sizeY);
         exp.setBuffToTXT(buffToTXT);
+
+        saveCorrMass();
         return true;
+    }
+
+    private void saveCorrMass() {
+        controller.setArifmeticMeanValue_0(arifmeticMeanValue_0);
+        controller.setArifmeticMeanValue_1(arifmeticMeanValue_1);
+        controller.setArifmeticMeanValue_1(arifmeticMeanValue_1);
     }
 
 

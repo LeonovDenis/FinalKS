@@ -3,6 +3,7 @@ package ru.pelengator.model;
 import javafx.event.ActionEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.pelengator.API.utils.Utils;
 import ru.pelengator.Controller;
 
 import java.io.*;
@@ -13,26 +14,36 @@ public class TwoPointCorrection implements Serializable {
     private transient Controller controller;
     private transient ActionEvent event;
 
-    private float[][] fShadow;
+    private double[][] fShadow;
 
-    private float[][] fSun;
+    private double[][] fSun;
 
     private float[][] k;
 
-    public TwoPointCorrection(float[][] fShadow, float[][] fSun) {
+    private float[][] A;//Y=A*X+B
+    private float[][] B;
+
+
+    private double shMEAN=0;
+
+    public TwoPointCorrection(double[][] fShadow, double[][] fSun) throws  Exception{
         this.fShadow = fShadow;
         this.fSun = fSun;
-        this.k = calulateK(fShadow, fSun);
+        this.shMEAN= Utils.makeMaxMeanMin(fShadow,true,0)[1];
+      //  this.k = calulateK(fShadow, fSun);
     }
 
-    private float[][] calulateK(float[][] fShadow, float[][] fSun) {
+    private float[][] calulateK(double[][] fShadow, double[][] fSun) {
         int h = fShadow.length;
         int w = fShadow[0].length;
         float[][] k = new float[h][w];
         for (int i = 0; i < h; i++) {
             for (int j = 0; j < w; j++) {
 
-                k[i][j] = (fSun[i][j]) / (fShadow[i][j]);
+
+
+
+            //    k[i][j] = (fSun[i][j]) / (fShadow[i][j]);
             }
         }
         return k;
@@ -69,13 +80,26 @@ public class TwoPointCorrection implements Serializable {
 
     }
 
-    public void showWindow() {
-
-    }
 
     public static TwoPointCorrection loadData(String Path) {
 
         return loadFile(Path);
+    }
+
+    public  boolean saveFile(String Path) {
+
+        try(ObjectOutputStream objectOutputStream = new ObjectOutputStream(
+                new FileOutputStream(Path))){
+            objectOutputStream.writeObject(this);
+        } catch (FileNotFoundException e) {
+            LOG.error("FileNotFoundException",e.getMessage());
+            return false;
+        } catch (IOException e) {
+            LOG.error("IOException",e.getMessage());
+            return false;
+        }
+
+        return true;
     }
 
     public int[][] correct(int[][] data) {
@@ -84,7 +108,7 @@ public class TwoPointCorrection implements Serializable {
         for (int i = 0; i < h; i++) {
             for (int j = 0; j < w; j++) {
 
-                data[i][j] = (int) (data[i][j] * k[i][j]);
+             //   data[i][j] = (int) (data[i][j] * k[i][j]);
             }
         }
         return data;

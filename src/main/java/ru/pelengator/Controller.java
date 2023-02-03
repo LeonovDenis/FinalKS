@@ -30,6 +30,7 @@ import javafx.concurrent.Worker;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.embed.swing.SwingNode;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -363,7 +364,10 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
     private MenuItem menu_LoadExp;
     @FXML
     private MenuItem menu_SaveExp;
-
+    @FXML
+    private MenuItem menu_GetData;
+    @FXML
+    private MenuItem menu_LoadCorr;
     @FXML
     private Menu menu_Order_M;
     @FXML
@@ -948,26 +952,63 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
         String path = getParams().getCorrectionFilePath();
 
         if (TwoPointCorrection.isCorrectionFileAlive(path)) {
-
             TwoPointCorrection correction = TwoPointCorrection.loadData(path);//если ок, то грузим данные
-            this.correction = correction;
-
+            setCorrection(correction);
         } else {
             try {
                 startShowCerrWindow();
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
+        }
+    }
+
+    @FXML
+    private void loadCorrFile(ActionEvent event) throws IOException {
+        Stage stage = (Stage) btnGetData.getScene().getWindow();
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Загрузить файл коррекции");
+        fileChooser.setInitialDirectory(new File(System.getProperty("user.dir")));
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("CORR DATA", "*.corr"),
+                new FileChooser.ExtensionFilter("All Files", "*.*"));
+
+        File file = fileChooser.showOpenDialog(stage);
+
+        if (file == null) {
+            stage.close();
+        } else {
+            String path = file.getAbsolutePath();
+
+            if (TwoPointCorrection.isCorrectionFileAlive(path))//если файл подходит, то загружаем
+            {
+                TwoPointCorrection correction = TwoPointCorrection.loadData(path);//если ок, то грузим данные
+                setCorrection(correction);
+                getParams().setCorrectionFilePath(path);
+            } else {//иначе возврат к окну выбора
+                Platform.runLater(() -> {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Ошибка");
+
+                    alert.setHeaderText(null);
+                    alert.setContentText("Файл не содержет требуемой информации." +
+                            "\nВыберите другой файл или произведите новую корректировку.");
+
+                    Optional<ButtonType> buttonType = alert.showAndWait();
+
+                });
+
+            }
 
         }
-
     }
 
     private void startShowCerrWindow() throws IOException {
 
         Stage stage = new Stage();
 
-        FXMLLoader   corrFxmlLoader = new FXMLLoader(getClass().getResource("corrPage.fxml"));
+        FXMLLoader corrFxmlLoader = new FXMLLoader(getClass().getResource("corrPage.fxml"));
         Parent root = corrFxmlLoader.load();
         CorrController corrController = corrFxmlLoader.getController();
         corrController.initController(this);
@@ -978,6 +1019,7 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
         stage.centerOnScreen();
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.setResizable(false);
+        stage.setOnCloseRequest(windowEvent -> getBt_correction().fire());
         stage.show();
     }
 
@@ -1083,6 +1125,9 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
         list.put(menu_Exp_M, "menu/exp.png");
         list.put(menu_LoadExp, "menu/dowload.png");
         list.put(menu_SaveExp, "menu/save.png");
+
+        list.put(menu_GetData, "menu/expL.png");
+        list.put(menu_LoadCorr, "menu/loading.png");
 
         list.put(menu_Order_M, "menu/clipboard.png");
         list.put(menu_fields, "menu/filling-form.png");
@@ -2614,8 +2659,11 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
         Scene scene = new Scene(root);
         stage.setTitle("Расчет характеристик ФПУ");
         stage.setScene(scene);
-        stage.centerOnScreen();
-        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.setX(0);
+        stage.setY(0);
+        stage.setResizable(true);
+        // stage.centerOnScreen();
+        // stage.initModality(Modality.APPLICATION_MODAL);
         stage.show();
     }
 
@@ -3267,5 +3315,17 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.show();
 
+    }
+
+    public static TwoPointCorrection getCorrection() {
+        return correction;
+    }
+
+    public static void setCorrection(TwoPointCorrection correction) {
+        Controller.correction = correction;
+    }
+
+    public ToggleButton getBt_correction() {
+        return bt_correction;
     }
 }
