@@ -283,6 +283,7 @@ public class MeasService extends Service<Void> {
                 SKOValue[h][w] = dataArrayStat_0[h][w].getStdDev() * MASHTAB / 1000;
 
                 arifmeticMeanValue_1[h][w] = dataArrayStat_1[h][w].getMean() * MASHTAB / 1000.0;
+
                 quadraticMeanValue_1[h][w] = dataArrayStat_1[h][w].getQvadraricMean() * MASHTAB / 1000.0;
             }
         }
@@ -305,6 +306,7 @@ public class MeasService extends Service<Void> {
 
         arifmeticMeanValue_0 = new double[sizeY][sizeX];
         arifmeticMeanValue_1 = new double[sizeY][sizeX];
+
         quadraticMeanValue_0 = new double[sizeY][sizeX];
         quadraticMeanValue_1 = new double[sizeY][sizeX];
 
@@ -489,9 +491,9 @@ public class MeasService extends Service<Void> {
             int h = frList.get(3).getSizeY();
 
             int nizIndexX = (w - StendParams.getDiametr()) / 2;
-            int verhIndexX = (nizIndexX +  StendParams.getDiametr() - 1);
-            int nizIndexY = (h -  StendParams.getDiametr()) / 2;
-            int verhIndexY = (nizIndexY +  StendParams.getDiametr() - 1);
+            int verhIndexX = (nizIndexX + StendParams.getDiametr() - 1);
+            int nizIndexY = (h - StendParams.getDiametr()) / 2;
+            int verhIndexY = (nizIndexY + StendParams.getDiametr() - 1);
 
             for (BadPoint bp :
                     bpList) {
@@ -500,8 +502,8 @@ public class MeasService extends Service<Void> {
 
                 if (bp.getX() >= nizIndexX && bp.getX() <= verhIndexX
                         && bp.getY() >= nizIndexY && bp.getY() <= verhIndexY) {
-                        BadBigPoint badbBigPoint = new BadBigPoint(bp, convertcolor(color));
-                        tempMatrix[y][x] = badbBigPoint;
+                    BadBigPoint badbBigPoint = new BadBigPoint(bp, convertcolor(color));
+                    tempMatrix[y][x] = badbBigPoint;
                 }
             }
         }
@@ -622,14 +624,7 @@ public class MeasService extends Service<Void> {
         exp.setSizeY(sizeY);
         exp.setBuffToTXT(buffToTXT);
 
-        saveCorrMass();
         return true;
-    }
-
-    private void saveCorrMass() {
-        controller.setArifmeticMeanValue_0(arifmeticMeanValue_0);
-        controller.setArifmeticMeanValue_1(arifmeticMeanValue_1);
-        controller.setArifmeticMeanValue_1(arifmeticMeanValue_1);
     }
 
 

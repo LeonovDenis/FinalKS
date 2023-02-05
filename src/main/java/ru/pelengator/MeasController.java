@@ -486,8 +486,7 @@ public class MeasController implements Initializable {
         //  cbExpOptions
         LOG.debug("saveTempDataExp pushed");
     }
-    private double[][] arifmeticMeanValue_0;
-    private double[][] arifmeticMeanValue_1;
+
 
     @FXML
     public void saveCorrData(ActionEvent event) {
@@ -511,10 +510,12 @@ public class MeasController implements Initializable {
         boolean b = false;
 
         try {
-            TwoPointCorrection coreFile = new TwoPointCorrection(getArifmeticMeanValue_0(), getArifmeticMeanValue_1());
+            TwoPointCorrection coreFile = new TwoPointCorrection(controller.getSelExp(),getController());
+            coreFile.activation();
             b = coreFile.saveFile(file.getAbsolutePath());
 
         } catch (Exception e) {
+            LOG.error(e.getMessage());
             // ignore
         } finally {
             if (!b) {
@@ -533,6 +534,8 @@ public class MeasController implements Initializable {
                     prIndicatorCorr.setVisible(false);
                  //   lab_status.textProperty().setValue("Файл успешно записан");
                  //   lab_status.visibleProperty().setValue(true);
+
+                    controller.startShowCerrWindow();
                 });
             }
 
@@ -741,19 +744,5 @@ public class MeasController implements Initializable {
 
     }
 
-    public double[][] getArifmeticMeanValue_0() {
-        return arifmeticMeanValue_0;
-    }
 
-    public void setArifmeticMeanValue_0(double[][] arifmeticMeanValue_0) {
-        this.arifmeticMeanValue_0 = arifmeticMeanValue_0;
-    }
-
-    public double[][] getArifmeticMeanValue_1() {
-        return arifmeticMeanValue_1;
-    }
-
-    public void setArifmeticMeanValue_1(double[][] arifmeticMeanValue_1) {
-        this.arifmeticMeanValue_1 = arifmeticMeanValue_1;
-    }
 }

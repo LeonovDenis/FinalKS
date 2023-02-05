@@ -2,6 +2,7 @@ package ru.pelengator.API.transformer;
 
 import ru.pelengator.API.DetectorImageTransformer;
 import ru.pelengator.API.devises.china.ChinaDevice;
+import ru.pelengator.Controller;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -61,8 +62,15 @@ public class MyMinusTransformer implements DetectorImageTransformer {
 
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
+
                 tempData[y][x] = src.getRGB(x, y) & 0xffffff;
             }
+        }
+
+        if (Controller.getSelCorrection() != null) {
+            int[][] correct = Controller.getSelCorrection().
+                    correct(tempData);
+            tempData = correct;
         }
 
         for (int y = 0; y < height; y++) {

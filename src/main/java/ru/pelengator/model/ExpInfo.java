@@ -4,6 +4,10 @@ import ru.pelengator.API.utils.Utils;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * Класс для списка экспериментов.
@@ -39,6 +43,8 @@ public class ExpInfo {
     private BufferedImage tempImage;
 
     private double arifmeticMean;
+    private double[][] arifmeticMean0;
+    private double[][] arifmeticMean1;
     private double quadraticMean;
     private double SKO;
     private double vw;
@@ -191,6 +197,22 @@ public class ExpInfo {
         this.frList = frList;
     }
 
+    public double[][] getArifmeticMean0() {
+        return arifmeticMean0;
+    }
+
+    public void setArifmeticMean0(double[][] arifmeticMean0) {
+        this.arifmeticMean0 = arifmeticMean0;
+    }
+
+    public double[][] getArifmeticMean1() {
+        return arifmeticMean1;
+    }
+
+    public void setArifmeticMean1(double[][] arifmeticMean1) {
+        this.arifmeticMean1 = arifmeticMean1;
+    }
+
     public BufferedImage getTempImage() {
         return tempImage;
     }
@@ -267,4 +289,5 @@ public class ExpInfo {
     public void setSizeX(int sizeX) {
         this.sizeX = sizeX;
     }
+
 }

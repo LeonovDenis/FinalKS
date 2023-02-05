@@ -115,7 +115,7 @@ public class DataService extends Service<Void> implements DetectorListener {
                     addListnr();
                     dataArray_0.clear();
                     while (dataArray_0.size() < count) {
-                        updateMessage("Набор кадров... 1-я часть: " + dataArray_0.size() + "/" + count+"");
+                        updateMessage("Набор кадров... 1-я часть: " + dataArray_0.size() + "/" + count + "");
                         updateProgress((0.5D / count) * dataArray_0.size(), 1);
                     }
                     removeListener();
@@ -138,7 +138,7 @@ public class DataService extends Service<Void> implements DetectorListener {
                     updateMessage("Задание на выборку: " + count + " значений");
                     //набор массива кадров
                     while (dataArray_1.size() < count) {
-                        updateMessage("Набор кадров... 2-я часть: " + dataArray_1.size() + "/" + count +"");
+                        updateMessage("Набор кадров... 2-я часть: " + dataArray_1.size() + "/" + count + "");
                         updateProgress((0.5D / count) * dataArray_1.size() + 0.5D, 1);
                     }
                     removeListener();
@@ -156,7 +156,7 @@ public class DataService extends Service<Void> implements DetectorListener {
 
                 takeStat();
                 takeAverage();
-
+                proofFail();
                 updateMessage("Сохранение данных");
                 saveExpData();
                 updateMessage("Данные сохранены");
@@ -197,7 +197,7 @@ public class DataService extends Service<Void> implements DetectorListener {
      */
     private void showAndWait(AtomicBoolean flag_pause, AtomicBoolean flag_2ndTry) {
         if (partFlag) {
-            partFlag=!partFlag;
+            partFlag = !partFlag;
             flag_2ndTry.set(false);
             flag_pause.set(true);
             return;
@@ -215,7 +215,7 @@ public class DataService extends Service<Void> implements DetectorListener {
             Label label = new Label("Первая часть данных собрана!\nУберите задвижку с оптического тракта.\nНажмите кнопку \"Продолжить\".");
             alert.getDialogPane().setPrefSize(310, 120);
             alert.getDialogPane().setContent(label);
-            partFlag=!partFlag;
+            partFlag = !partFlag;
 
             alert.getButtonTypes().clear();
             alert.getButtonTypes().addAll(goNextBtn, cancelBtn);
@@ -370,12 +370,19 @@ public class DataService extends Service<Void> implements DetectorListener {
         if (totalMeanValue <= 0) {
             controller.getSelExp().setDataArray0(dataArray_1);
             controller.getSelExp().setDataArray1(dataArray_0);
+            controller.getSelExp().setArifmeticMean0(dataArrayMeanValue_1);
+            controller.getSelExp().setArifmeticMean1(dataArrayMeanValue_0);
         } else {
             controller.getSelExp().setDataArray0(dataArray_0);
             controller.getSelExp().setDataArray1(dataArray_1);
+            controller.getSelExp().setArifmeticMean0(dataArrayMeanValue_0);
+            controller.getSelExp().setArifmeticMean1(dataArrayMeanValue_1);
         }
+
         controller.getSelExp().setTempImage(tempImage);
         tempImage = null;
+
+
     }
 
 

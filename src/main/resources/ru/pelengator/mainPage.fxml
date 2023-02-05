@@ -92,6 +92,7 @@
             <MenuItem fx:id="menu_SaveExp" mnemonicParsing="false" onAction="#saveExp" text="Сохранить" />
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem fx:id="menu_LoadCorr" mnemonicParsing="false" onAction="#loadCorrFile" text="Загрузить файл коррекции" />
+                  <MenuItem fx:id="menu_corrInfo" mnemonicParsing="false" text="Просмотр файла корректировки" />
                   <MenuItem fx:id="menu_GetData" mnemonicParsing="false" onAction="#startGetData" text="Сбор данных" />
               </items>
             </Menu>

@@ -20,8 +20,6 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -357,7 +355,8 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
     private RadioMenuItem menu_Ethernet;
     @FXML
     private MenuItem menu_loadProgram;
-
+    @FXML
+    private MenuItem  menu_corrInfo;
     @FXML
     private Menu menu_Exp_M;
     @FXML
@@ -905,10 +904,12 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
 
         sp_Protokol.minHeightProperty().bind(bpDetectorPaneHolder.heightProperty().subtract(bpDetectorPaneHolder.widthProperty()).subtract(5));
 
+
         initeDopFunctions();
     }
 
     private void initeDopFunctions() {
+
 
         tf_minus.setOnAction(event -> {
             int i = parseIntText(event, false);
@@ -930,37 +931,41 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
             }
         });
 
+        bt_correction.setDisable(true);
 
         bt_correction.selectedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
-                twoPointCorrectionEnebled();
+                selCorrection = tempCorrection;
             } else {
-                twoPointCorrectionDisebled();
+                selCorrection = null;
             }
         });
+
+        loadCorrection(getParams().getCorrectionFilePath());
     }
 
-    private void twoPointCorrectionDisebled() {
-
-        correction = null;
-    }
-
-    private static TwoPointCorrection correction = null;
-
-    private void twoPointCorrectionEnebled() {
-
-        String path = getParams().getCorrectionFilePath();
-
-        if (TwoPointCorrection.isCorrectionFileAlive(path)) {
-            TwoPointCorrection correction = TwoPointCorrection.loadData(path);//если ок, то грузим данные
-            setCorrection(correction);
-        } else {
-            try {
-                startShowCerrWindow();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+    private void loadCorrection(String path) {
+        try {
+            if (TwoPointCorrection.isCorrectionFileAlive(path)) {
+                TwoPointCorrection correction = TwoPointCorrection.loadData(path);//если ок, то грузим данные
+                tempCorrection = correction;
+                bt_correction.setDisable(false);
+            } else {
+                LOG.debug("Corr file not found: {}",path);
             }
+        } catch (Exception e) {
+            LOG.debug("No corr file found {}",e.getStackTrace());
         }
+    }
+
+
+    private TwoPointCorrection tempCorrection = null;
+
+    private static TwoPointCorrection selCorrection = null;
+
+
+    private void correctionEnebled() {
+
     }
 
     @FXML
@@ -971,21 +976,22 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
         fileChooser.setTitle("Загрузить файл коррекции");
         fileChooser.setInitialDirectory(new File(System.getProperty("user.dir")));
         fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("CORR DATA", "*.corr"),
+                new FileChooser.ExtensionFilter("CORR FILE", "*.corr"),
                 new FileChooser.ExtensionFilter("All Files", "*.*"));
 
         File file = fileChooser.showOpenDialog(stage);
 
         if (file == null) {
-            stage.close();
+
         } else {
             String path = file.getAbsolutePath();
 
             if (TwoPointCorrection.isCorrectionFileAlive(path))//если файл подходит, то загружаем
             {
                 TwoPointCorrection correction = TwoPointCorrection.loadData(path);//если ок, то грузим данные
-                setCorrection(correction);
+                tempCorrection=correction;
                 getParams().setCorrectionFilePath(path);
+                bt_correction.setDisable(false);
             } else {//иначе возврат к окну выбора
                 Platform.runLater(() -> {
                     Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -1004,22 +1010,29 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
         }
     }
 
-    private void startShowCerrWindow() throws IOException {
+
+
+    public void startShowCerrWindow(){
 
         Stage stage = new Stage();
 
         FXMLLoader corrFxmlLoader = new FXMLLoader(getClass().getResource("corrPage.fxml"));
-        Parent root = corrFxmlLoader.load();
+        Parent root = null;
+        try {
+            root = corrFxmlLoader.load();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         CorrController corrController = corrFxmlLoader.getController();
         corrController.initController(this);
 
         Scene scene = new Scene(root);
-        stage.setTitle("Загрузка файла коррекции");
+        stage.setTitle("Инфо по коррекции");
         stage.setScene(scene);
         stage.centerOnScreen();
         stage.initModality(Modality.APPLICATION_MODAL);
-        stage.setResizable(false);
-        stage.setOnCloseRequest(windowEvent -> getBt_correction().fire());
+        stage.setResizable(true);
+       // stage.setOnCloseRequest(windowEvent -> getBt_correction().fire());
         stage.show();
     }
 
@@ -1106,10 +1119,9 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
             stage.fireEvent(new WindowEvent(stage, WindowEvent.WINDOW_CLOSE_REQUEST));
         });
 
+        menu_corrInfo.setOnAction(actionEvent -> startShowCerrWindow());
 
         styleMenus();
-
-
     }
 
     private void styleMenus() {
@@ -1122,6 +1134,7 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
         list.put(menu_USB, "menu/usb.png");
         list.put(menu_Ethernet, "menu/lan.png");
         list.put(menu_loadProgram, "menu/loading.png");
+        list.put(menu_corrInfo, "newImg/start.png");
         list.put(menu_Exp_M, "menu/exp.png");
         list.put(menu_LoadExp, "menu/dowload.png");
         list.put(menu_SaveExp, "menu/save.png");
@@ -1310,11 +1323,23 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
         tf_stolbec.focusedProperty().addListener((observableValue, aBoolean, t1) -> {
             if (!t1) {
                 tf_stolbec.fireEvent(EnterEvent);
+            } else {
+                Platform.runLater(() -> {
+                    if (tf_stolbec.isFocused() && !tf_stolbec.getText().isEmpty()) {
+                        tf_stolbec.selectAll();
+                    }
+                });
             }
         });
         tf_stroka.focusedProperty().addListener((observableValue, aBoolean, t1) -> {
             if (!t1) {
                 tf_stroka.fireEvent(EnterEvent);
+            } else {
+                Platform.runLater(() -> {
+                    if (tf_stroka.isFocused() && !tf_stroka.getText().isEmpty()) {
+                        tf_stroka.selectAll();
+                    }
+                });
             }
         });
     }
@@ -1788,14 +1813,15 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
 
                     if (frameData != null) {
 
-                        if (correction != null) {
-                            correction.correct(frameData);
+                        if (selCorrection != null) {
+                            selCorrection.correct(frameData);
                         }
 
                         StatData statDataMain = new StatData(frameData);
                         float[] dataArray = statDataMain.getDataArray();
 
                         minusSignalFromData(frameData, MyMinusTransformer.getMinusValue());
+
                         StatData statData = new StatData(frameData);
 
                         float[] skoArray = statData.getSKOArray();
@@ -2875,146 +2901,146 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
 
     private static ArrayList<String> status = new ArrayList<>();
 
-    static {
+static {
 
         status.add("видео идет");
         status.add("калибровка не выполнена");
 
-    }
-
-    /**
-     * Статус в строку
-     *
-     * @return строка
-     */
-    private String statusToString() {
-        StringBuilder stringBuilder = new StringBuilder();
-        for (String txt :
-                status) {
-            if (stringBuilder.length() == 0) {
-                stringBuilder.append(" ");
-            } else {
-                stringBuilder.append("; ");
-            }
-            stringBuilder.append(" ").append(txt);
         }
 
-        if (stringBuilder.length() > 0) {
-            stringBuilder.append(".");
+/**
+ * Статус в строку
+ *
+ * @return строка
+ */
+private String statusToString(){
+        StringBuilder stringBuilder=new StringBuilder();
+        for(String txt:
+        status){
+        if(stringBuilder.length()==0){
+        stringBuilder.append(" ");
+        }else{
+        stringBuilder.append("; ");
+        }
+        stringBuilder.append(" ").append(txt);
+        }
+
+        if(stringBuilder.length()>0){
+        stringBuilder.append(".");
         }
         return stringBuilder.toString();
-    }
+        }
 
-    /**
-     * Печать строки в лейбле
-     */
-    private void printStatus() {
-        lb_debug_status.setText("Статус:" + statusToString());
-    }
+/**
+ * Печать строки в лейбле
+ */
+private void printStatus(){
+        lb_debug_status.setText("Статус:"+statusToString());
+        }
 
-    /**
-     * Инициирование debug панели
-     */
-    private void initDebugPanel() {
+/**
+ * Инициирование debug панели
+ */
+private void initDebugPanel(){
 
         pb_debug_progress.setVisible(false);
 
         printStatus();
+        }
+
+
+private class MyFPSConverter extends DoubleStringConverter {
+    public MyFPSConverter() {
+        super();
     }
 
-
-    private class MyFPSConverter extends DoubleStringConverter {
-        public MyFPSConverter() {
-            super();
-        }
-
-        @Override
-        public Double fromString(String value) {
-            try {
-                Double.parseDouble(value);
-                return super.fromString(value);
-            } catch (NumberFormatException exception) {
-                return Double.valueOf(0);
-            }
-        }
-
-        @Override
-        public String toString(Double value) {
-            if (value >= 0) {
-                return String.format("%.1f", value);
-            } else {
-                return "Err.";
-            }
+    @Override
+    public Double fromString(String value) {
+        try {
+            Double.parseDouble(value);
+            return super.fromString(value);
+        } catch (NumberFormatException exception) {
+            return Double.valueOf(0);
         }
     }
 
-
-    /**
-     * Конвертер для надписи кнопки "Газ"
-     */
-    private static class MyGazConverter extends IntegerStringConverter {
-        public MyGazConverter() {
-            super();
+    @Override
+    public String toString(Double value) {
+        if (value >= 0) {
+            return String.format("%.1f", value);
+        } else {
+            return "Err.";
         }
+    }
+}
 
-        @Override
-        public Integer fromString(String value) {
-            try {
-                Integer.parseInt(value);
-                return super.fromString(value);
-            } catch (NumberFormatException exception) {
-                return 0;
-            }
-        }
 
-        @Override
-        public String toString(Integer value) {
-            if (value == 0) {
-                return "Старт";
-            } else {
-                return "Стоп";
-            }
+/**
+ * Конвертер для надписи кнопки "Газ"
+ */
+private static class MyGazConverter extends IntegerStringConverter {
+    public MyGazConverter() {
+        super();
+    }
+
+    @Override
+    public Integer fromString(String value) {
+        try {
+            Integer.parseInt(value);
+            return super.fromString(value);
+        } catch (NumberFormatException exception) {
+            return 0;
         }
     }
 
-    /**
-     * Конвертер для вывода значения температуры в кельвинах
-     */
-    private static class MyTempConverter extends IntegerStringConverter {
-
-        public MyTempConverter() {
-            super();
-        }
-
-        @Override
-        public String toString(Integer value) {
-            if (value < 0) {
-                return "Err.";
-            } else {
-                return value + " К";
-            }
+    @Override
+    public String toString(Integer value) {
+        if (value == 0) {
+            return "Старт";
+        } else {
+            return "Стоп";
         }
     }
+}
 
-    /**
-     * Конвертер для вывода значения температуры в градусах
-     */
-    private static class MyTempCelsConverter extends IntegerStringConverter {
+/**
+ * Конвертер для вывода значения температуры в кельвинах
+ */
+private static class MyTempConverter extends IntegerStringConverter {
 
-        public MyTempCelsConverter() {
-            super();
-        }
+    public MyTempConverter() {
+        super();
+    }
 
-        @Override
-        public String toString(Integer value) {
-            if (value < 0 || value > 500) {
-                return "Err.";
-            } else {
-                return (value - 273) + " \u2103";
-            }
-
+    @Override
+    public String toString(Integer value) {
+        if (value < 0) {
+            return "Err.";
+        } else {
+            return value + " К";
         }
     }
+}
+
+/**
+ * Конвертер для вывода значения температуры в градусах
+ */
+private static class MyTempCelsConverter extends IntegerStringConverter {
+
+    public MyTempCelsConverter() {
+        super();
+    }
+
+    @Override
+    public String toString(Integer value) {
+        if (value < 0 || value > 500) {
+            return "Err.";
+        } else {
+            return (value - 273) + " \u2103";
+        }
+
+    }
+}
 
     @FXML
     private void setTempParams(ActionEvent event) throws IOException {
@@ -3037,25 +3063,25 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
     private static final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("mm:ss");
     private static final SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat("m мин s сек");
 
-    private static class MyTimeConverter extends LongStringConverter {
+private static class MyTimeConverter extends LongStringConverter {
 
 
-        public MyTimeConverter() {
-            super();
-        }
-
-        @Override
-        public Long fromString(String value) {
-            return super.fromString(value);
-        }
-
-        @Override
-        public String toString(Long value) {
-            String str_date = simpleDateFormat.format(value);
-            return str_date;
-        }
-
+    public MyTimeConverter() {
+        super();
     }
+
+    @Override
+    public Long fromString(String value) {
+        return super.fromString(value);
+    }
+
+    @Override
+    public String toString(Long value) {
+        String str_date = simpleDateFormat.format(value);
+        return str_date;
+    }
+
+}
 
     private static boolean isTimerStarted = false;
     private static Thread serviceSbora;
@@ -3317,12 +3343,20 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
 
     }
 
-    public static TwoPointCorrection getCorrection() {
-        return correction;
+    public static TwoPointCorrection getSelCorrection() {
+        return selCorrection;
     }
 
-    public static void setCorrection(TwoPointCorrection correction) {
-        Controller.correction = correction;
+    public static void setSelCorrection(TwoPointCorrection selCorrection) {
+        Controller.selCorrection = selCorrection;
+    }
+
+    public TwoPointCorrection getTempCorrection() {
+        return tempCorrection;
+    }
+
+    public void setTempCorrection(TwoPointCorrection tempCorrection) {
+        this.tempCorrection = tempCorrection;
     }
 
     public ToggleButton getBt_correction() {
