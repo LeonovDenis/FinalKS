@@ -36,9 +36,9 @@ public class App extends Application {
         String crc32 = calkCRC32();
         stage.setTitle("Стенд ИС2. CRC-32: " + crc32);
         stage.setScene(scene);
-        stage.setResizable(false);
+       // stage.setResizable(false);
        // stage.setFullScreen(true);
-        stage.setMaximized(true);
+       // stage.setMaximized(true);
         stage.toBack();
       //  stage.centerOnScreen();
         stage.show();

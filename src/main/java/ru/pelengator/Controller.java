@@ -358,7 +358,7 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
     @FXML
     private MenuItem menu_loadProgram;
     @FXML
-    private MenuItem  menu_corrInfo;
+    private MenuItem menu_corrInfo;
     @FXML
     private Menu menu_Exp_M;
     @FXML
@@ -965,10 +965,10 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
                 tempCorrection = correction;
                 bt_correction.setDisable(false);
             } else {
-                LOG.debug("Corr file not found: {}",path);
+                LOG.debug("Corr file not found: {}", path);
             }
         } catch (Exception e) {
-            LOG.debug("No corr file found {}",e.getStackTrace());
+            LOG.debug("No corr file found {}", e.getStackTrace());
         }
     }
 
@@ -1003,7 +1003,7 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
             if (TwoPointCorrection.isCorrectionFileAlive(path))//если файл подходит, то загружаем
             {
                 TwoPointCorrection correction = TwoPointCorrection.loadData(path);//если ок, то грузим данные
-                tempCorrection=correction;
+                tempCorrection = correction;
                 getParams().setCorrectionFilePath(path);
                 bt_correction.setDisable(false);
             } else {//иначе возврат к окну выбора
@@ -1025,8 +1025,7 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
     }
 
 
-
-    public void startShowCerrWindow(){
+    public void startShowCerrWindow() {
 
         Stage stage = new Stage();
 
@@ -1046,7 +1045,7 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
         stage.centerOnScreen();
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.setResizable(true);
-       // stage.setOnCloseRequest(windowEvent -> getBt_correction().fire());
+        // stage.setOnCloseRequest(windowEvent -> getBt_correction().fire());
         stage.show();
     }
 
@@ -1618,6 +1617,13 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
         for (int i = 0; i < count; i++) {
             drawRect(g2, max, i, count, h, w);
         }
+        g2.setColor(new Color(0, 0, 0));
+        int cc = 5;
+        for (int i = 1; i < cc; i++) {
+            g2.drawRect(0, 0, ((w * i) / cc) - 1+w/count, h - 1);
+        }
+        g2.drawRect(0, 0, w / 2 - 1+w/count, h - 1);
+        g2.drawRect(0, 0, w - 1, h - 1);
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2.dispose();
         bi.flush();
@@ -2928,146 +2934,146 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
 
     private static ArrayList<String> status = new ArrayList<>();
 
-static {
+    static {
 
         status.add("видео идет");
         status.add("калибровка не выполнена");
 
+    }
+
+    /**
+     * Статус в строку
+     *
+     * @return строка
+     */
+    private String statusToString() {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (String txt :
+                status) {
+            if (stringBuilder.length() == 0) {
+                stringBuilder.append(" ");
+            } else {
+                stringBuilder.append("; ");
+            }
+            stringBuilder.append(" ").append(txt);
         }
 
-/**
- * Статус в строку
- *
- * @return строка
- */
-private String statusToString(){
-        StringBuilder stringBuilder=new StringBuilder();
-        for(String txt:
-        status){
-        if(stringBuilder.length()==0){
-        stringBuilder.append(" ");
-        }else{
-        stringBuilder.append("; ");
-        }
-        stringBuilder.append(" ").append(txt);
-        }
-
-        if(stringBuilder.length()>0){
-        stringBuilder.append(".");
+        if (stringBuilder.length() > 0) {
+            stringBuilder.append(".");
         }
         return stringBuilder.toString();
-        }
+    }
 
-/**
- * Печать строки в лейбле
- */
-private void printStatus(){
-        lb_debug_status.setText("Статус:"+statusToString());
-        }
+    /**
+     * Печать строки в лейбле
+     */
+    private void printStatus() {
+        lb_debug_status.setText("Статус:" + statusToString());
+    }
 
-/**
- * Инициирование debug панели
- */
-private void initDebugPanel(){
+    /**
+     * Инициирование debug панели
+     */
+    private void initDebugPanel() {
 
         pb_debug_progress.setVisible(false);
 
         printStatus();
+    }
+
+
+    private class MyFPSConverter extends DoubleStringConverter {
+        public MyFPSConverter() {
+            super();
         }
 
-
-private class MyFPSConverter extends DoubleStringConverter {
-    public MyFPSConverter() {
-        super();
-    }
-
-    @Override
-    public Double fromString(String value) {
-        try {
-            Double.parseDouble(value);
-            return super.fromString(value);
-        } catch (NumberFormatException exception) {
-            return Double.valueOf(0);
+        @Override
+        public Double fromString(String value) {
+            try {
+                Double.parseDouble(value);
+                return super.fromString(value);
+            } catch (NumberFormatException exception) {
+                return Double.valueOf(0);
+            }
         }
-    }
 
-    @Override
-    public String toString(Double value) {
-        if (value >= 0) {
-            return String.format("%.1f", value);
-        } else {
-            return "Err.";
-        }
-    }
-}
-
-
-/**
- * Конвертер для надписи кнопки "Газ"
- */
-private static class MyGazConverter extends IntegerStringConverter {
-    public MyGazConverter() {
-        super();
-    }
-
-    @Override
-    public Integer fromString(String value) {
-        try {
-            Integer.parseInt(value);
-            return super.fromString(value);
-        } catch (NumberFormatException exception) {
-            return 0;
+        @Override
+        public String toString(Double value) {
+            if (value >= 0) {
+                return String.format("%.1f", value);
+            } else {
+                return "Err.";
+            }
         }
     }
 
-    @Override
-    public String toString(Integer value) {
-        if (value == 0) {
-            return "Старт";
-        } else {
-            return "Стоп";
-        }
-    }
-}
 
-/**
- * Конвертер для вывода значения температуры в кельвинах
- */
-private static class MyTempConverter extends IntegerStringConverter {
-
-    public MyTempConverter() {
-        super();
-    }
-
-    @Override
-    public String toString(Integer value) {
-        if (value < 0) {
-            return "Err.";
-        } else {
-            return value + " К";
-        }
-    }
-}
-
-/**
- * Конвертер для вывода значения температуры в градусах
- */
-private static class MyTempCelsConverter extends IntegerStringConverter {
-
-    public MyTempCelsConverter() {
-        super();
-    }
-
-    @Override
-    public String toString(Integer value) {
-        if (value < 0 || value > 500) {
-            return "Err.";
-        } else {
-            return (value - 273) + " \u2103";
+    /**
+     * Конвертер для надписи кнопки "Газ"
+     */
+    private static class MyGazConverter extends IntegerStringConverter {
+        public MyGazConverter() {
+            super();
         }
 
+        @Override
+        public Integer fromString(String value) {
+            try {
+                Integer.parseInt(value);
+                return super.fromString(value);
+            } catch (NumberFormatException exception) {
+                return 0;
+            }
+        }
+
+        @Override
+        public String toString(Integer value) {
+            if (value == 0) {
+                return "Старт";
+            } else {
+                return "Стоп";
+            }
+        }
     }
-}
+
+    /**
+     * Конвертер для вывода значения температуры в кельвинах
+     */
+    private static class MyTempConverter extends IntegerStringConverter {
+
+        public MyTempConverter() {
+            super();
+        }
+
+        @Override
+        public String toString(Integer value) {
+            if (value < 0) {
+                return "Err.";
+            } else {
+                return value + " К";
+            }
+        }
+    }
+
+    /**
+     * Конвертер для вывода значения температуры в градусах
+     */
+    private static class MyTempCelsConverter extends IntegerStringConverter {
+
+        public MyTempCelsConverter() {
+            super();
+        }
+
+        @Override
+        public String toString(Integer value) {
+            if (value < 0 || value > 500) {
+                return "Err.";
+            } else {
+                return (value - 273) + " \u2103";
+            }
+
+        }
+    }
 
     @FXML
     private void setTempParams(ActionEvent event) throws IOException {
@@ -3090,25 +3096,25 @@ private static class MyTempCelsConverter extends IntegerStringConverter {
     private static final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("mm:ss");
     private static final SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat("m мин s сек");
 
-private static class MyTimeConverter extends LongStringConverter {
+    private static class MyTimeConverter extends LongStringConverter {
 
 
-    public MyTimeConverter() {
-        super();
+        public MyTimeConverter() {
+            super();
+        }
+
+        @Override
+        public Long fromString(String value) {
+            return super.fromString(value);
+        }
+
+        @Override
+        public String toString(Long value) {
+            String str_date = simpleDateFormat.format(value);
+            return str_date;
+        }
+
     }
-
-    @Override
-    public Long fromString(String value) {
-        return super.fromString(value);
-    }
-
-    @Override
-    public String toString(Long value) {
-        String str_date = simpleDateFormat.format(value);
-        return str_date;
-    }
-
-}
 
     private static boolean isTimerStarted = false;
     private static Thread serviceSbora;
@@ -3181,7 +3187,7 @@ private static class MyTimeConverter extends LongStringConverter {
             @Override
             public void run() {
 
-           //     params.setTempValue(i++);//тест
+                //     params.setTempValue(i++);//тест
                 if (params.getTemp() <= TARGET_TEMP) {
                     String txt = "Таймер остановлен!\n" +
                             "Время выхода на рабочий режим: " + simpleDateFormat2.format(params.getTime()) + ".";
@@ -3192,7 +3198,7 @@ private static class MyTimeConverter extends LongStringConverter {
                     tm = null;
                     isTimerStarted = !isTimerStarted;
                 } else {
-                //    params.setTempValue(i++);//тест
+                    //    params.setTempValue(i++);//тест
                     long l = System.currentTimeMillis() - startTime;
                     params.setTime(l);
                 }

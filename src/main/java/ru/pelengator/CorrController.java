@@ -183,7 +183,7 @@ public class CorrController implements Initializable {
 
         StackPane stackPane = new ModernChart().startView(
                 "Pix [" + X+ "][" + (mainController.getSelDetector().getViewSize().height - 1-Y) + "]",
-                "Temperature, oC", "Signal, мВ",
+                "Temperature, oC", "Signal, mV",
                 (int) tempCorrection.getTempS()[0], (int) tempCorrection.getTempS()[1],
                ///////////////////////////////////////////////////////////////
                 tempCorrection.getTempS(),
