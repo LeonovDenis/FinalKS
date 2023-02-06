@@ -100,6 +100,8 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
      */
     @FXML
     private TextField tf_minus;
+    @FXML
+    private TextField tf_plus;
 
     @FXML
     private ToggleButton bt_correction;
@@ -922,9 +924,21 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
             if (imageTransformer instanceof MyMinusTransformer) {
                 ((MyMinusTransformer) imageTransformer).setMinusValue(roundValue);
 
-                //    lb_lowValueGist.setText(String.format("%.1f В",i/1000.0).replace(",","."));
-                //    lb_medValueGist.setText(String.format("%.1f В",((2500+i/2.0)/1000.0)).replace(",","."));
-                //     lb_hiValueGist.setText(String.format("%.1f В",5.0).replace(",","."));
+                BufferedImage bufferedImage = fillPolosa(ivPolosa, pnGist);
+                ivPolosa.setImage(SwingFXUtils.toFXImage(bufferedImage, null));
+            }
+        });
+
+        tf_plus.setOnAction(event -> {
+            int i = parseIntText(event, false);
+            if (i < 0) {
+                i = 0;
+            } else if (i > 5000) {
+                i = 5000;
+            }
+            int roundValue = Math.round(i / MASHTAB);
+            if (imageTransformer instanceof MyMinusTransformer) {
+                ((MyMinusTransformer) imageTransformer).setPlusValue(roundValue);
 
                 BufferedImage bufferedImage = fillPolosa(ivPolosa, pnGist);
                 ivPolosa.setImage(SwingFXUtils.toFXImage(bufferedImage, null));
@@ -1297,6 +1311,19 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
                 Platform.runLater(() -> {
                     if (tf_minus.isFocused() && !tf_minus.getText().isEmpty()) {
                         tf_minus.selectAll();
+                    }
+                });
+            }
+
+        });
+
+        tf_plus.focusedProperty().addListener((observableValue, aBoolean, t1) -> {
+            if (!t1) {
+                tf_plus.fireEvent(EnterEvent);
+            } else {
+                Platform.runLater(() -> {
+                    if (tf_plus.isFocused() && !tf_plus.getText().isEmpty()) {
+                        tf_plus.selectAll();
                     }
                 });
             }
@@ -3154,7 +3181,7 @@ private static class MyTimeConverter extends LongStringConverter {
             @Override
             public void run() {
 
-                params.setTempValue(i++);//тест
+           //     params.setTempValue(i++);//тест
                 if (params.getTemp() <= TARGET_TEMP) {
                     String txt = "Таймер остановлен!\n" +
                             "Время выхода на рабочий режим: " + simpleDateFormat2.format(params.getTime()) + ".";
@@ -3165,7 +3192,7 @@ private static class MyTimeConverter extends LongStringConverter {
                     tm = null;
                     isTimerStarted = !isTimerStarted;
                 } else {
-                    params.setTempValue(i++);
+                //    params.setTempValue(i++);//тест
                     long l = System.currentTimeMillis() - startTime;
                     params.setTime(l);
                 }

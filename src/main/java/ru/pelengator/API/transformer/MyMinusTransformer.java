@@ -48,13 +48,14 @@ public class MyMinusTransformer implements DetectorImageTransformer {
     @Override
     public BufferedImage transform(BufferedImage image) {
 
-        convertImageMinus(image, minusValue);
+        convertImageMinus(image, minusValue,plusValue);
         return image;
     }
 
     private static int minusValue = 0;
+    private static int plusValue = (int)ACP;
 
-    private void convertImageMinus(BufferedImage src, int value) {
+    private void convertImageMinus(BufferedImage src, int minusValue,int plusValue) {
         int width = src.getWidth();
         int height = src.getHeight();
         int[][] tempData = new int[height][width];
@@ -75,18 +76,18 @@ public class MyMinusTransformer implements DetectorImageTransformer {
 
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
-                src.setRGB(x, y, convertValueMinus(tempData[y][x], value));
+                src.setRGB(x, y, convertValueMinus(tempData[y][x], minusValue, plusValue));
             }
         }
 
 
     }
 
-    private int convertValueMinus(int sourceValue, int valueACP) {
+    private int convertValueMinus(int sourceValue, int minusValue, int plusValue) {
         int BITBYTE = 255;
-        double koef = (ACP - valueACP) / (BITBYTE * 4.0 + 1.0);
+        double koef = (plusValue-minusValue) / (BITBYTE * 4.0 + 1.0);
 
-        sourceValue = (int) ((sourceValue - valueACP) / koef);
+        sourceValue = (int) ((sourceValue - minusValue-(ACP-plusValue)) / koef);
 
         int a = 0xff000000;
         int r = 0;
@@ -118,11 +119,16 @@ public class MyMinusTransformer implements DetectorImageTransformer {
             r = BITBYTE;
             g = BITBYTE - (sourceValue - BITBYTE * 3);
             b = 0;
-        } else {
+        } else if (sourceValue > BITBYTE * 4 && sourceValue <= BITBYTE * 4+1) {
             new Color(BITBYTE, 0, 0);
             r = BITBYTE;
             g = 0;
             b = 0;
+        } else {
+            new Color(255, 255, 255);
+            r = 255;
+            g = 255;
+            b = 255;
         }
 
         return a | (r << 16) | (g << 8) | b;
@@ -131,7 +137,7 @@ public class MyMinusTransformer implements DetectorImageTransformer {
 
     @Override
     public int convertValueToColor(int value) {
-        return convertValueMinus(value, minusValue);
+        return convertValueMinus(value, minusValue, plusValue);
     }
 
 
@@ -146,5 +152,12 @@ public class MyMinusTransformer implements DetectorImageTransformer {
 
     public static void setMinusValue(int minusValue) {
         MyMinusTransformer.minusValue = minusValue;
+    }
+    public static int getPlusValue() {
+        return plusValue;
+    }
+
+    public static void setPlusValue(int plusValue) {
+        MyMinusTransformer.plusValue = plusValue;
     }
 }
