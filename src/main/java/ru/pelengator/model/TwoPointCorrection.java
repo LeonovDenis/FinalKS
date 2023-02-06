@@ -9,6 +9,8 @@ import java.io.*;
 import java.util.*;
 import java.util.concurrent.*;
 
+import static ru.pelengator.API.utils.Utils.makeMaxMeanMin;
+
 public class TwoPointCorrection implements Serializable {
 
     private static final Logger LOG = LoggerFactory.getLogger(TwoPointCorrection.class);
@@ -476,6 +478,14 @@ public class TwoPointCorrection implements Serializable {
         values[1] = tempData.get(3)[0][0];
         return values;
     }
+
+    public double[] getTempSValues() {
+        double[] values = new double[2];
+        values[0] = makeMaxMeanMin(tempData.get(0), true, 0)[1];
+        values[1] = makeMaxMeanMin(tempData.get(1), true, 0)[1];
+        return values;
+    }
+
     public int[][] correct(int[][] data) {
         int h = data.length;
         int w = data[0].length;

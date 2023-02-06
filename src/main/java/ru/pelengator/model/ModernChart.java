@@ -32,7 +32,7 @@ import static ru.pelengator.API.utils.Utils.MASHTAB;
 public class ModernChart {
 
     static JFreeChart charttt;
-    public static final int TIPE_Dataset30_40 = 0;
+
 
     /**
      * Вложенный класс панели графика
@@ -43,6 +43,7 @@ public class ModernChart {
         private Crosshair xCrosshair;//перекрестие
         private Crosshair yCrosshair;//перекрестие
         private Crosshair yCrosshair2;//перекрестие
+        private Crosshair yCrosshair3;//перекрестие
 
         private boolean FL_BPS = true;
 
@@ -63,8 +64,8 @@ public class ModernChart {
             charttt = chart;
             XYPlot xyPlot = chart.getXYPlot();
 
-            final Plot plot = chart.getPlot();
-            plot.setBackgroundPaint( new Color(130, 189, 66) );
+      //      final Plot plot = chart.getPlot();
+     //       plot.setBackgroundPaint( new Color(130, 189, 66) );
 
             xyPlot.getDomainAxis().setLowerBound(start - 10);
             xyPlot.getDomainAxis().setUpperBound(end + 10);
@@ -83,6 +84,7 @@ public class ModernChart {
             this.yCrosshair.setStroke(new BasicStroke(1.5f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND,
                     1, new float[]{5.0f, 5.0f}, 0));
             this.yCrosshair.setLabelVisible(true);
+
             this.yCrosshair2 = new Crosshair(Double.NaN, Color.GRAY, new BasicStroke(1f));
             this.yCrosshair2.setStroke(new BasicStroke(1.5f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND,
                     1, new float[]{5.0f, 5.0f}, 0));
@@ -92,6 +94,17 @@ public class ModernChart {
             this.yCrosshair2.setLabelXOffset(5);
             this.yCrosshair2.setLabelYOffset(5);
             this.yCrosshair2.setLabelBackgroundPaint(new Color(0, 0, 0, 0));
+
+            this.yCrosshair3 = new Crosshair(Double.NaN, Color.GRAY, new BasicStroke(1f));
+            this.yCrosshair3.setStroke(new BasicStroke(1.5f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND,
+                    1, new float[]{5.0f, 5.0f}, 0));
+            this.yCrosshair3.setLabelVisible(true);
+            this.yCrosshair3.setLabelFont(new Font("Tahoma", 0, 15));
+            this.yCrosshair3.setLabelOutlineVisible(false);
+            this.yCrosshair3.setLabelXOffset(5);
+            this.yCrosshair3.setLabelYOffset(5);
+            this.yCrosshair3.setLabelBackgroundPaint(new Color(0, 0, 0, 0));
+
             this.yCrosshair.setLabelFont(new Font("Tahoma", 0, 15));
             this.xCrosshair.setLabelFont(new Font("Tahoma", 0, 15));
             this.xCrosshair.setLabelOutlineVisible(false);
@@ -104,9 +117,10 @@ public class ModernChart {
             this.yCrosshair.setLabelBackgroundPaint(new Color(0, 0, 0, 0));
             crosshairOverlay.addDomainCrosshair(xCrosshair);
             crosshairOverlay.addRangeCrosshair(yCrosshair);
-            // if (FL_BPS){
+
             crosshairOverlay.addRangeCrosshair(yCrosshair2);
-            // }
+            crosshairOverlay.addRangeCrosshair(yCrosshair3);
+
 
             Platform.runLater(() -> {
                 this.chartViewer.getCanvas().addOverlay(crosshairOverlay);
@@ -132,11 +146,13 @@ public class ModernChart {
             }
             this.xCrosshair.setValue((int) x);
 
-            if (plot.getDataset().getSeriesCount() == 2) {
+         //   if (plot.getDataset().getSeriesCount() == 2) {
                 double y2 = DatasetUtils.findYValue(plot.getDataset(), 1, (int) x);
                 this.yCrosshair2.setValue(y2);
 
-            }
+            double y3 = DatasetUtils.findYValue(plot.getDataset(), 2, (int) x);
+            this.yCrosshair3.setValue(y3);
+         //   }
 
             double y = DatasetUtils.findYValue(plot.getDataset(), 0, (int) x);
             this.yCrosshair.setValue(y);
@@ -158,17 +174,22 @@ public class ModernChart {
             return dataset;
         }
         String label = "";
-        for (int i = 1; i < mass.length; i++) {
-            if (i == 1) {
+        for (int i = 2; i < mass.length; i++) {
+            if (i == 2) {
                 label = "Main";
-            } else {
+            } else if (i == 3){
                 label = "Pixel";
+            }else{
+                label = "Correcting";
             }
+
             XYSeries series = new XYSeries(label);
             double[] masivY = mass[i];
             double[] masivX = mass[0];
+            double[] masivXValues = mass[1];
+
             for (int j = 0; j < masivX.length; j++) {
-                double v = masivY[j] * MASHTAB;
+                double v = (masivXValues[j]*masivY[0]+ masivY[1])* MASHTAB;
                 double round = DoubleRounder.round(v, 0);
                 series.add(masivX[j], (int)round);
             }

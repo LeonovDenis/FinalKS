@@ -185,9 +185,12 @@ public class CorrController implements Initializable {
                 "Pix [" + X+ "][" + (mainController.getSelDetector().getViewSize().height - 1-Y) + "]",
                 "Temperature, oC", "Signal, мВ",
                 (int) tempCorrection.getTempS()[0], (int) tempCorrection.getTempS()[1],
+               ///////////////////////////////////////////////////////////////
                 tempCorrection.getTempS(),
+                tempCorrection.getTempSValues(),
                 tempCorrection.getMedianAB(),
-                tempCorrection.getRealAB(X, Y));
+                tempCorrection.getRealAB(X, Y),
+                tempCorrection.getCorrAB(X, Y));
 
 
         Platform.runLater(() -> {
