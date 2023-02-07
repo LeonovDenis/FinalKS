@@ -119,7 +119,7 @@
     </MenuBar>
    </top>
    <left>
-      <ScrollPane hvalue="0.42" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" pannable="true" prefViewportHeight="800.0" prefViewportWidth="500.0" vvalue="0.37" BorderPane.alignment="TOP_LEFT">
+      <ScrollPane hvalue="0.42" vvalue="0.37" BorderPane.alignment="TOP_LEFT">
          <content>
           <AnchorPane>
                <children>

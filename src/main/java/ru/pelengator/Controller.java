@@ -1618,12 +1618,16 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
             drawRect(g2, max, i, count, h, w);
         }
         g2.setColor(new Color(0, 0, 0));
+
         int cc = 5;
         for (int i = 1; i < cc; i++) {
             g2.drawRect(0, 0, ((w * i) / cc) - 1+w/count, h - 1);
+            g2.drawRect(0, 0, ((w * i) / cc) - 1, h - 1);
         }
         g2.drawRect(0, 0, w / 2 - 1+w/count, h - 1);
+        g2.drawRect(0, 0, w / 2 - 1, h - 1);
         g2.drawRect(0, 0, w - 1, h - 1);
+
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2.dispose();
         bi.flush();
