@@ -198,6 +198,10 @@ public class MeasController implements Initializable {
     @FXML
     private ProgressIndicator prIndicatorCorr;
     @FXML
+    private ComboBox cbExpTemperatureOptions;
+    @FXML
+    private ComboBox cbExpPreasureOptions;
+    @FXML
     private ComboBox cbExpOptions;
     /**
      * Сервис расчетов.
@@ -264,7 +268,7 @@ public class MeasController implements Initializable {
 
         setLostFocusAction();
 
-        cbExpOptions.setPromptText("Выберите испытание");
+      //  cbExpOptions.setPromptText("Выберите испытание");
 
     }
 
