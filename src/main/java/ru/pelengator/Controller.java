@@ -28,7 +28,6 @@ import javafx.concurrent.Worker;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.embed.swing.SwingNode;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -3338,7 +3337,7 @@ public class Controller implements Initializable, DetectorDiscoveryListener {
     @FXML
     private void saveExp(ActionEvent event) throws IOException {
 
-        PdfExp.SaveExp(this);
+        PdfExp.saveExp(this);
         LOG.debug("SaveExp");
     }
 

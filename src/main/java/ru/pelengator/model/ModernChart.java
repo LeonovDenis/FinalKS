@@ -189,7 +189,7 @@ public class ModernChart {
             double[] masivXValues = mass[1];
 
             for (int j = 0; j < masivX.length; j++) {
-                double v = (masivXValues[j]*masivY[0]+ masivY[1])* MASHTAB;
+                double v = (masivXValues[j]*masivY[0]+ masivY[1]);
                 double round = DoubleRounder.round(v, 0);
                 series.add(masivX[j], (int)round);
             }

@@ -183,7 +183,7 @@ public class CorrController implements Initializable {
 
         StackPane stackPane = new ModernChart().startView(
                 "Pix [" + X+ "][" + (mainController.getSelDetector().getViewSize().height - 1-Y) + "]",
-                "Temperature, oC", "Signal, mV",
+                "Temperature, oC", "Signal, ADC points",
                 (int) tempCorrection.getTempS()[0], (int) tempCorrection.getTempS()[1],
                ///////////////////////////////////////////////////////////////
                 tempCorrection.getTempS(),
@@ -201,12 +201,12 @@ public class CorrController implements Initializable {
             stackPane.prefWidthProperty().bind(pane.prefWidthProperty());
             pane.getChildren().add(stackPane);
 
-            String txt = String.format("%.2f*X + %.2f", tempCorrection.getMedianAB()[0], tempCorrection.getMedianAB()[1]);
+            String txt = String.format("%.2f*X + %.2f (ADC points)", tempCorrection.getMedianAB()[0], tempCorrection.getMedianAB()[1]);
             lb_final.setText(txt);
-            txt = String.format("%.2f*X + %.2f", tempCorrection.getRealAB(X, Y)[0], tempCorrection.getRealAB(X, Y)[1]);
+            txt = String.format("%.2f*X + %.2f (ADC points)", tempCorrection.getRealAB(X, Y)[0], tempCorrection.getRealAB(X, Y)[1]);
             lb_pixel.setText(txt);
 
-            txt = String.format("%.2f*X + %.2f", tempCorrection.getCorrAB(X, Y)[0], tempCorrection.getCorrAB(X, Y)[1]);
+            txt = String.format("%.2f*X + %.2f (ADC points)", tempCorrection.getCorrAB(X, Y)[0], tempCorrection.getCorrAB(X, Y)[1]);
             lb_coefic.setText(txt);
 
         });
